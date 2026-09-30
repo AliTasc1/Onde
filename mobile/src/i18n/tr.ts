@@ -93,7 +93,7 @@ export const tr: Dict = {
     lower: 'Yoğunluğu azalt',
     raise: 'Yoğunluğu artır',
     pause: 'Duraklat',
-    resume: 'Devam',
+    resume: 'Başlat',
     stop: 'Durdur',
     stopA11y: 'Seansı durdur',
     doubleTap: 'Durdurmak için herhangi bir yere çift dokun',

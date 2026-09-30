@@ -193,20 +193,15 @@ export default function Session() {
       </View>
 
       <View style={{ flexDirection: 'row', gap: 12, alignSelf: 'stretch' }}>
-        {!paused ? (
-          <Pressable onPress={() => setPaused(true)} accessibilityRole="button" accessibilityLabel={t.session.pause}
-            style={({ pressed }) => [s.pill, { width: 120, backgroundColor: C.surface2, borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)', opacity: pressed ? 0.8 : 1 }]}>
-            <Icon name="pause" size={20} color="#fff" />
-            <Txt style={{ fontSize: 17, fontWeight: '600' }}>{t.session.pause}</Txt>
-          </Pressable>
-        ) : (
-          <Pressable onPress={() => setPaused(false)} accessibilityRole="button" accessibilityLabel={t.session.resume}
-            style={({ pressed }) => [s.pill, { width: 140, overflow: 'hidden', opacity: pressed ? 0.8 : 1 }]}>
-            <LinearGradient {...PRIMARY_GRADIENT} style={StyleSheet.absoluteFill} />
-            <View><Icon name="play" size={18} color="#fff" /></View>
-            <Txt style={{ fontSize: 17, fontWeight: '600' }}>{t.session.resume}</Txt>
-          </Pressable>
-        )}
+        {/* One button that stays mounted and switches between Duraklat and Başlat, so it never drops out on native. */}
+        <Pressable onPress={() => setPaused(!paused)} accessibilityRole="button" accessibilityLabel={paused ? t.session.resume : t.session.pause}
+          style={({ pressed }) => [s.pill, { width: 140, backgroundColor: paused ? C.violet : C.surface2, borderWidth: paused ? 0 : 1, borderColor: 'rgba(255,255,255,0.12)', opacity: pressed ? 0.8 : 1 }]}>
+          {paused ? <LinearGradient {...PRIMARY_GRADIENT} pointerEvents="none" style={[StyleSheet.absoluteFill, { borderRadius: 36 }]} /> : null}
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <Icon name={paused ? 'play' : 'pause'} size={paused ? 18 : 20} color="#fff" />
+            <Txt style={{ fontSize: 17, fontWeight: '600' }}>{paused ? t.session.resume : t.session.pause}</Txt>
+          </View>
+        </Pressable>
         <Pressable onPress={() => finish(true)} accessibilityRole="button" accessibilityLabel={t.session.stopA11y}
           style={({ pressed }) => [s.pill, { flex: 1, backgroundColor: C.red, gap: 10, opacity: pressed ? 0.85 : 1 }]}>
           <View style={{ width: 16, height: 16, borderRadius: 3, backgroundColor: C.redInk }} />
