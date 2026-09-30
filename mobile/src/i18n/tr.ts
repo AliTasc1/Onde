@@ -276,7 +276,7 @@ export const tr: Dict = {
     backgroundSub: 'Konuşmanın altında nefesler ve sesler',
     soundPack: 'Ses paketi',
     soundPackValue: (n) => `${n} ses`,
-    soundPackDetail: (bed, rhythm, accents, cries) => `${bed} döngü · ${rhythm} ritim · ${accents} nefes · ${cries} haykırış`,
+    soundPackDetail: (c) => `${c.bed} döngü · ${c.rhythm} hareket · ${c.accents} nefes · ${c.cries} haykırış · ${c.slaps} şaplak · ${c.murmurs} fısıltı`,
     noSoundPack: 'Bu sürümde henüz arka plan sesi yok',
     backgroundVolume: 'Arka plan ses seviyesi',
     percent: (n) => `%${n}`,

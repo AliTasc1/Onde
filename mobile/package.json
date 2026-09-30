@@ -43,6 +43,7 @@
     "lint": "expo lint",
     "voice": "node scripts/generate-voice.mjs",
     "ambience": "node scripts/build-ambience.mjs",
+    "murmurs": "node scripts/generate-murmurs.mjs",
     "sfx": "node scripts/generate-sfx.mjs"
   },
   "private": true

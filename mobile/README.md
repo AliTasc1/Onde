@@ -85,6 +85,8 @@ The layers are paced like a slow bed scene, not a metronome:
 - **Motion:** `assets/ambience/rhythm/` holds short movement sounds (sheets, skin). They play in phrases of 3–5 slow, heavy moves (about 1–2 s apart, played at 0.86–0.97×). Each phrase rises and falls in loudness, then pauses before the next. The odd move is skipped so it never sounds mechanical.
 - **Accents:** `assets/ambience/accents/` holds breaths, sighs and moans. They come one at a time, roughly every 6–12 s (a bit more often near the peak), never on top of each other or of the voice, and each leaves a moment of silence after it.
 - **Cries:** `assets/ambience/cries/` holds fuller exclamations. These are rarer: every ~22–40 s, only in the voice's pauses, and only once the session has warmed up.
+- **Slaps:** `assets/ambience/slaps/` holds spanks. Once the scene has started, one plays every 2–3 s, with slight pitch variation.
+- **Murmurs:** `assets/ambience/murmurs/` holds short phrases from the couple (a woman and a man). They are rare, every ~35–70 s, and play only in the voice's pauses. The text is in `voice/murmurs.tr.json`. Generate the clips with `npm run murmurs`; this needs `ELEVENLABS_FEMALE_VOICE_ID` in `.env.local`, and optionally `ELEVENLABS_MALE_VOICE_ID` (otherwise the companion voice is used).
 - **Mix:** the background default is 35 %, and every layer ducks to 40 % while the voice speaks, so the voice always stays on top.
 - All layers start the moment a session starts. Confirming the 18+ screen turns on both the voice and the background sounds.
 - **Adding sounds:** drop `.mp3`, `.m4a`, `.aac` or `.wav` files into those folders, then run `npm run ambience` to rebuild `src/data/ambienceManifest.ts`.

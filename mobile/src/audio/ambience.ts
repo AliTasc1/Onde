@@ -5,13 +5,16 @@ import { voice, type VoiceContext } from './voice';
 
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 
-export const ambienceCounts = () => ({ bed: AMBIENCE.bed.length, rhythm: AMBIENCE.rhythm.length, accents: AMBIENCE.accents.length, cries: AMBIENCE.cries.length });
-export const ambienceTotal = () => AMBIENCE.bed.length + AMBIENCE.rhythm.length + AMBIENCE.accents.length + AMBIENCE.cries.length;
+export const ambienceCounts = () => ({
+  bed: AMBIENCE.bed.length, rhythm: AMBIENCE.rhythm.length, accents: AMBIENCE.accents.length,
+  cries: AMBIENCE.cries.length, slaps: AMBIENCE.slaps.length, murmurs: AMBIENCE.murmurs.length,
+});
+export const ambienceTotal = () => Object.values(ambienceCounts()).reduce((a, b) => a + b, 0);
 
 /** How far the background drops while the voice is speaking. */
 const DUCK = 0.4;
 /** Relative level of each layer under the volume setting. */
-const MIX = { bed: 0.8, rhythm: 0.65, accents: 0.75, cries: 0.9 };
+const MIX = { bed: 0.8, rhythm: 0.65, accents: 0.75, cries: 0.9, slaps: 0.8, murmurs: 0.7 };
 
 /**
  * One slow body movement. Deliberately slower than the vibration pulse:
@@ -32,6 +35,8 @@ const BREATHING_ROOM = 1800;
  * - accents: breaths / sighs / moans placed in the voice's pauses, never
  *   stacked on each other;
  * - cries: rarer, fuller exclamations, also only in the pauses.
+ * - slaps: a spank every 2–3 s once the scene has started;
+ * - murmurs: rare short phrases from the couple, only in the pauses.
  * Everything ducks while the voice speaks so the voice stays on top.
  */
 class Ambience {
@@ -39,10 +44,15 @@ class Ambience {
   private moves: AudioPlayer[] = [];
   private accent: AudioPlayer | null = null;
   private cry: AudioPlayer | null = null;
+  private slaps: AudioPlayer[] = [];
+  private murmur: AudioPlayer | null = null;
+  private slapN = 0;
   private tick: ReturnType<typeof setInterval> | undefined;
   private moveTimer: ReturnType<typeof setTimeout> | undefined;
   private accentTimer: ReturnType<typeof setTimeout> | undefined;
   private cryTimer: ReturnType<typeof setTimeout> | undefined;
+  private slapTimer: ReturnType<typeof setTimeout> | undefined;
+  private murmurTimer: ReturnType<typeof setTimeout> | undefined;
   private running = false;
   private paused = false;
   private volume = 0.35;
@@ -51,7 +61,7 @@ class Ambience {
   private phraseLeft = 0;
   private phraseLen = 0;
   private quietUntil = 0;
-  private last = { move: -1, accent: -1, cry: -1 };
+  private last = { move: -1, accent: -1, cry: -1, slap: -1, murmur: -1 };
   private getContext: () => VoiceContext = () => ({ progress: 0, intensity: 5, rhythm: 4 });
 
   start(opts: { volume: number; getContext: () => VoiceContext }) {
@@ -85,6 +95,15 @@ class Ambience {
         this.cry = createAudioPlayer(null);
         this.scheduleCry(rand(18000, 28000));
       }
+      if (AMBIENCE.slaps.length) {
+        // Two players so a slap never cuts off the tail of the previous one.
+        this.slaps = [createAudioPlayer(null), createAudioPlayer(null)];
+        this.scheduleSlap(rand(4000, 6000));
+      }
+      if (AMBIENCE.murmurs.length) {
+        this.murmur = createAudioPlayer(null);
+        this.scheduleMurmur(rand(25000, 40000));
+      }
     } catch {
       this.stop();
       return;
@@ -96,8 +115,8 @@ class Ambience {
   pause() {
     if (!this.running) return;
     this.paused = true;
-    for (const t of [this.moveTimer, this.accentTimer, this.cryTimer]) clearTimeout(t);
-    for (const p of [this.bed, this.accent, this.cry, ...this.moves]) p?.pause();
+    this.clearTimers();
+    for (const p of this.players()) p?.pause();
   }
 
   resume() {
@@ -107,6 +126,8 @@ class Ambience {
     if (this.moves.length) { this.phraseLeft = 0; this.scheduleMove(rand(800, 1500)); }
     if (this.accent) this.scheduleAccent(rand(2000, 4000));
     if (this.cry) this.scheduleCry(rand(10000, 18000));
+    if (this.slaps.length) this.scheduleSlap(rand(1500, 2500));
+    if (this.murmur) this.scheduleMurmur(rand(15000, 25000));
   }
 
   setVolume(v: number) {
@@ -117,15 +138,25 @@ class Ambience {
   stop() {
     this.running = false;
     clearInterval(this.tick);
-    for (const t of [this.moveTimer, this.accentTimer, this.cryTimer]) clearTimeout(t);
-    for (const p of [this.bed, this.accent, this.cry, ...this.moves]) {
+    this.clearTimers();
+    for (const p of this.players()) {
       if (!p) continue;
       try { p.pause(); p.remove(); } catch { /* already released */ }
     }
     this.bed = null;
     this.accent = null;
     this.cry = null;
+    this.murmur = null;
     this.moves = [];
+    this.slaps = [];
+  }
+
+  private players() {
+    return [this.bed, this.accent, this.cry, this.murmur, ...this.moves, ...this.slaps];
+  }
+
+  private clearTimers() {
+    for (const t of [this.moveTimer, this.accentTimer, this.cryTimer, this.slapTimer, this.murmurTimer]) clearTimeout(t);
   }
 
   /** Layer volume: setting × layer mix × intensity (55–100 %) × ducking under the voice. */
@@ -240,6 +271,43 @@ class Ambience {
     } catch { /* skip this one */ }
     const busy = Math.min(1, (intensity / 10) * 0.6 + (progress > 0.55 ? 0.4 : 0));
     this.scheduleCry(rand(22, 40) * 1000 * (1.15 - busy * 0.5));
+  }
+
+  // ---- spanks, every 2–3 s ----
+  private scheduleSlap(ms: number) {
+    clearTimeout(this.slapTimer);
+    this.slapTimer = setTimeout(() => this.playSlap(), ms);
+  }
+
+  private playSlap() {
+    if (!this.running || this.paused || !this.slaps.length) return;
+    const p = this.slaps[this.slapN++ % this.slaps.length];
+    try {
+      p.replace(this.pick(AMBIENCE.slaps, 'slap'));
+      p.volume = this.level('slaps') * rand(0.8, 1);
+      p.shouldCorrectPitch = false;
+      p.setPlaybackRate(rand(0.94, 1.06)); // no two sound quite the same
+      p.play();
+    } catch { /* skip this one */ }
+    this.scheduleSlap(rand(2000, 3000));
+  }
+
+  // ---- rare phrases from the couple ----
+  private scheduleMurmur(ms: number) {
+    clearTimeout(this.murmurTimer);
+    this.murmurTimer = setTimeout(() => this.playMurmur(), ms);
+  }
+
+  private playMurmur() {
+    if (!this.running || this.paused || !this.murmur) return;
+    if (!this.quiet()) return this.scheduleMurmur(1200);
+    try {
+      this.murmur.replace(this.pick(AMBIENCE.murmurs, 'murmur'));
+      this.murmur.volume = this.level('murmurs');
+      this.murmur.play();
+      this.hold(this.murmur);
+    } catch { /* skip this one */ }
+    this.scheduleMurmur(rand(35, 70) * 1000);
   }
 }
 

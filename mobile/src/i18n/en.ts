@@ -278,7 +278,8 @@ export const en = {
     backgroundSub: 'Breaths and sounds under the voice',
     soundPack: 'Sound pack',
     soundPackValue: (n: number) => `${n} sounds`,
-    soundPackDetail: (bed: number, rhythm: number, accents: number, cries: number) => `${bed} loop · ${rhythm} rhythm · ${accents} accents · ${cries} cries`,
+    soundPackDetail: (c: { bed: number; rhythm: number; accents: number; cries: number; slaps: number; murmurs: number }) =>
+      `${c.bed} loop · ${c.rhythm} motion · ${c.accents} breaths · ${c.cries} cries · ${c.slaps} slaps · ${c.murmurs} phrases`,
     noSoundPack: 'No background sounds in this build yet',
     backgroundVolume: 'Background volume',
     percent: (n: number) => `${n}%`,

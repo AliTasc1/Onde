@@ -62,7 +62,7 @@ export default function Settings() {
           onPress={() => (adultConfirmed ? flip('ambience') : go('/adult'))} />
         {tg.ambience && adultConfirmed ? (
           <NavRow label={T.soundPack} value={ambienceTotal() ? T.soundPackValue(ambienceTotal()) : T.notInstalled} icon="headphones"
-            onPress={() => showToast(ambienceTotal() ? T.soundPackDetail(amb.bed, amb.rhythm, amb.accents, amb.cries) : T.noSoundPack)} />
+            onPress={() => showToast(ambienceTotal() ? T.soundPackDetail(amb) : T.noSoundPack)} />
         ) : null}
       </Group>
       {tg.voice && adultConfirmed ? (
