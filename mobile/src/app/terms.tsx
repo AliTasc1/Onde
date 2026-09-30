@@ -1,0 +1,32 @@
+import { useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
+import { View } from 'react-native';
+
+import { BackHeader, H1, Page, Segmented, Txt } from '../components/ui';
+import { LEGAL, LEGAL_UPDATED } from '../data/content';
+import { goBack } from '../lib/nav';
+import { C } from '../theme';
+
+/** 28 · Terms / Privacy */
+export default function Terms() {
+  const params = useLocalSearchParams<{ tab?: string }>();
+  const [tab, setTab] = useState<'terms' | 'privacy'>(params.tab === 'privacy' ? 'privacy' : 'terms');
+  return (
+    <Page>
+      <BackHeader onBack={goBack} />
+      <View style={{ paddingTop: 4, paddingHorizontal: 24, gap: 16 }}>
+        <H1>Legal</H1>
+        <Segmented items={[['terms', 'Terms'], ['privacy', 'Privacy Policy']]} value={tab} onChange={setTab} />
+        <Txt style={{ fontSize: 13, color: C.faint }}>{LEGAL_UPDATED}</Txt>
+      </View>
+      <View style={{ paddingTop: 8, paddingHorizontal: 24, gap: 20 }}>
+        {LEGAL[tab].map(([h, p]) => (
+          <View key={h} style={{ gap: 6 }}>
+            <Txt accessibilityRole="header" style={{ fontSize: 17, fontWeight: '600' }}>{h}</Txt>
+            <Txt style={{ fontSize: 15, lineHeight: 24, color: C.muted }}>{p}</Txt>
+          </View>
+        ))}
+      </View>
+    </Page>
+  );
+}
