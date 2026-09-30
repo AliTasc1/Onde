@@ -6,6 +6,8 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { localeOf, useT } from '../i18n';
+import { useStore } from '../store';
 import { C, em, F, PRIMARY_GRADIENT } from '../theme';
 import { Icon, type IconName } from './Icon';
 
@@ -177,9 +179,10 @@ export function Fill({ children, style }: { children: ReactNode; style?: StylePr
 export function BackHeader({ onBack, title, right, icon = 'back', inset = true }: {
   onBack: () => void; title?: string; right?: ReactNode; icon?: IconName; inset?: boolean;
 }) {
+  const t = useT();
   return (
     <View style={{ height: 60, paddingHorizontal: inset ? 16 : 0, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-      <RoundButton icon={icon} label={icon === 'close' ? 'Close' : 'Back'} onPress={onBack} size={icon === 'close' ? 18 : 20} />
+      <RoundButton icon={icon} label={icon === 'close' ? t.common.close : t.common.back} onPress={onBack} size={icon === 'close' ? 18 : 20} />
       {title ? <Txt style={{ flex: 1, textAlign: 'center', fontSize: 17, fontWeight: '600', marginRight: right ? 0 : 44 }}>{title}</Txt> : null}
       {right}
     </View>
@@ -191,7 +194,10 @@ export function H1({ children, style, size = 28 }: { children: ReactNode; style?
 }
 
 export function Overline({ children, style }: { children: ReactNode; style?: StyleProp<TextStyle> }) {
-  return <Txt style={[{ fontSize: 12, fontWeight: '600', color: C.muted, letterSpacing: 1.2, textTransform: 'uppercase' }, style]}>{children}</Txt>;
+  // Upper-case in JS with the app locale: textTransform ignores Turkish i → İ.
+  const lang = useStore((s) => s.lang);
+  const text = typeof children === 'string' ? children.toLocaleUpperCase(localeOf(lang)) : children;
+  return <Txt style={[{ fontSize: 12, fontWeight: '600', color: C.muted, letterSpacing: 1.2 }, style]}>{text}</Txt>;
 }
 
 export function Card({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {

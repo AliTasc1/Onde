@@ -7,9 +7,10 @@ import { Linking, Platform } from 'react-native';
  */
 export type Plan = 'yearly' | 'monthly';
 
-export const PLANS: Record<Plan, { name: string; price: string; note: string; badge: string | null; per: string; renewMonths: number }> = {
-  yearly: { name: 'Yearly', price: '$39.99', note: '$3.33/mo · billed yearly', badge: 'Save 52%', per: 'year', renewMonths: 12 },
-  monthly: { name: 'Monthly', price: '$6.99', note: 'Billed monthly', badge: null, per: 'month', renewMonths: 1 },
+/** Prices come from the store; plan names and notes are in src/i18n (`subscription.plans`). */
+export const PLANS: Record<Plan, { price: string; renewMonths: number }> = {
+  yearly: { price: '$39.99', renewMonths: 12 },
+  monthly: { price: '$6.99', renewMonths: 1 },
 };
 
 export async function purchase(_plan: Plan): Promise<{ ok: boolean }> {

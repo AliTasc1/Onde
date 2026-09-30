@@ -8,18 +8,12 @@ import { RadialGlow } from '../components/visuals';
 import { PATTERNS } from '../data/patterns';
 import { goBack } from '../lib/nav';
 import { openManageSubscriptions, PLANS, purchase, restorePurchases, type Plan } from '../services/purchases';
+import { useT, useUpper } from '../i18n';
 import { useStore } from '../store';
 import { C, em } from '../theme';
 
 const freeCount = PATTERNS.filter((p) => !p.locked).length;
-const FEATURES: [string, string][] = [
-  ['All patterns', `${freeCount} of ${PATTERNS.length}`],
-  ['Advanced pattern builder', 'Basic'],
-  ['Unlimited saved patterns', '3'],
-  ['Advanced controls', '—'],
-  ['Detailed insights', 'Basic'],
-  ['Premium themes', '—'],
-];
+
 
 /** 21 · Subscription — honest paywall, clear pricing. */
 export default function Subscription() {
@@ -27,12 +21,24 @@ export default function Subscription() {
   const set = useStore((s) => s.set);
   const showToast = useStore((s) => s.showToast);
   const [busy, setBusy] = useState(false);
+  const t = useT();
+  const T = t.subscription;
+  const up = useUpper();
   const p = PLANS[plan];
+  const per = T.plans[plan].per;
+  const features: [string, string][] = [
+    [T.features.patterns, T.xOfY(freeCount, PATTERNS.length)],
+    [T.features.builder, T.basic],
+    [T.features.saved, '3'],
+    [T.features.controls, T.none],
+    [T.features.insights, T.basic],
+    [T.features.themes, T.none],
+  ];
 
   const restore = async () => {
     const r = await restorePurchases();
-    if (r.restored) { set({ premium: true }); showToast('Premium restored'); goBack(); }
-    else showToast('No previous purchases found');
+    if (r.restored) { set({ premium: true }); showToast(T.restored); goBack(); }
+    else showToast(T.noPurchases);
   };
 
   const buy = async () => {
@@ -50,27 +56,27 @@ export default function Subscription() {
       <RadialGlow glows={[{ cx: 0.5, cy: 0, rx: 0.9, ry: 0.4, color: '#8B5CF6', opacity: 0.25 }]} />
       <Page bottom={40} style={{ backgroundColor: 'transparent' }}>
         <View style={{ height: 60, paddingHorizontal: 16, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <RoundButton icon="close" label="Close" bg="rgba(255,255,255,0.08)" size={18} onPress={goBack} />
+          <RoundButton icon="close" label={t.common.close} bg="rgba(255,255,255,0.08)" size={18} onPress={goBack} />
           <Pressable onPress={restore} accessibilityRole="button" style={{ height: 44, paddingHorizontal: 12, justifyContent: 'center' }}>
-            <Txt style={{ fontSize: 15, fontWeight: '600', color: C.lilac }}>Restore</Txt>
+            <Txt style={{ fontSize: 15, fontWeight: '600', color: C.lilac }}>{T.restore}</Txt>
           </Pressable>
         </View>
         <View style={{ paddingHorizontal: 24, gap: 8 }}>
-          <H1 size={30} style={{ lineHeight: 34.5 }}>Unlock Your Personal Experience</H1>
-          <Txt style={{ fontSize: 15, color: C.muted }}>Everything in Onde, on all your devices.</Txt>
+          <H1 size={30} style={{ lineHeight: 34.5 }}>{T.title}</H1>
+          <Txt style={{ fontSize: 15, color: C.muted }}>{T.sub}</Txt>
         </View>
 
         <View style={{ marginTop: 20, marginHorizontal: 24, borderRadius: 22, backgroundColor: C.surface, borderWidth: 1, borderColor: C.hairline, overflow: 'hidden' }}>
           <View style={{ flexDirection: 'row', paddingVertical: 12, paddingHorizontal: 16 }}>
             <View style={{ flex: 1 }} />
-            <Txt style={{ width: 64, textAlign: 'center', fontSize: 12, fontWeight: '600', letterSpacing: em(0.08, 12), textTransform: 'uppercase', color: C.muted }}>Free</Txt>
-            <Txt style={{ width: 72, textAlign: 'center', fontSize: 12, fontWeight: '600', letterSpacing: em(0.08, 12), textTransform: 'uppercase', color: C.lilac }}>Premium</Txt>
+            <Txt style={{ width: 84, textAlign: 'center', fontSize: 12, fontWeight: '600', letterSpacing: em(0.08, 12), color: C.muted }}>{up(T.free)}</Txt>
+            <Txt style={{ width: 72, textAlign: 'center', fontSize: 12, fontWeight: '600', letterSpacing: em(0.08, 12), color: C.lilac }}>{up(T.premium)}</Txt>
           </View>
-          {FEATURES.map(([l, free]) => (
-            <View key={l} accessible accessibilityLabel={`${l}: free ${free === '—' ? 'not included' : free}, premium included`}
+          {features.map(([l, free]) => (
+            <View key={l} accessible accessibilityLabel={T.featureA11y(l, free === T.none ? T.notIncluded : free)}
               style={{ flexDirection: 'row', alignItems: 'center', minHeight: 44, paddingHorizontal: 16, borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.05)' }}>
               <Txt style={{ flex: 1, fontSize: 14 }}>{l}</Txt>
-              <Txt style={{ width: 64, textAlign: 'center', color: C.muted, fontSize: 13 }}>{free}</Txt>
+              <Txt style={{ width: 84, textAlign: 'center', color: C.muted, fontSize: 13 }}>{free}</Txt>
               <View style={{ width: 72, alignItems: 'center' }}><Icon name="check" size={18} color={C.lavender} /></View>
             </View>
           ))}
@@ -78,7 +84,7 @@ export default function Subscription() {
 
         <View style={{ gap: 10, paddingTop: 16, paddingHorizontal: 24 }} accessibilityRole="radiogroup">
           {(Object.keys(PLANS) as Plan[]).map((k) => {
-            const pl = PLANS[k];
+            const pl = { ...PLANS[k], ...T.plans[k] };
             const a = plan === k;
             return (
               <Pressable key={k} onPress={() => set({ plan: k })} accessibilityRole="radio" accessibilityState={{ checked: a }}
@@ -105,14 +111,14 @@ export default function Subscription() {
         </View>
 
         <View style={{ paddingTop: 16, paddingHorizontal: 24, gap: 12 }}>
-          <PrimaryButton label={`Continue — ${p.price} / ${p.per}`} onPress={buy} disabled={busy} shadow />
+          <PrimaryButton label={T.cta(p.price, per)} onPress={buy} disabled={busy} shadow />
           <Txt style={{ fontSize: 12, lineHeight: 18, color: C.faint, textAlign: 'center' }}>
-            Billed {p.price} {plan === 'yearly' ? 'once a year' : 'every month'}. Renews automatically. Cancel anytime in your store settings.
+            {T.fine(p.price, plan === 'yearly')}
           </Txt>
           <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 16 }}>
-            <Txt onPress={restore} accessibilityRole="link" style={{ fontSize: 13, color: C.lavender }}>Restore Purchases</Txt>
-            <Txt onPress={openManageSubscriptions} accessibilityRole="link" style={{ fontSize: 13, color: C.lavender }}>Manage Subscription</Txt>
-            <Txt onPress={() => router.push('/terms?tab=terms')} accessibilityRole="link" style={{ fontSize: 13, color: C.lavender }}>Terms</Txt>
+            <Txt onPress={restore} accessibilityRole="link" style={{ fontSize: 13, color: C.lavender }}>{T.restorePurchases}</Txt>
+            <Txt onPress={openManageSubscriptions} accessibilityRole="link" style={{ fontSize: 13, color: C.lavender }}>{T.manage}</Txt>
+            <Txt onPress={() => router.push('/terms?tab=terms')} accessibilityRole="link" style={{ fontSize: 13, color: C.lavender }}>{T.terms}</Txt>
           </View>
         </View>
       </Page>

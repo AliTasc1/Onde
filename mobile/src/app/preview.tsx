@@ -11,12 +11,15 @@ import { timelineSteps } from '../haptics/patterns';
 import { saveCurrentDraft } from '../lib/actions';
 import { goBack, goTab } from '../lib/nav';
 import { averageIntensity, cycleSeconds, timelineBars } from '../lib/shapes';
+import { useT, useUpper } from '../i18n';
 import { useStore } from '../store';
 import { C, F } from '../theme';
 
 /** 13 · Pattern Preview */
 export default function Preview() {
   const d = useStore((s) => s.draft);
+  const t = useT();
+  const up = useUpper();
   const limit = useStore((s) => s.limit);
   const updDraft = useStore((s) => s.updDraft);
   const [playing, setPlaying] = useState(false);
@@ -52,11 +55,11 @@ export default function Preview() {
 
   return (
     <Page contentStyle={{ flexGrow: 1 }} bottom={40}>
-      <BackHeader onBack={() => { stop(); goBack(); }} title="Pattern Preview" />
+      <BackHeader onBack={() => { stop(); goBack(); }} title={t.preview.title} />
       <View style={{ paddingTop: 8, paddingHorizontal: 24, gap: 6 }}>
-        <Txt style={{ fontSize: 12, fontWeight: '600', letterSpacing: 0.96, textTransform: 'uppercase', color: C.muted }}>Name</Txt>
-        <TextInput value={d.name} onChangeText={(v) => updDraft({ name: v })} accessibilityLabel="Pattern name" maxLength={40}
-          placeholder="My Pattern" placeholderTextColor={C.faint} returnKeyType="done"
+        <Txt style={{ fontSize: 12, fontWeight: '600', letterSpacing: 0.96, color: C.muted }}>{up(t.preview.name)}</Txt>
+        <TextInput value={d.name} onChangeText={(v) => updDraft({ name: v })} accessibilityLabel={t.preview.nameA11y} maxLength={40}
+          placeholder={t.custom.defaultName} placeholderTextColor={C.faint} returnKeyType="done"
           style={{ height: 52, borderRadius: 16, borderWidth: 1, borderColor: C.border2, backgroundColor: C.surface, color: '#fff', fontFamily: F.semibold, fontSize: 18, paddingHorizontal: 16 }} />
       </View>
 
@@ -77,34 +80,34 @@ export default function Preview() {
           ))}
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Txt style={{ fontSize: 12, color: C.faint }}>0 s</Txt>
-          <Txt style={{ fontSize: 12, color: C.faint }}>Loops for {d.dur} min</Txt>
-          <Txt style={{ fontSize: 12, color: C.faint }}>{cycle} s</Txt>
+          <Txt style={{ fontSize: 12, color: C.faint }}>{t.preview.zero}</Txt>
+          <Txt style={{ fontSize: 12, color: C.faint }}>{t.preview.loops(d.dur)}</Txt>
+          <Txt style={{ fontSize: 12, color: C.faint }}>{t.common.sec(cycle)}</Txt>
         </View>
       </Card>
 
       <View style={{ flexDirection: 'row', gap: 8, paddingTop: 12, paddingHorizontal: 24 }}>
-        <Stat label="Duration" value={`${d.dur} min`} valueSize={18} style={{ padding: 14 }} />
-        <Stat label="Intensity" value={averageIntensity(d.segs).toFixed(1)} valueSize={18} style={{ padding: 14 }} />
-        <Stat label="Rhythm" value={rhythmLabel(d.rhythm)} valueSize={18} style={{ padding: 14 }} />
+        <Stat label={t.common.duration} value={t.common.min(d.dur)} valueSize={18} style={{ padding: 14 }} />
+        <Stat label={t.common.intensity} value={averageIntensity(d.segs).toFixed(1)} valueSize={18} style={{ padding: 14 }} />
+        <Stat label={t.common.rhythm} value={rhythmLabel(d.rhythm, t.common.rhythmLabels)} valueSize={18} style={{ padding: 14 }} />
       </View>
 
       <View style={{ flex: 1, minHeight: 24 }} />
 
       <View style={{ gap: 12, paddingHorizontal: 24 }}>
         <View style={{ flexDirection: 'row', gap: 12 }}>
-          <Tap onPress={play} accessibilityRole="button" accessibilityLabel={playing ? 'Playing preview' : 'Play preview'}
+          <Tap onPress={play} accessibilityRole="button" accessibilityLabel={playing ? t.preview.playingA11y : t.preview.playA11y}
             style={{ flex: 1, height: 56, borderRadius: 18, borderWidth: 1, borderColor: C.border2, backgroundColor: playing ? 'rgba(139,92,246,0.22)' : C.surface2, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
             <Icon name="play" size={16} color="#fff" />
-            <Txt style={{ fontSize: 17, fontWeight: '600' }}>{playing ? 'Playing…' : 'Play Preview'}</Txt>
+            <Txt style={{ fontSize: 17, fontWeight: '600' }}>{playing ? t.preview.playing : t.preview.play}</Txt>
           </Tap>
-          <Tap onPress={stop} accessibilityRole="button" accessibilityLabel="Stop preview"
+          <Tap onPress={stop} accessibilityRole="button" accessibilityLabel={t.preview.stopA11y}
             style={{ width: 120, height: 56, borderRadius: 18, borderWidth: 1, borderColor: 'rgba(248,113,113,0.3)', backgroundColor: 'rgba(248,113,113,0.1)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
             <View style={{ width: 12, height: 12, borderRadius: 2, backgroundColor: C.redSoft }} />
-            <Txt style={{ fontSize: 17, fontWeight: '600', color: C.redSoft }}>Stop</Txt>
+            <Txt style={{ fontSize: 17, fontWeight: '600', color: C.redSoft }}>{t.preview.stop}</Txt>
           </Tap>
         </View>
-        <PrimaryButton label="Save" onPress={save} />
+        <PrimaryButton label={t.preview.save} onPress={save} />
       </View>
     </Page>
   );

@@ -52,7 +52,8 @@ export type Draft = {
   name: string;
 };
 
-export const LOCK_MODES = ['Stop session', 'Pause session', 'Keep running'] as const;
+/** Screen-lock behaviour options (labels live in i18n: settings.lockModes). */
+export const LOCK_MODE_COUNT = 3;
 
 const DEFAULT_TOGGLES: Toggles = {
   analytics: false, personalization: true, notif: true, local: true, cloud: false, sound: false, dark: true,
@@ -62,13 +63,15 @@ const DEFAULT_TOGGLES: Toggles = {
 };
 
 const newDraft = (dur = 5): Draft => ({
-  segs: DEFAULT_SEGMENTS.map((s) => ({ ...s })), sel: 3, freq: 5, rhythm: 4, pulseLen: 250, pauseLen: 600, dur, name: 'Evening Drift',
+  segs: DEFAULT_SEGMENTS.map((s) => ({ ...s })), sel: 3, freq: 5, rhythm: 4, pulseLen: 250, pauseLen: 600, dur, name: '',
 });
 
 const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 
 type Persisted = {
   onboarded: boolean;
+  /** UI language. Turkish by default. */
+  lang: 'tr' | 'en';
   /** The 18+ voice screen has been shown once (confirmed or declined). */
   adultAsked: boolean;
   adultConfirmed: boolean;
@@ -111,7 +114,7 @@ type Actions = {
   updSeg: (p: Partial<Segment>) => void;
   moveSeg: (from: number, to: number) => void;
   loadSaved: (id: string) => void;
-  saveDraft: () => void;
+  saveDraft: (fallbackName: string) => void;
   deleteSaved: (id: string) => void;
   deleteData: () => void;
   deleteAccount: () => void;
@@ -123,6 +126,7 @@ let toastTimer: ReturnType<typeof setTimeout> | undefined;
 
 const initialPersisted = (): Persisted => ({
   onboarded: false,
+  lang: 'tr',
   adultAsked: false,
   adultConfirmed: false,
   voiceVolume: 0.8,
@@ -191,10 +195,10 @@ export const useStore = create<Store>()(
         if (!p) return;
         set({ draft: { segs: p.segs.map((g) => ({ ...g })), sel: 0, freq: p.freq, rhythm: p.rhythm, pulseLen: p.pulseLen, pauseLen: p.pauseLen, dur: p.dur, name: p.name } });
       },
-      saveDraft: () => set((s) => {
+      saveDraft: (fallbackName) => set((s) => {
         const d = s.draft;
         const pat: SavedPattern = {
-          id: uid(), name: d.name.trim() || 'My Pattern', segs: d.segs.map((g) => ({ ...g })), freq: d.freq, rhythm: d.rhythm,
+          id: uid(), name: d.name.trim() || fallbackName, segs: d.segs.map((g) => ({ ...g })), freq: d.freq, rhythm: d.rhythm,
           pulseLen: d.pulseLen, pauseLen: d.pauseLen, dur: d.dur, createdAt: Date.now(),
         };
         return { saved: [pat, ...s.saved.filter((x) => x.name !== pat.name)], customView: 'saved' };
@@ -205,18 +209,20 @@ export const useStore = create<Store>()(
     }),
     {
       name: 'onde-store-v1',
-      version: 2,
+      version: 3,
       // v1: the default intensity limit went from 8 to 10 (full strength).
       migrate: (persisted, version) => {
         const p = (persisted ?? {}) as Partial<Persisted>;
         if (version < 1 && p.limit === 8) p.limit = 10;
         // v2: background sounds sit much lower under the voice by default.
         if (version < 2 && (p.ambienceVolume ?? 0) > 0.35) p.ambienceVolume = 0.35;
+        // v3: the app speaks Turkish by default.
+        if (version < 3) p.lang = 'tr';
         return p as Persisted;
       },
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (s): Persisted => ({
-        onboarded: s.onboarded, adultAsked: s.adultAsked, adultConfirmed: s.adultConfirmed, voiceVolume: s.voiceVolume, voiceFreq: s.voiceFreq, ambienceVolume: s.ambienceVolume, createdAt: s.createdAt, name: s.name, premium: s.premium, plan: s.plan, tg: s.tg, limit: s.limit,
+        onboarded: s.onboarded, lang: s.lang, adultAsked: s.adultAsked, adultConfirmed: s.adultConfirmed, voiceVolume: s.voiceVolume, voiceFreq: s.voiceFreq, ambienceVolume: s.ambienceVolume, createdAt: s.createdAt, name: s.name, premium: s.premium, plan: s.plan, tg: s.tg, limit: s.limit,
         defDur: s.defDur, lockMode: s.lockMode, fav: s.fav, saved: s.saved, history: s.history, last: s.last, draft: s.draft,
       }),
       // Shallow merge would drop newly added toggles from older saves.

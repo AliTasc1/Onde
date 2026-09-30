@@ -1,7 +1,5 @@
+import type { Dict } from '../i18n';
 import type { SessionRecord } from '../store';
-
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-export const DAY_LABELS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
 export function startOfWeek(d = new Date()) {
   const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
@@ -10,24 +8,22 @@ export function startOfWeek(d = new Date()) {
   return x;
 }
 
-export function weekLabel(start: Date) {
+export function weekLabel(start: Date, t: Dict) {
   const end = new Date(start);
   end.setDate(start.getDate() + 6);
-  const a = `${MONTHS[start.getMonth()]} ${start.getDate()}`;
-  const b = start.getMonth() === end.getMonth() ? `${end.getDate()}` : `${MONTHS[end.getMonth()]} ${end.getDate()}`;
+  const M = t.dates.monthsShort;
+  const a = t.dates.dayMonth(start.getDate(), M[start.getMonth()]);
+  const b = start.getMonth() === end.getMonth() ? `${end.getDate()}` : t.dates.dayMonth(end.getDate(), M[end.getMonth()]);
   return `${a} – ${b}`;
 }
 
-const fmtHour = (h: number) => `${((h + 11) % 12) + 1}`;
-const ampm = (h: number) => (h % 24 < 12 ? 'AM' : 'PM');
-
-function timeBucket(h: number) {
-  const name = h >= 5 && h < 12 ? 'Morning' : h >= 12 && h < 17 ? 'Afternoon' : h >= 17 && h < 22 ? 'Evening' : 'Night';
+function timeBucket(h: number, t: Dict) {
+  const key = h >= 5 && h < 12 ? 'Morning' : h >= 12 && h < 17 ? 'Afternoon' : h >= 17 && h < 22 ? 'Evening' : 'Night';
   const end = (h + 2) % 24;
-  return { name, range: `${fmtHour(h)} – ${fmtHour(end)} ${ampm(end)}` };
+  return { name: t.insights.times[key], range: t.dates.range(h, end) };
 }
 
-export function weeklyInsights(history: SessionRecord[], now = new Date()) {
+export function weeklyInsights(history: SessionRecord[], t: Dict, now = new Date()) {
   const start = startOfWeek(now);
   const startMs = start.getTime();
   const endMs = startMs + 7 * 86400000;
@@ -54,11 +50,14 @@ export function weeklyInsights(history: SessionRecord[], now = new Date()) {
   hours.forEach((c, h) => { if (c > bestCount) { bestCount = c; bestHour = h; } });
 
   const counts = new Map<string, number>();
-  week.forEach((r) => counts.set(r.name, (counts.get(r.name) ?? 0) + 1));
+  week.forEach((r) => {
+    const label = t.patterns[r.pid]?.name ?? r.name;
+    counts.set(label, (counts.get(label) ?? 0) + 1);
+  });
   const favs = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3);
 
   return {
-    label: weekLabel(start),
+    label: weekLabel(start, t),
     sessions: week.length,
     activeDays: perDay.filter((s) => s > 0).length,
     perDay,
@@ -66,7 +65,7 @@ export function weeklyInsights(history: SessionRecord[], now = new Date()) {
     todayIdx,
     totalMin,
     avgInt,
-    time: bestHour >= 0 ? timeBucket(bestHour) : null,
+    time: bestHour >= 0 ? timeBucket(bestHour, t) : null,
     favs,
   };
 }

@@ -1,6 +1,7 @@
 import { Share } from 'react-native';
 
 import { findPattern, FREE_SAVED_LIMIT } from '../data/patterns';
+import { getT } from '../i18n';
 import { useStore } from '../store';
 import { go } from './nav';
 
@@ -23,21 +24,23 @@ export function splitRgba(c: string) {
 
 export function greeting(d = new Date()) {
   const h = d.getHours();
-  return h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+  const g = getT().greeting;
+  return h < 12 ? g.morning : h < 18 ? g.afternoon : g.evening;
 }
 
 /** Save the builder draft (free plan keeps up to FREE_SAVED_LIMIT). Returns true when saved. */
 export function saveCurrentDraft(): boolean {
   const st = useStore.getState();
-  const name = st.draft.name.trim() || 'My Pattern';
+  const t = getT();
+  const name = st.draft.name.trim() || t.custom.defaultName;
   const replacing = st.saved.some((x) => x.name === name);
   if (!st.premium && !replacing && st.saved.length >= FREE_SAVED_LIMIT) {
-    st.showToast(`Free plan saves up to ${FREE_SAVED_LIMIT} patterns`);
+    st.showToast(t.custom.freeLimit(FREE_SAVED_LIMIT));
     go('/subscription');
     return false;
   }
-  st.saveDraft();
-  st.showToast('Pattern saved');
+  st.saveDraft(t.custom.defaultName);
+  st.showToast(t.custom.saved);
   return true;
 }
 
@@ -53,9 +56,9 @@ export async function exportData() {
     sessions: s.history.map((h) => ({ ...h, startedAt: new Date(h.startedAt).toISOString() })),
   };
   try {
-    await Share.share({ title: 'Onde data export', message: JSON.stringify(payload, null, 2) });
+    await Share.share({ title: getT().privacy.exportTitle, message: JSON.stringify(payload, null, 2) });
   } catch {
-    s.showToast('Something went wrong. Try again.');
+    s.showToast(getT().common.wrong);
   }
 }
 

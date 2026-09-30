@@ -11,7 +11,6 @@ type LineFile = { groups: Record<VoiceGroup, { id: string; text: string }[]> };
 const LINE_FILES: Record<string, LineFile> = { tr: linesTr as LineFile };
 
 export const VOICE_LANG = 'tr';
-export const FREQUENCY_LABELS = ['Relaxed', 'Normal', 'Continuous'] as const;
 /** Pause between lines, seconds [min, max], per frequency setting. */
 // Natural conversational pauses: long enough to breathe, never a gap you wait on.
 const GAPS: [number, number][] = [[3.5, 6], [1.6, 3.2], [0.9, 1.8]];

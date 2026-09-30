@@ -4,9 +4,10 @@ import { ListPage } from '../components/ListPage';
 import { Slider } from '../components/Slider';
 import { Group, NavRow, ToggleRow, Txt } from '../components/ui';
 import { ambienceCounts, ambienceTotal } from '../audio/ambience';
-import { FREQUENCY_LABELS, voiceClipCount } from '../audio/voice';
+import { voiceClipCount } from '../audio/voice';
+import { LANG_NAMES, LANGS, useT } from '../i18n';
 import { go } from '../lib/nav';
-import { LOCK_MODES, useStore } from '../store';
+import { LOCK_MODE_COUNT, useStore } from '../store';
 import { C } from '../theme';
 
 const NEXT_DUR: Record<number, number> = { 1: 3, 3: 5, 5: 10, 10: 15, 15: 1 };
@@ -26,71 +27,75 @@ export default function Settings() {
   const clips = voiceClipCount();
   const ambienceVolume = useStore((s) => s.ambienceVolume);
   const amb = ambienceCounts();
+  const lang = useStore((s) => s.lang);
+  const t = useT();
+  const T = t.settings;
+  const pct = (v: number) => Math.round(v * 100);
 
   return (
-    <ListPage title="Settings" sub="Tune how Onde works for you.">
+    <ListPage title={T.title} sub={T.sub}>
       <View style={{ marginTop: 20, marginHorizontal: 24, padding: 16, borderRadius: 20, backgroundColor: C.surface, gap: 2 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Txt style={{ fontSize: 16 }}>Haptic intensity limit</Txt>
-          <Txt style={{ fontSize: 16, color: C.muted }}>{limit} / 10</Txt>
+          <Txt style={{ fontSize: 16 }}>{T.limit}</Txt>
+          <Txt style={{ fontSize: 16, color: C.muted }}>{t.common.of10(limit)}</Txt>
         </View>
-        <Slider label="Haptic intensity limit" value={limit} min={1} max={10} onChange={(v) => set({ limit: v })} valueText={`${limit} of 10`} />
-        <Txt style={{ fontSize: 13, color: C.faint }}>No session will go above this level.</Txt>
+        <Slider label={T.limit} value={limit} min={1} max={10} onChange={(v) => set({ limit: v })} valueText={t.detail.valueOf10(limit)} />
+        <Txt style={{ fontSize: 13, color: C.faint }}>{T.limitNote}</Txt>
       </View>
 
-      <Group title="Haptics">
-        <NavRow label="Default duration" value={`${defDur} min`} icon="timer" onPress={() => set({ defDur: NEXT_DUR[defDur] ?? 5 })} />
-        <ToggleRow label="Auto stop" sub="End sessions when the timer finishes" icon="clock" on={tg.autostop} onPress={() => flip('autostop')} />
-        <NavRow label="Screen lock behavior" value={LOCK_MODES[lockMode]} icon="lock" onPress={() => set({ lockMode: (lockMode + 1) % LOCK_MODES.length })} />
+      <Group title={T.haptics}>
+        <NavRow label={T.defaultDuration} value={t.common.min(defDur)} icon="timer" onPress={() => set({ defDur: NEXT_DUR[defDur] ?? 5 })} />
+        <ToggleRow label={T.autostop} sub={T.autostopSub} icon="clock" on={tg.autostop} onPress={() => flip('autostop')} />
+        <NavRow label={T.lock} value={T.lockModes[lockMode]} icon="lock" onPress={() => set({ lockMode: (lockMode + 1) % LOCK_MODE_COUNT })} />
       </Group>
-      <Group title="Voice companion · 18+">
-        <ToggleRow label="Voice companion" sub="Whispered voice during sessions" icon="sound" on={tg.voice && adultConfirmed}
+      <Group title={T.voiceGroup}>
+        <ToggleRow label={T.voice} sub={T.voiceSub} icon="sound" on={tg.voice && adultConfirmed}
           onPress={() => (adultConfirmed ? flip('voice') : go('/adult'))} />
         {tg.voice && adultConfirmed ? (
           <>
-            <NavRow label="How often" value={FREQUENCY_LABELS[voiceFreq]} icon="waves" onPress={() => set({ voiceFreq: ((voiceFreq + 1) % 3) as 0 | 1 | 2 })} />
-            <NavRow label="Voice pack" value={clips ? `Turkish · ${clips} clips` : 'Not installed'} icon="headphones"
-              onPress={() => showToast(clips ? 'More voices and languages are coming' : 'The voice pack has not been added to this build yet')} />
+            <NavRow label={T.howOften} value={T.frequencies[voiceFreq]} icon="waves" onPress={() => set({ voiceFreq: ((voiceFreq + 1) % 3) as 0 | 1 | 2 })} />
+            <NavRow label={T.voicePack} value={clips ? T.voicePackValue(clips) : T.notInstalled} icon="headphones"
+              onPress={() => showToast(clips ? T.moreVoices : T.noVoicePack)} />
           </>
         ) : null}
-        <ToggleRow label="Background sounds" sub="Breaths and sounds under the voice" icon="waves" on={tg.ambience && adultConfirmed}
+        <ToggleRow label={T.background} sub={T.backgroundSub} icon="waves" on={tg.ambience && adultConfirmed}
           onPress={() => (adultConfirmed ? flip('ambience') : go('/adult'))} />
         {tg.ambience && adultConfirmed ? (
-          <NavRow label="Sound pack" value={ambienceTotal() ? `${ambienceTotal()} sounds` : 'Not installed'} icon="headphones"
-            onPress={() => showToast(ambienceTotal() ? `${amb.bed} loop · ${amb.rhythm} rhythm · ${amb.accents} accents · ${amb.cries} cries` : 'No background sounds in this build yet')} />
+          <NavRow label={T.soundPack} value={ambienceTotal() ? T.soundPackValue(ambienceTotal()) : T.notInstalled} icon="headphones"
+            onPress={() => showToast(ambienceTotal() ? T.soundPackDetail(amb.bed, amb.rhythm, amb.accents, amb.cries) : T.noSoundPack)} />
         ) : null}
       </Group>
       {tg.voice && adultConfirmed ? (
         <View style={{ marginTop: 12, marginHorizontal: 24, padding: 16, borderRadius: 20, backgroundColor: C.surface, gap: 2 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Txt style={{ fontSize: 16 }}>Voice volume</Txt>
-            <Txt style={{ fontSize: 16, color: C.muted }}>{Math.round(voiceVolume * 100)}%</Txt>
+            <Txt style={{ fontSize: 16 }}>{T.voiceVolume}</Txt>
+            <Txt style={{ fontSize: 16, color: C.muted }}>{T.percent(pct(voiceVolume))}</Txt>
           </View>
-          <Slider label="Voice volume" value={Math.round(voiceVolume * 10)} min={1} max={10} onChange={(v) => set({ voiceVolume: v / 10 })} valueText={`${Math.round(voiceVolume * 100)} percent`} />
+          <Slider label={T.voiceVolume} value={Math.round(voiceVolume * 10)} min={1} max={10} onChange={(v) => set({ voiceVolume: v / 10 })} valueText={T.percentA11y(pct(voiceVolume))} />
         </View>
       ) : null}
       {tg.ambience && adultConfirmed ? (
         <View style={{ marginTop: 12, marginHorizontal: 24, padding: 16, borderRadius: 20, backgroundColor: C.surface, gap: 2 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Txt style={{ fontSize: 16 }}>Background volume</Txt>
-            <Txt style={{ fontSize: 16, color: C.muted }}>{Math.round(ambienceVolume * 100)}%</Txt>
+            <Txt style={{ fontSize: 16 }}>{T.backgroundVolume}</Txt>
+            <Txt style={{ fontSize: 16, color: C.muted }}>{T.percent(pct(ambienceVolume))}</Txt>
           </View>
-          <Slider label="Background volume" value={Math.round(ambienceVolume * 10)} min={1} max={10} onChange={(v) => set({ ambienceVolume: v / 10 })} valueText={`${Math.round(ambienceVolume * 100)} percent`} />
+          <Slider label={T.backgroundVolume} value={Math.round(ambienceVolume * 10)} min={1} max={10} onChange={(v) => set({ ambienceVolume: v / 10 })} valueText={T.percentA11y(pct(ambienceVolume))} />
         </View>
       ) : null}
-      <Group title="App">
-        <ToggleRow label="Sound effects" icon="sound" on={tg.sound} onPress={() => flip('sound')} />
-        <ToggleRow label="Dark mode" icon="moon" on={tg.dark} onPress={() => (tg.dark ? showToast('Light mode is coming soon') : flip('dark'))} />
-        <NavRow label="Notifications" icon="bell" onPress={() => go('/notifications')} />
-        <NavRow label="Language" value="English" icon="globe" onPress={() => showToast('More languages coming soon')} />
+      <Group title={T.app}>
+        <ToggleRow label={T.sound} icon="sound" on={tg.sound} onPress={() => flip('sound')} />
+        <ToggleRow label={T.dark} icon="moon" on={tg.dark} onPress={() => (tg.dark ? showToast(T.lightSoon) : flip('dark'))} />
+        <NavRow label={T.notifications} icon="bell" onPress={() => go('/notifications')} />
+        <NavRow label={T.language} value={LANG_NAMES[lang]} icon="globe" onPress={() => set({ lang: LANGS[(LANGS.indexOf(lang) + 1) % LANGS.length] })} />
       </Group>
-      <Group title="Accessibility">
-        <ToggleRow label="Reduce Motion" sub="Calmer, static visuals" icon="eye" on={tg.rm} onPress={() => flip('rm')} />
-        <ToggleRow label="Visual pulse cues" sub="On-screen pulses as a haptic alternative" icon="waves" on={tg.visual} onPress={() => flip('visual')} />
+      <Group title={T.accessibility}>
+        <ToggleRow label={T.rm} sub={T.rmSub} icon="eye" on={tg.rm} onPress={() => flip('rm')} />
+        <ToggleRow label={T.visual} sub={T.visualSub} icon="waves" on={tg.visual} onPress={() => flip('visual')} />
       </Group>
-      <Group title="Device">
-        <ToggleRow label="Battery optimization" sub="Lower haptic power in Low Power Mode" icon="battery" on={tg.battery} onPress={() => flip('battery')} />
-        <NavRow label="Privacy" icon="shield" onPress={() => go('/privacy')} />
+      <Group title={T.device}>
+        <ToggleRow label={T.battery} sub={T.batterySub} icon="battery" on={tg.battery} onPress={() => flip('battery')} />
+        <NavRow label={T.privacy} icon="shield" onPress={() => go('/privacy')} />
       </Group>
     </ListPage>
   );

@@ -7,18 +7,20 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icon } from '../components/Icon';
 import { PrimaryButton, Txt } from '../components/ui';
 import { Bars, Orb, PulsingBars, RadialGlow, Waves } from '../components/visuals';
-import { ONBOARDING } from '../data/content';
 import { bars } from '../lib/shapes';
+import { useT } from '../i18n';
 import { useStore } from '../store';
 import { C, em, SLIDER_GRADIENT } from '../theme';
 
 /** 02–05 · Onboarding */
 export default function Onboarding() {
   const [step, setStep] = useState(0);
+  const t = useT();
+  const slides = t.onboarding.slides;
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const cardW = Math.min(345, width - 48);
-  const last = step === ONBOARDING.length - 1;
+  const last = step === slides.length - 1;
 
   const finish = () => {
     const st = useStore.getState();
@@ -30,7 +32,7 @@ export default function Onboarding() {
   const swipe = useMemo(() => PanResponder.create({
     onMoveShouldSetPanResponder: (_e, g) => Math.abs(g.dx) > 16 && Math.abs(g.dx) > Math.abs(g.dy) * 1.5,
     onPanResponderRelease: (_e, g) => {
-      if (g.dx < -40) setStep((s) => Math.min(ONBOARDING.length - 1, s + 1));
+      if (g.dx < -40) setStep((s) => Math.min(3, s + 1));
       if (g.dx > 40) setStep((s) => Math.max(0, s - 1));
     },
   }), []);
@@ -40,7 +42,7 @@ export default function Onboarding() {
       <View style={{ height: 52, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
         {!last ? (
           <Pressable onPress={finish} accessibilityRole="button" style={{ height: 44, paddingHorizontal: 12, justifyContent: 'center' }}>
-            <Txt style={{ fontSize: 15, fontWeight: '600', color: C.muted }}>Skip</Txt>
+            <Txt style={{ fontSize: 15, fontWeight: '600', color: C.muted }}>{t.onboarding.skip}</Txt>
           </Pressable>
         ) : null}
       </View>
@@ -60,12 +62,12 @@ export default function Onboarding() {
         {step === 1 && (
           <View style={{ width: cardW, height: 320, borderRadius: 32, backgroundColor: C.surface, borderWidth: 1, borderColor: C.hairline, justifyContent: 'center', gap: 24, padding: 28 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Txt style={{ fontSize: 13, color: C.muted }}>Calm Pulse</Txt>
-              <Txt style={{ fontSize: 13, color: C.muted }}>Rhythmic</Txt>
+              <Txt style={{ fontSize: 13, color: C.muted }}>{t.onboarding.demoPattern}</Txt>
+              <Txt style={{ fontSize: 13, color: C.muted }}>{t.onboarding.demoCat}</Txt>
             </View>
             <PulsingBars />
             <View style={{ flexDirection: 'row', gap: 8 }}>
-              {['Gentle', 'Pulse', 'Wave'].map((l, i) => (
+              {t.onboarding.demoChips.map((l, i) => (
                 <View key={l} style={{ height: 32, paddingHorizontal: 14, borderRadius: 16, justifyContent: 'center', backgroundColor: i === 0 ? 'rgba(139,92,246,0.18)' : C.surface2 }}>
                   <Txt style={{ fontSize: 13, fontWeight: '600', color: i === 0 ? C.lilac : C.muted }}>{l}</Txt>
                 </View>
@@ -76,8 +78,8 @@ export default function Onboarding() {
         {step === 2 && (
           <View style={{ width: cardW, borderRadius: 32, backgroundColor: C.surface, borderWidth: 1, borderColor: C.hairline, padding: 24, gap: 22 }}>
             <Bars bars={bars('swell', 3, 30, 1, '#A78BFA')} height={72} gap={3} radius={3} align="flex-end" />
-            <DemoSlider label="Intensity" value="6 / 10" pct={58} />
-            <DemoSlider label="Rhythm" value="Slow" pct={30} />
+            <DemoSlider label={t.common.intensity} value={t.common.of10(6)} pct={58} />
+            <DemoSlider label={t.common.rhythm} value={t.common.slow} pct={30} />
           </View>
         )}
         {step === 3 && (
@@ -88,18 +90,18 @@ export default function Onboarding() {
       </View>
 
       <View style={{ gap: 12, minHeight: 150 }}>
-        <Txt accessibilityRole="header" style={{ fontSize: 30, lineHeight: 34.5, fontWeight: '700', letterSpacing: em(-0.02, 30) }}>{ONBOARDING[step][0]}</Txt>
-        <Txt style={{ fontSize: 16, lineHeight: 24.8, color: C.muted }}>{ONBOARDING[step][1]}</Txt>
+        <Txt accessibilityRole="header" style={{ fontSize: 30, lineHeight: 34.5, fontWeight: '700', letterSpacing: em(-0.02, 30) }}>{slides[step][0]}</Txt>
+        <Txt style={{ fontSize: 16, lineHeight: 24.8, color: C.muted }}>{slides[step][1]}</Txt>
       </View>
 
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginTop: 16 }}>
         <View style={{ flexDirection: 'row', gap: 6 }}>
-          {ONBOARDING.map((_, i) => (
-            <Pressable key={i} onPress={() => setStep(i)} accessibilityRole="button" accessibilityLabel={`Step ${i + 1}`} hitSlop={10}
+          {slides.map((_, i) => (
+            <Pressable key={i} onPress={() => setStep(i)} accessibilityRole="button" accessibilityLabel={t.onboarding.step(i + 1)} hitSlop={10}
               style={{ width: i === step ? 24 : 8, height: 8, borderRadius: 4, backgroundColor: i === step ? '#fff' : C.offTrack }} />
           ))}
         </View>
-        <PrimaryButton label={last ? 'Get Started' : 'Next'} onPress={next} shadow style={{ paddingHorizontal: 28 }} />
+        <PrimaryButton label={last ? t.onboarding.start : t.onboarding.next} onPress={next} shadow style={{ paddingHorizontal: 28 }} />
       </View>
     </View>
   );

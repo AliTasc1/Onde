@@ -10,6 +10,7 @@ import { Chip, H1, Page, PrimaryButton, RoundButton, Txt } from '../../component
 import { Orb, Waves } from '../../components/visuals';
 import { DURATIONS } from '../../data/content';
 import { findPattern, rhythmLabel } from '../../data/patterns';
+import { patDesc, patName, useT, useUpper } from '../../i18n';
 import { go, goBack } from '../../lib/nav';
 import { useStore } from '../../store';
 import { C, em } from '../../theme';
@@ -18,6 +19,8 @@ import { C, em } from '../../theme';
 export default function PatternDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const pat = findPattern(id);
+  const t = useT();
+  const up = useUpper();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const play = useStore((s) => s.play);
@@ -39,17 +42,17 @@ export default function PatternDetail() {
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <Page bottom={170}>
         <View style={{ height: 60, paddingHorizontal: 16, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <RoundButton icon="back" label="Back" onPress={goBack} />
-          <Pressable onPress={() => toggleFav(pat.id)} accessibilityRole="button" accessibilityLabel="Favorite" accessibilityState={{ selected: isFav }}
+          <RoundButton icon="back" label={t.common.back} onPress={goBack} />
+          <Pressable onPress={() => toggleFav(pat.id)} accessibilityRole="button" accessibilityLabel={t.detail.favorite} accessibilityState={{ selected: isFav }}
             style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: C.surface2, alignItems: 'center', justifyContent: 'center' }}>
             <Icon name={isFav ? 'heartF' : 'heart'} size={20} color={isFav ? C.pinkSoft : '#fff'} />
           </Pressable>
         </View>
 
         <View style={{ paddingTop: 4, paddingHorizontal: 24, gap: 6 }}>
-          <Txt style={{ fontSize: 12, color: C.lavender, fontWeight: '600', letterSpacing: em(0.1, 12), textTransform: 'uppercase' }}>{pat.cat} · {pat.dur} min</Txt>
-          <H1 size={30}>{pat.name}</H1>
-          <Txt style={{ color: C.muted, fontSize: 15, lineHeight: 22.5 }}>{pat.desc}</Txt>
+          <Txt style={{ fontSize: 12, color: C.lavender, fontWeight: '600', letterSpacing: em(0.1, 12) }}>{up(`${t.cats[pat.cat]} · ${t.common.min(pat.dur)}`)}</Txt>
+          <H1 size={30}>{patName(t, pat)}</H1>
+          <Txt style={{ color: C.muted, fontSize: 15, lineHeight: 22.5 }}>{patDesc(t, pat)}</Txt>
         </View>
 
         <View style={{ marginTop: 16, marginHorizontal: 24, height: 56 }}>
@@ -62,17 +65,17 @@ export default function PatternDetail() {
         <View style={{ alignItems: 'center', marginTop: 8 }}>
           <Orb size={184} rhythm={rhythm} intensity={intensity}>
             <Txt style={{ fontSize: 36, fontWeight: '700', fontVariant: ['tabular-nums'] }}>{intensity}</Txt>
-            <Txt style={{ fontSize: 12, color: C.lilacSoft, letterSpacing: em(0.08, 12), textTransform: 'uppercase' }}>Intensity</Txt>
+            <Txt style={{ fontSize: 12, color: C.lilacSoft, letterSpacing: em(0.08, 12) }}>{up(t.common.intensity)}</Txt>
           </Orb>
         </View>
 
         <View style={{ paddingTop: 16, paddingHorizontal: 24, gap: 20 }}>
           <View style={{ gap: 4 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Txt style={{ fontSize: 15, fontWeight: '600' }}>Intensity</Txt>
-              <Txt style={{ fontSize: 15, color: C.muted, fontVariant: ['tabular-nums'] }}>{intensity} / 10</Txt>
+              <Txt style={{ fontSize: 15, fontWeight: '600' }}>{t.common.intensity}</Txt>
+              <Txt style={{ fontSize: 15, color: C.muted, fontVariant: ['tabular-nums'] }}>{t.common.of10(intensity)}</Txt>
             </View>
-            <Slider label="Intensity" value={intensity} min={1} max={10} onChange={(v) => setPlay({ intensity: v })} valueText={`${intensity} of 10`} />
+            <Slider label={t.common.intensity} value={intensity} min={1} max={10} onChange={(v) => setPlay({ intensity: v })} valueText={t.detail.valueOf10(intensity)} />
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Txt style={{ fontSize: 12, color: C.faint }}>1</Txt>
               <Txt style={{ fontSize: 12, color: C.faint }}>10</Txt>
@@ -80,20 +83,20 @@ export default function PatternDetail() {
           </View>
           {pat.shape !== 'constant' ? <View style={{ gap: 4 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Txt style={{ fontSize: 15, fontWeight: '600' }}>Rhythm</Txt>
-              <Txt style={{ fontSize: 15, color: C.muted }}>{rhythmLabel(rhythm)}</Txt>
+              <Txt style={{ fontSize: 15, fontWeight: '600' }}>{t.common.rhythm}</Txt>
+              <Txt style={{ fontSize: 15, color: C.muted }}>{rhythmLabel(rhythm, t.common.rhythmLabels)}</Txt>
             </View>
-            <Slider label="Rhythm" value={rhythm} min={1} max={10} onChange={(v) => setPlay({ rhythm: v })} valueText={rhythmLabel(rhythm)} />
+            <Slider label={t.common.rhythm} value={rhythm} min={1} max={10} onChange={(v) => setPlay({ rhythm: v })} valueText={rhythmLabel(rhythm, t.common.rhythmLabels)} />
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Txt style={{ fontSize: 12, color: C.faint }}>Slow</Txt>
-              <Txt style={{ fontSize: 12, color: C.faint }}>Fast</Txt>
+              <Txt style={{ fontSize: 12, color: C.faint }}>{t.common.slow}</Txt>
+              <Txt style={{ fontSize: 12, color: C.faint }}>{t.common.fast}</Txt>
             </View>
           </View> : null}
           <View style={{ gap: 12 }}>
-            <Txt style={{ fontSize: 15, fontWeight: '600' }}>Duration</Txt>
+            <Txt style={{ fontSize: 15, fontWeight: '600' }}>{t.common.duration}</Txt>
             <View style={{ flexDirection: 'row', gap: 8 }}>
               {DURATIONS.map((d) => (
-                <Chip key={d} label={`${d} min`} active={duration === d} onPress={() => setPlay({ duration: d })}
+                <Chip key={d} label={t.common.min(d)} active={duration === d} onPress={() => setPlay({ duration: d })}
                   style={{ flex: 1, height: 48, borderRadius: 14, paddingHorizontal: 0 }} />
               ))}
             </View>
@@ -103,12 +106,12 @@ export default function PatternDetail() {
 
       <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, paddingTop: 24, paddingHorizontal: 24, paddingBottom: Math.max(insets.bottom, 12) + 16, alignItems: 'center', gap: 12 }}>
         <LinearGradient colors={['rgba(11,11,18,0)', C.bg, C.bg]} locations={[0, 0.3, 1]} style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }} pointerEvents="none" />
-        <PrimaryButton label="Start Experience" onPress={() => go('/session')} shadow style={{ alignSelf: 'stretch' }}
+        <PrimaryButton label={t.detail.start} onPress={() => go('/session')} shadow style={{ alignSelf: 'stretch' }}
           icon={<Icon name="play" size={18} color="#fff" />} />
         <View style={{ flexDirection: 'row', gap: 8 }}>
-          <Txt style={{ fontSize: 13, color: C.muted }}>Stop anytime</Txt>
+          <Txt style={{ fontSize: 13, color: C.muted }}>{t.detail.stopAnytime}</Txt>
           <Txt style={{ fontSize: 13, color: C.muted }}>·</Txt>
-          <Txt onPress={() => go('/safety')} accessibilityRole="link" style={{ fontSize: 13, color: C.lavender }}>Use responsibly</Txt>
+          <Txt onPress={() => go('/safety')} accessibilityRole="link" style={{ fontSize: 13, color: C.lavender }}>{t.detail.responsibly}</Txt>
         </View>
       </View>
     </View>

@@ -6,6 +6,7 @@ import { H1, Page, RoundButton, Tap, Txt } from '../../components/ui';
 import { Bars, RadialGlow } from '../../components/visuals';
 import { MOODS } from '../../data/content';
 import { findPattern } from '../../data/patterns';
+import { patName, useT, useUpper } from '../../i18n';
 import { greeting, openPattern, splitRgba } from '../../lib/actions';
 import { go, goTab } from '../../lib/nav';
 import { bars } from '../../lib/shapes';
@@ -17,6 +18,8 @@ const HOME_BARS = bars('sine', 2, 22, 1);
 /** 06 · Home — mood card → detail → Start is the 2-tap core flow. */
 export default function Home() {
   const { width } = useWindowDimensions();
+  const t = useT();
+  const up = useUpper();
   const name = useStore((s) => s.name);
   const last = useStore((s) => s.last);
   const defDur = useStore((s) => s.defDur);
@@ -36,21 +39,21 @@ export default function Home() {
       <View style={{ paddingTop: 16, paddingHorizontal: 24, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <View style={{ gap: 6, flex: 1 }}>
           <Txt style={{ fontSize: 15, color: C.muted }}>{greeting()}{name ? `, ${name}` : ''}</Txt>
-          <H1 style={{ maxWidth: 260 }}>How would you like to feel?</H1>
+          <H1 style={{ maxWidth: 260 }}>{t.home.title}</H1>
         </View>
-        <RoundButton icon="bell" label="Notifications" bg={C.surface} onPress={() => go('/notifications')}
+        <RoundButton icon="bell" label={t.home.notifications} bg={C.surface} onPress={() => go('/notifications')}
           style={{ borderWidth: 1, borderColor: C.border }} />
       </View>
 
       <Tap onPress={continueLast} accessibilityRole="button"
-        accessibilityLabel={`Continue ${contPattern.name}, ${cont.duration} minutes, intensity ${cont.intensity}`}
+        accessibilityLabel={t.home.continueA11y(patName(t, contPattern), cont.duration, cont.intensity)}
         style={{ marginTop: 24, marginHorizontal: 24, padding: 16, borderRadius: 24, overflow: 'hidden', backgroundColor: C.surface, borderWidth: 1, borderColor: 'rgba(196,181,253,0.14)', flexDirection: 'row', alignItems: 'center', gap: 16 }}>
         <LinearGradient colors={['rgba(139,92,246,0.22)', 'rgba(236,72,153,0.1)']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
         <View style={{ flex: 1, gap: 10 }}>
-          <Txt style={{ fontSize: 12, fontWeight: '600', letterSpacing: em(0.08, 12), textTransform: 'uppercase', color: C.lavender }}>Continue</Txt>
-          <Txt style={{ fontSize: 18, fontWeight: '600' }}>{contPattern.name}</Txt>
+          <Txt style={{ fontSize: 12, fontWeight: '600', letterSpacing: em(0.08, 12), color: C.lavender }}>{up(t.home.continue)}</Txt>
+          <Txt style={{ fontSize: 18, fontWeight: '600' }}>{patName(t, contPattern)}</Txt>
           <Bars bars={HOME_BARS} height={20} barWidth={4} gap={2} radius={2} align="flex-end" color="rgba(221,211,255,0.8)" />
-          <Txt style={{ fontSize: 13, color: C.muted }}>{cont.duration} min · Intensity {cont.intensity}</Txt>
+          <Txt style={{ fontSize: 13, color: C.muted }}>{t.home.continueMeta(cont.duration, cont.intensity)}</Txt>
         </View>
         <View style={{ width: 56, height: 56, borderRadius: 28, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="play" size={22} color={C.bg} />
@@ -58,20 +61,21 @@ export default function Home() {
       </Tap>
 
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12, paddingTop: 16, paddingHorizontal: 24 }}>
-        {MOODS.map(([label, sub, icon, pid, glow]) => {
+        {MOODS.map(([key, icon, pid, glow]) => {
           const g = splitRgba(glow);
+          const p = findPattern(pid);
           return (
-            <MoodCard key={label} width={cardW} label={label} sub={sub} icon={<Icon name={icon} size={20} color={C.iconTint} />} onPress={() => openPattern(pid)}>
+            <MoodCard key={key} width={cardW} label={t.home.moods[key]} sub={`${patName(t, p)} · ${t.common.min(p.dur)}`} icon={<Icon name={icon} size={20} color={C.iconTint} />} onPress={() => openPattern(pid)}>
               <RadialGlow glows={[{ cx: 1, cy: 0, rx: 1.2, ry: 0.9, color: g.color, opacity: g.opacity, stop: 0.62 }]} />
             </MoodCard>
           );
         })}
-        <MoodCard width={MOODS.length % 2 ? cardW : cardW * 2 + 12} label="Custom" sub="Build your own" dashed icon={<Icon name="plus" size={20} color={C.iconTint} />} onPress={() => goTab('custom')} />
+        <MoodCard width={MOODS.length % 2 ? cardW : cardW * 2 + 12} label={t.home.custom} sub={t.home.customSub} dashed icon={<Icon name="plus" size={20} color={C.iconTint} />} onPress={() => goTab('custom')} />
       </View>
 
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 24 }}>
         <Icon name="shield" size={15} color={C.faint} />
-        <Txt style={{ fontSize: 13, color: C.faint }}>Your data stays on this device</Txt>
+        <Txt style={{ fontSize: 13, color: C.faint }}>{t.home.privacy}</Txt>
       </View>
     </Page>
   );

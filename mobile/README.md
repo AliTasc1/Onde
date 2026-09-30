@@ -19,7 +19,8 @@ src/app/            expo-router routes (one file per screen)
 src/components/     ui primitives, Slider, Timeline, Orb/Waves/Logo visuals, TabBar, Toast
 src/haptics/        engine.ts (playback) + patterns.ts (session & timeline → steps)
 src/store/          zustand store, persisted to AsyncStorage
-src/data/           pattern library, segment types, all copy
+src/data/           pattern library, segment types, icons & colours
+src/i18n/           all user-facing text: tr.ts (default), en.ts (defines the shape)
 src/services/       notifications (local reminder), purchases (store stub)
 src/lib/            waveform maths, insights, navigation helpers
 ```
@@ -62,7 +63,7 @@ src/lib/            waveform maths, insights, navigation helpers
 
 The voice is an optional whispered voice that plays alongside a session. It is off by default. The 18+ screen (`/adult`) opens once, after onboarding or on the next launch for existing users. The voice only turns on if the user confirms they are an adult; declining leaves it off. After confirming, users can switch it in Settings and on the session screen.
 
-- **Lines:** `voice/lines.tr.json` holds long, whispered lines in five stages that follow the session as a story: open → warm → build → peak → close. The voice starts as soon as a session starts and leaves only a short breath between lines; the "How often" setting (Relaxed / Normal / Continuous) sets that gap. Intensity 7+ pulls the build and peak stages forward. A line doesn't repeat until every line in its stage has played.
+- **Lines:** `voice/lines.tr.json` holds long, whispered lines in five stages that follow the session as a story: open → warm → build → peak → close. The voice starts as soon as a session starts and speaks at a natural, unhurried pace (0.94× with pitch kept). Between lines it leaves a natural pause: 3.5–6 s, 1.6–3.2 s or 0.9–1.8 s, depending on the "How often" setting (Sakin / Normal / Kesintisiz). Intensity 7+ pulls the build and peak stages forward. A line doesn't repeat until every line in its stage has played.
 - **Generating the audio.** Clips are generated once with ElevenLabs and bundled with the app. They are never generated live.
   1. Create `mobile/.env.local` (it is git-ignored):
      ```
@@ -78,14 +79,26 @@ The voice is an optional whispered voice that plays alongside a session. It is o
 
 The background sounds sit under the voice, behind the same 18+ confirmation. Users switch them on under Settings → Voice companion → Background sounds, which is off by default.
 
-- **Bed:** `assets/ambience/bed/` holds looping tracks. One is picked per session; its speed follows rhythm (0.86×–1.4×) and its loudness follows intensity.
-- **Rhythm:** `assets/ambience/rhythm/` holds short (1–2 s) sounds. One fires on every beat, in time with the vibration pulse (the beat length comes from rhythm), with slight pitch and timing variation. This turns short clips into one continuous rhythmic texture.
-- **Accents:** `assets/ambience/accents/` holds short one-shots (breaths, sighs…). They play densely, roughly every 1.5–4 s and faster at high intensity near the peak.
-- **Cries:** `assets/ambience/cries/` holds louder exclamations. They only play in the voice's pauses, once the session has warmed up, every ~12–25 s and more often near the peak.
+The layers are paced like a slow bed scene, not a metronome:
+
+- **Bed:** `assets/ambience/bed/` holds looping tracks. One is picked per session and slowly swells and settles over a ~20 s cycle. Its speed follows rhythm (0.88×–1.15×).
+- **Motion:** `assets/ambience/rhythm/` holds short movement sounds (sheets, skin). They play in phrases of 3–5 slow, heavy moves (about 1–2 s apart, played at 0.86–0.97×). Each phrase rises and falls in loudness, then pauses before the next. The odd move is skipped so it never sounds mechanical.
+- **Accents:** `assets/ambience/accents/` holds breaths, sighs and moans. They come one at a time, roughly every 6–12 s (a bit more often near the peak), never on top of each other or of the voice, and each leaves a moment of silence after it.
+- **Cries:** `assets/ambience/cries/` holds fuller exclamations. These are rarer: every ~22–40 s, only in the voice's pauses, and only once the session has warmed up.
 - **Mix:** the background default is 35 %, and every layer ducks to 40 % while the voice speaks, so the voice always stays on top.
 - All layers start the moment a session starts. Confirming the 18+ screen turns on both the voice and the background sounds.
 - **Adding sounds:** drop `.mp3`, `.m4a`, `.aac` or `.wav` files into those folders, then run `npm run ambience` to rebuild `src/data/ambienceManifest.ts`.
 - **Generating sounds (optional):** `npm run sfx` creates the prompts in `ambience/prompts.json` with ElevenLabs Sound Effects. The API key needs the Sound Effects permission.
+
+## Languages
+
+The app ships in Turkish by default. Every screen, button, toast, accessibility label, pattern name and legal text comes from `src/i18n/`:
+
+- `en.ts` defines the full dictionary shape (`Dict`). `tr.ts` and any future language are type-checked against it, so a missing string fails `npm run typecheck`.
+- Components read text with `const t = useT()`. Code outside React (toasts, notifications) uses `getT()`.
+- The language is stored with the rest of the settings (`lang`). Settings → Dil cycles through the installed languages.
+- To add a language: copy `tr.ts` to `xx.ts`, translate it, and register it in `DICTS` / `LANG_NAMES` in `src/i18n/index.ts`.
+- Upper-case labels use `useUpper()` (locale-aware), because `textTransform: 'uppercase'` turns Turkish "i" into "I" rather than "İ".
 
 ## Where the app differs from the prototype
 
@@ -98,5 +111,5 @@ The background sounds sit under the voice, behind the same 18+ confirmation. Use
 ## Not wired yet
 
 - **Store billing.** `src/services/purchases.ts` is a stub. Replace it with StoreKit / Play Billing, for example through RevenueCat.
-- **Cloud Sync, light mode, languages and custom quiet hours.** These show a "coming soon" toast.
+- **Cloud Sync, light mode and custom quiet hours.** These show a "coming soon" toast.
 - **Battery optimization.** The switch is stored but doesn't yet read Low Power Mode.

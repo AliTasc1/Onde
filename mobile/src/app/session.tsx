@@ -14,6 +14,7 @@ import { Orb, RadialGlow } from '../components/visuals';
 import { findPattern } from '../data/patterns';
 import { haptics } from '../haptics/engine';
 import { sessionSteps } from '../haptics/patterns';
+import { patName, useT, useUpper } from '../i18n';
 import { useStore } from '../store';
 import { C, em, PRIMARY_GRADIENT } from '../theme';
 
@@ -25,6 +26,8 @@ const KEEP_AWAKE_TAG = 'onde-session';
 /** 09 / 10 · Active Session & Pause State. Stop is always the largest control. */
 export default function Session() {
   const insets = useSafeAreaInsets();
+  const t = useT();
+  const up = useUpper();
   const play = useStore((s) => s.play);
   const limit = useStore((s) => s.limit);
   const autostop = useStore((s) => s.tg.autostop);
@@ -143,17 +146,17 @@ export default function Session() {
       style={{ flex: 1, backgroundColor: C.bg, alignItems: 'center', paddingTop: insets.top + 16, paddingHorizontal: 24, paddingBottom: Math.max(insets.bottom, 12) + 16 }}>
       <RadialGlow glows={[{ cx: 0.5, cy: 0.42, rx: 0.8, ry: 0.5, color: '#8B5CF6', opacity: 0.16 }]} />
       <View style={{ alignItems: 'center', gap: 4 }}>
-        <Txt style={{ fontSize: 12, fontWeight: '600', letterSpacing: em(0.12, 12), textTransform: 'uppercase', color: C.muted }}>Current Pattern</Txt>
-        <Txt style={{ fontSize: 20, fontWeight: '600' }}>{pat.name}</Txt>
+        <Txt style={{ fontSize: 12, fontWeight: '600', letterSpacing: em(0.12, 12), color: C.muted }}>{up(t.session.current)}</Txt>
+        <Txt style={{ fontSize: 20, fontWeight: '600' }}>{patName(t, pat)}</Txt>
         {voiceOn ? (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 }}>
             <Icon name="headphones" size={13} color={C.faint} />
-            <Txt style={{ fontSize: 12, color: C.faint }}>Voice on · headphones recommended</Txt>
+            <Txt style={{ fontSize: 12, color: C.faint }}>{t.session.voiceOn}</Txt>
           </View>
         ) : null}
       </View>
       {adultConfirmed ? (
-        <Pressable onPress={() => (voiceClipCount() ? useStore.getState().flip('voice') : useStore.getState().showToast('Voice pack not installed yet'))} accessibilityRole="switch" accessibilityLabel="Voice companion"
+        <Pressable onPress={() => (voiceClipCount() ? useStore.getState().flip('voice') : useStore.getState().showToast(t.session.noVoicePack))} accessibilityRole="switch" accessibilityLabel={t.session.voiceToggle}
           accessibilityState={{ checked: voiceOn }} hitSlop={6}
           style={{ position: 'absolute', top: insets.top + 16, right: 24, width: 44, height: 44, borderRadius: 22, backgroundColor: C.surface, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center' }}>
           <Icon name={voiceOn ? 'sound' : 'soundOff'} size={20} color={voiceOn ? C.lavender : C.faint} />
@@ -171,46 +174,46 @@ export default function Session() {
         <View pointerEvents="none" style={{ position: 'absolute', alignItems: 'center', gap: 6 }}>
           {paused ? (
             <View style={{ height: 26, paddingHorizontal: 12, borderRadius: 13, backgroundColor: 'rgba(255,255,255,0.12)', justifyContent: 'center' }}>
-              <Txt style={{ fontSize: 12, fontWeight: '600', letterSpacing: em(0.1, 12), textTransform: 'uppercase' }}>Paused</Txt>
+              <Txt style={{ fontSize: 12, fontWeight: '600', letterSpacing: em(0.1, 12) }}>{up(t.session.paused)}</Txt>
             </View>
           ) : null}
-          <Txt accessibilityRole="timer" accessibilityLabel={`${mm} minutes ${ss} seconds remaining`}
+          <Txt accessibilityRole="timer" accessibilityLabel={t.session.remainingA11y(mm, ss)}
             style={{ fontSize: 60, fontWeight: '600', letterSpacing: em(-0.02, 60), fontVariant: ['tabular-nums'], lineHeight: 72 }}>{timeStr}</Txt>
-          <Txt style={{ fontSize: 14, color: C.lilacSoft }}>remaining</Txt>
+          <Txt style={{ fontSize: 14, color: C.lilacSoft }}>{t.session.remaining}</Txt>
         </View>
       </View>
 
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16, marginBottom: 24 }}>
-        <StepButton label="−" a11y="Lower intensity" onPress={() => setIntensity(play.intensity - 1)} />
+        <StepButton label="−" a11y={t.session.lower} onPress={() => setIntensity(play.intensity - 1)} />
         <View style={{ minWidth: 120, alignItems: 'center' }}>
-          <Txt style={{ fontSize: 12, color: C.muted, letterSpacing: em(0.08, 12), textTransform: 'uppercase' }}>Intensity</Txt>
+          <Txt style={{ fontSize: 12, color: C.muted, letterSpacing: em(0.08, 12) }}>{up(t.common.intensity)}</Txt>
           <Txt style={{ fontSize: 18, fontWeight: '600', fontVariant: ['tabular-nums'] }}>{level}/10</Txt>
         </View>
-        <StepButton label="+" a11y="Raise intensity" onPress={() => setIntensity(play.intensity + 1)} />
+        <StepButton label="+" a11y={t.session.raise} onPress={() => setIntensity(play.intensity + 1)} />
       </View>
 
       <View style={{ flexDirection: 'row', gap: 12, alignSelf: 'stretch' }}>
         {!paused ? (
-          <Pressable onPress={() => setPaused(true)} accessibilityRole="button" accessibilityLabel="Pause"
+          <Pressable onPress={() => setPaused(true)} accessibilityRole="button" accessibilityLabel={t.session.pause}
             style={({ pressed }) => [s.pill, { width: 120, backgroundColor: C.surface2, borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)', opacity: pressed ? 0.8 : 1 }]}>
             <Icon name="pause" size={20} color="#fff" />
-            <Txt style={{ fontSize: 17, fontWeight: '600' }}>Pause</Txt>
+            <Txt style={{ fontSize: 17, fontWeight: '600' }}>{t.session.pause}</Txt>
           </Pressable>
         ) : (
-          <Pressable onPress={() => setPaused(false)} accessibilityRole="button" accessibilityLabel="Resume"
+          <Pressable onPress={() => setPaused(false)} accessibilityRole="button" accessibilityLabel={t.session.resume}
             style={({ pressed }) => [s.pill, { width: 140, overflow: 'hidden', opacity: pressed ? 0.8 : 1 }]}>
             <LinearGradient {...PRIMARY_GRADIENT} style={StyleSheet.absoluteFill} />
             <View><Icon name="play" size={18} color="#fff" /></View>
-            <Txt style={{ fontSize: 17, fontWeight: '600' }}>Resume</Txt>
+            <Txt style={{ fontSize: 17, fontWeight: '600' }}>{t.session.resume}</Txt>
           </Pressable>
         )}
-        <Pressable onPress={() => finish(true)} accessibilityRole="button" accessibilityLabel="Stop session"
+        <Pressable onPress={() => finish(true)} accessibilityRole="button" accessibilityLabel={t.session.stopA11y}
           style={({ pressed }) => [s.pill, { flex: 1, backgroundColor: C.red, gap: 10, opacity: pressed ? 0.85 : 1 }]}>
           <View style={{ width: 16, height: 16, borderRadius: 3, backgroundColor: C.redInk }} />
-          <Txt style={{ fontSize: 19, fontWeight: '700', color: C.redInk }}>Stop</Txt>
+          <Txt style={{ fontSize: 19, fontWeight: '700', color: C.redInk }}>{t.session.stop}</Txt>
         </Pressable>
       </View>
-      <Txt style={{ marginTop: 14, fontSize: 13, color: C.faint }}>Double-tap anywhere to stop</Txt>
+      <Txt style={{ marginTop: 14, fontSize: 13, color: C.faint }}>{t.session.doubleTap}</Txt>
     </Pressable>
   );
 }

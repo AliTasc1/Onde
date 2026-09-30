@@ -64,4 +64,4 @@ export const DEFAULT_SEGMENTS: Segment[] = [
   { type: 'Ramp Down', int: 6, dur: 5 },
 ];
 
-export const rhythmLabel = (r: number) => (r <= 3 ? 'Slow' : r <= 7 ? 'Moderate' : 'Fast');
+export const rhythmLabel = (r: number, labels: readonly [string, string, string]) => labels[r <= 3 ? 0 : r <= 7 ? 1 : 2];

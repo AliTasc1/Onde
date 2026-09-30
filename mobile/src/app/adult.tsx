@@ -5,19 +5,17 @@ import { Icon, type IconName } from '../components/Icon';
 import { Fill, H1, PrimaryButton, SecondaryButton, Txt } from '../components/ui';
 import { Orb } from '../components/visuals';
 import { goBack } from '../lib/nav';
+import { useT } from '../i18n';
 import { useStore } from '../store';
 import { C, em } from '../theme';
 
-const POINTS: [IconName, string][] = [
-  ['sound', 'A soft, whispered voice that accompanies your sessions'],
-  ['headphones', 'Best with headphones'],
-  ['sliders', 'Change or turn it off anytime in Settings'],
-];
+const POINT_ICONS: IconName[] = ['sound', 'headphones', 'sliders'];
 
 /** Voice companion age gate. The voice stays off until an adult opts in. */
 export default function AdultGate() {
   const { from } = useLocalSearchParams<{ from?: string }>();
   const fromEntry = from === 'onboarding';
+  const t = useT();
 
   const leave = () => {
     if (fromEntry) router.replace('/(tabs)/home');
@@ -30,7 +28,7 @@ export default function AdultGate() {
     st.setToggle('voice', true);
     st.setToggle('ambience', true);
     leave();
-    st.showToast('Voice companion on');
+    st.showToast(t.adult.on);
   };
 
   const decline = () => {
@@ -43,28 +41,28 @@ export default function AdultGate() {
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 14 }}>
         <Orb size={180} rhythm={2} intensity={4}><Icon name="sound" size={40} color="#fff" /></Orb>
         <View style={{ marginTop: 12, height: 26, paddingHorizontal: 12, borderRadius: 13, backgroundColor: 'rgba(236,72,153,0.16)', justifyContent: 'center' }}>
-          <Txt style={{ fontSize: 12, fontWeight: '700', letterSpacing: em(0.1, 12), color: C.pinkSoft }}>18+ ONLY</Txt>
+          <Txt style={{ fontSize: 12, fontWeight: '700', letterSpacing: em(0.1, 12), color: C.pinkSoft }}>{t.adult.badge}</Txt>
         </View>
-        <H1 style={{ textAlign: 'center' }}>Voice Companion</H1>
+        <H1 style={{ textAlign: 'center' }}>{t.adult.title}</H1>
         <Txt style={{ fontSize: 15, lineHeight: 22.5, color: C.muted, textAlign: 'center', maxWidth: 320 }}>
-          This optional voice uses intimate, adult language and is intended for adults only. It stays off unless you turn it on.
+          {t.adult.body}
         </Txt>
         <View style={{ alignSelf: 'stretch', marginTop: 12, gap: 12 }}>
-          {POINTS.map(([icon, t]) => (
-            <View key={t} style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
+          {t.adult.points.map((point, i) => (
+            <View key={point} style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
               <View style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: 'rgba(139,92,246,0.18)', alignItems: 'center', justifyContent: 'center' }}>
-                <Icon name={icon} size={16} color={C.lilac} />
+                <Icon name={POINT_ICONS[i]} size={16} color={C.lilac} />
               </View>
-              <Txt style={{ flex: 1, fontSize: 15 }}>{t}</Txt>
+              <Txt style={{ flex: 1, fontSize: 15 }}>{point}</Txt>
             </View>
           ))}
         </View>
       </View>
       <View style={{ gap: 12 }}>
-        <PrimaryButton label="I'm 18 or older — Turn On" onPress={confirm} />
-        <SecondaryButton label="Not Now" onPress={decline} />
+        <PrimaryButton label={t.adult.confirm} onPress={confirm} />
+        <SecondaryButton label={t.adult.notNow} onPress={decline} />
         <Txt style={{ fontSize: 12, lineHeight: 18, color: C.faint, textAlign: 'center' }}>
-          By turning it on you confirm you are at least 18 years old.
+          {t.adult.fine}
         </Txt>
       </View>
     </Fill>

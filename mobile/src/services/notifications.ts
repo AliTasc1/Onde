@@ -2,6 +2,7 @@ import Constants, { ExecutionEnvironment } from 'expo-constants';
 import type * as NotificationsModule from 'expo-notifications';
 import { Platform } from 'react-native';
 
+import { getT } from '../i18n';
 import type { Toggles } from '../store';
 
 const ROUTINE_ID = 'onde-evening-routine';
@@ -58,7 +59,7 @@ export async function syncReminders(tg: Pick<Toggles, 'notif' | 'n_routine'>) {
     if (!perm.granted) return;
     await N.scheduleNotificationAsync({
       identifier: ROUTINE_ID,
-      content: { title: 'Onde', body: 'Your evening wellness routine is ready.' },
+      content: { title: 'Onde', body: getT().notifications.routineBody },
       trigger: { type: N.SchedulableTriggerInputTypes.DAILY, hour: 21, minute: 0 },
     });
   } catch {
