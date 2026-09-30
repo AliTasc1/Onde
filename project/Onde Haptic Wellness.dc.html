@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><meta name="design_doc_mode" content="canvas"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"><style>body{margin:0;background:#08080D}a{color:#C4B5FD}a:hover{color:#fff}</style></helmet>
+<div style="min-width:1400px;padding:72px 80px 120px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#fff;background:#08080D">
+<header style="display:flex;gap:40px;align-items:flex-start;max-width:1400px;margin-bottom:72px">
+<div style="display:flex;align-items:center;gap:20px;flex:none">
+<div style="width:88px;height:88px;border-radius:24px;background:linear-gradient(145deg,#231A3F,#15151F);border:1px solid rgba(196,181,253,.2);box-shadow:0 20px 50px rgba(139,92,246,.3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px"><div style="width:44px;height:4px;border-radius:2px;background:#C4B5FD"></div><div style="width:34px;height:4px;border-radius:2px;background:#A78BFA"></div><div style="width:44px;height:4px;border-radius:2px;background:#F0ABFC"></div></div>
+<div style="display:flex;flex-direction:column;gap:4px"><h1 style="margin:0;font-size:44px;font-weight:700;letter-spacing:-.02em">Onde</h1><span style="font-size:15px;color:#A1A1B5">Premium haptic wellness · iOS &amp; Android · 28 screens</span></div>
+</div>
+<div style="flex:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;font-size:14px;line-height:1.55;color:#A1A1B5">
+<div><div style="color:#fff;font-weight:600;margin-bottom:6px">Assumptions</div>Working name “Onde” (French for wave). Plus Jakarta Sans stands in for Inter/SF Pro. iPhone 16 Pro frame (393×852), safe areas respected.</div>
+<div><div style="color:#fff;font-weight:600;margin-bottom:6px">Every frame is live</div>Sliders drag, the timeline reorders, sessions count down and the phone vibrates on Android (navigator.vibrate). The first frame runs the full flow from the splash.</div>
+<div><div style="color:#fff;font-weight:600;margin-bottom:6px">Core flow · 2–3 taps</div>Home → mood card → Start Experience. Stop is always the largest control; double-tap anywhere also stops. No health claims, no body imagery.</div>
+</div>
+</header>
+<sc-for list="{{ groups }}" as="g" hint-placeholder-count="2">
+<section style="margin-bottom:88px">
+<div style="display:flex;align-items:baseline;gap:14px;margin-bottom:32px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.07)"><h2 style="margin:0;font-size:22px;font-weight:600">{{ g.title }}</h2><span style="font-size:14px;color:#8A8AA0">{{ g.note }}</span></div>
+<div style="display:flex;flex-wrap:wrap;gap:64px 56px">
+<sc-for list="{{ g.items }}" as="it"><div style="display:flex;flex-direction:column;gap:24px;flex:none"><div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:600;padding:3px 8px;border-radius:6px;background:#1D1D29;color:#C4B5FD">{{ it.no }}</span><span style="font-weight:600">{{ it.label }}</span></div><div style="padding:11px"><dc-import name="OndeApp" start="{{ it.start }}" live="{{ it.live }}" premium="{{ premium }}" reduce-motion="{{ rm }}" hint-size="393px,852px"></dc-import></div></div></sc-for>
+</div>
+</section>
+</sc-for>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;premium&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;State&quot;},&quot;reduceMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Accessibility&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const G = [
+      ['Live prototype', 'Starts at the splash and runs the whole app', [['▶', 'Full flow', 'splash', true]]],
+      ['Welcome', 'Splash and a four-step onboarding', [['01','Splash','splash'],['02','Onboarding 1','onb1'],['03','Onboarding 2','onb2'],['04','Onboarding 3','onb3'],['05','Onboarding 4','onb4']]],
+      ['Explore & play', 'Choose → adjust → start', [['06','Home','home'],['07','Pattern Library','library'],['08','Pattern Detail','detail'],['09','Active Session','session'],['10','Pause State','paused'],['11','Session Complete','complete']]],
+      ['Create', 'Timeline builder, preview and library', [['12','Custom Pattern Builder','builder'],['13','Pattern Preview','preview'],['14','Saved Patterns','saved'],['23','Empty State','empty']]],
+      ['You', 'Insights, profile and preferences', [['15','Insights','insights'],['16','Profile','profile'],['17','Privacy Center','privacy'],['18','Settings','settings'],['19','Notifications','notifications'],['20','Safety','safety']]],
+      ['Premium', 'Honest paywall, clear pricing', [['21','Subscription','subscription'],['22','Payment Confirmation','payment']]],
+      ['System', 'Errors, permissions, support and legal', [['24','Error State','error'],['25','Permission Screen','permission'],['26','Help & Support','help'],['27','Delete Account','delete'],['28','Terms / Privacy','terms']]]
+    ];
+    return {
+      premium: !!this.props.premium, rm: !!this.props.reduceMotion,
+      groups: G.map(([title, note, items]) => ({ title, note, items: items.map(([no, label, start, live]) => ({ no, label, start, live: !!live })) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

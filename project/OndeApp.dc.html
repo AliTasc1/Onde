@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"><style>body{margin:0;background:#0B0B12}a{color:#C4B5FD}a:hover{color:#fff}@keyframes hw-slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}@keyframes hw-breathe{0%,100%{transform:scale(.9);opacity:.75}50%{transform:scale(1);opacity:1}}@keyframes hw-ripple{0%{transform:scale(.62);opacity:.8}100%{transform:scale(1.18);opacity:0}}@keyframes hw-bar{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}@keyframes hw-play{from{left:0}to{left:100%}}@keyframes hw-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}</style></helmet>
+<div style="position:relative;width:393px;height:852px;border-radius:56px;overflow:hidden;background:#0B0B12;color:#fff;font-family:'Plus Jakarta Sans',system-ui,sans-serif;box-shadow:0 0 0 10px #16161E,0 0 0 11px #2B2B38,0 40px 90px rgba(0,0,0,.55);-webkit-font-smoothing:antialiased">
+
+<div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 46px;z-index:40;pointer-events:none;font-weight:600;font-size:16px">
+<span>9:41</span>
+<div style="position:absolute;left:50%;top:11px;width:124px;height:36px;margin-left:-62px;border-radius:20px;background:#000"></div>
+<div style="display:flex;align-items:center;gap:6px"><div style="display:flex;align-items:flex-end;gap:2px;height:12px"><div style="width:3px;height:4px;border-radius:1px;background:#fff"></div><div style="width:3px;height:6px;border-radius:1px;background:#fff"></div><div style="width:3px;height:9px;border-radius:1px;background:#fff"></div><div style="width:3px;height:12px;border-radius:1px;background:#fff"></div></div><div style="width:25px;height:12px;border-radius:4px;border:1.5px solid rgba(255,255,255,.5);padding:1.5px;box-sizing:border-box"><div style="width:75%;height:100%;border-radius:2px;background:#fff"></div></div></div>
+</div>
+
+<sc-if value="{{ s.splash }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ splashTap }}" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:radial-gradient(60% 40% at 50% 46%,rgba(139,92,246,.2),transparent 70%),#0B0B12">
+<div style="position:absolute;left:0;top:50%;margin-top:-120px;opacity:.55">{{ splashWaves }}</div>
+<div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:20px">{{ splashLogo }}<div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div style="font-size:34px;font-weight:600;letter-spacing:.01em">onde</div><div style="font-size:12px;color:#A1A1B5;letter-spacing:.24em;text-transform:uppercase">Haptic Wellness</div></div></div>
+<div style="position:absolute;bottom:56px;font-size:13px;color:#8A8AA0">Private by design</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.onb }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;padding:54px 24px 44px;display:flex;flex-direction:column">
+<div style="display:flex;justify-content:flex-end;height:52px;align-items:center"><button onClick="{{ skipOnb }}" style="height:44px;padding:0 12px;border:none;background:none;color:#A1A1B5;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer">{{ onbSkip }}</button></div>
+<div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative">
+<sc-if value="{{ o.v1 }}" hint-placeholder-val="{{ false }}"><div style="position:relative;width:345px;height:320px;border-radius:32px;background:radial-gradient(70% 60% at 50% 50%,rgba(139,92,246,.22),transparent 72%);display:flex;align-items:center;justify-content:center">{{ onbWaves }}</div></sc-if>
+<sc-if value="{{ o.v2 }}" hint-placeholder-val="{{ false }}"><div style="width:345px;height:320px;border-radius:32px;background:#15151F;border:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;justify-content:center;gap:24px;padding:28px;box-sizing:border-box"><div style="display:flex;justify-content:space-between;font-size:13px;color:#A1A1B5"><span>Calm Pulse</span><span>Rhythmic</span></div>{{ onbBars }}<div style="display:flex;gap:8px"><span style="height:32px;padding:0 14px;border-radius:16px;background:rgba(139,92,246,.18);color:#DDD3FF;font-size:13px;font-weight:600;display:flex;align-items:center">Gentle</span><span style="height:32px;padding:0 14px;border-radius:16px;background:#1D1D29;color:#A1A1B5;font-size:13px;font-weight:600;display:flex;align-items:center">Pulse</span><span style="height:32px;padding:0 14px;border-radius:16px;background:#1D1D29;color:#A1A1B5;font-size:13px;font-weight:600;display:flex;align-items:center">Wave</span></div></div></sc-if>
+<sc-if value="{{ o.v3 }}" hint-placeholder-val="{{ false }}"><div style="width:345px;border-radius:32px;background:#15151F;border:1px solid rgba(255,255,255,.06);padding:24px;box-sizing:border-box;display:flex;flex-direction:column;gap:22px"><div style="display:flex;align-items:flex-end;gap:3px;height:72px"><sc-for list="{{ o3bars }}" as="b"><div style="flex:1;height:{{ b.h }};border-radius:3px;background:{{ b.c }}"></div></sc-for></div><div style="display:flex;flex-direction:column;gap:10px"><div style="display:flex;justify-content:space-between;font-size:14px"><span style="color:#A1A1B5">Intensity</span><span style="font-weight:600">6 / 10</span></div><div style="position:relative;height:6px;border-radius:3px;background:#2A2A3A"><div style="position:absolute;left:0;top:0;bottom:0;width:58%;border-radius:3px;background:linear-gradient(90deg,#8B5CF6,#C084FC)"></div><div style="position:absolute;left:58%;top:50%;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(139,92,246,.25)"></div></div></div><div style="display:flex;flex-direction:column;gap:10px"><div style="display:flex;justify-content:space-between;font-size:14px"><span style="color:#A1A1B5">Rhythm</span><span style="font-weight:600">Slow</span></div><div style="position:relative;height:6px;border-radius:3px;background:#2A2A3A"><div style="position:absolute;left:0;top:0;bottom:0;width:30%;border-radius:3px;background:linear-gradient(90deg,#8B5CF6,#C084FC)"></div><div style="position:absolute;left:30%;top:50%;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(139,92,246,.25)"></div></div></div></div></sc-if>
+<sc-if value="{{ o.v4 }}" hint-placeholder-val="{{ false }}"><div style="position:relative;width:260px;height:260px">{{ onbOrb }}<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px;color:#fff">{{ ic.lock }}</div></div></sc-if>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;min-height:150px">
+<h1 style="margin:0;font-size:30px;line-height:1.15;font-weight:700;letter-spacing:-.02em;text-wrap:balance">{{ onbTitle }}</h1>
+<p style="margin:0;font-size:16px;line-height:1.55;color:#A1A1B5;text-wrap:pretty">{{ onbText }}</p>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:16px">
+<div style="display:flex;gap:6px"><sc-for list="{{ onbDots }}" as="d"><button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width:{{ d.w }};height:8px;border-radius:4px;border:none;padding:0;background:{{ d.bg }};cursor:pointer;transition:width .25s"></button></sc-for></div>
+<button onClick="{{ nextOnb }}" style="height:56px;padding:0 28px;border-radius:18px;border:none;background:linear-gradient(135deg,#8B5CF6,#9B5DF2 55%,#C45CC8);color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer;box-shadow:0 8px 24px rgba(139,92,246,.28)">{{ onbCta }}</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.home }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding:54px 0 120px;box-sizing:border-box">
+<div style="padding:16px 24px 0;display:flex;justify-content:space-between;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:15px;color:#A1A1B5">{{ greeting }}, Elif</div><h1 style="margin:0;font-size:28px;line-height:1.2;font-weight:700;letter-spacing:-.02em;max-width:260px">How would you like to feel?</h1></div>
+<button onClick="{{ nav.notifications }}" aria-label="Notifications" style="width:44px;height:44px;border-radius:22px;border:1px solid rgba(255,255,255,.08);background:#15151F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;flex:none">{{ ic.bell }}</button>
+</div>
+<div onClick="{{ continueLast }}" role="button" tabindex="0" style="margin:24px 24px 0;padding:16px;border-radius:24px;background:linear-gradient(135deg,rgba(139,92,246,.22),rgba(236,72,153,.1)),#15151F;border:1px solid rgba(196,181,253,.14);display:flex;align-items:center;gap:16px;cursor:pointer">
+<div style="flex:1;display:flex;flex-direction:column;gap:10px"><div style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#C4B5FD">Continue</div><div style="font-size:18px;font-weight:600">Soft Wave</div><div style="display:flex;align-items:flex-end;gap:2px;height:20px"><sc-for list="{{ homeBars }}" as="b"><div style="width:4px;height:{{ b.h }};border-radius:2px;background:rgba(221,211,255,.8)"></div></sc-for></div><div style="font-size:13px;color:#A1A1B5">5 min · Intensity 6</div></div>
+<div style="width:56px;height:56px;border-radius:28px;background:#fff;color:#0B0B12;display:flex;align-items:center;justify-content:center;font-size:22px;flex:none">{{ ic.play }}</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px 24px 0">
+<sc-for list="{{ moods }}" as="m" hint-placeholder-count="6">
+<button onClick="{{ m.open }}" style="height:140px;border-radius:24px;border:{{ m.border }};background:{{ m.bg }};color:#fff;font-family:inherit;text-align:left;padding:16px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer">
+<span style="width:40px;height:40px;border-radius:20px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:20px;color:#E4DCFF">{{ m.icon }}</span>
+<span style="display:flex;flex-direction:column;gap:4px"><span style="font-size:18px;font-weight:600">{{ m.label }}</span><span style="font-size:13px;color:#A1A1B5">{{ m.sub }}</span></span>
+</button>
+</sc-for>
+</div>
+<div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;font-size:13px;color:#8A8AA0"><span style="font-size:15px;display:flex">{{ ic.shield }}</span>Your data stays on this device</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.library }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding:54px 0 120px;box-sizing:border-box">
+<div style="padding:16px 24px 0;display:flex;justify-content:space-between;align-items:center"><h1 style="margin:0;font-size:28px;font-weight:700;letter-spacing:-.02em">Explore Patterns</h1><button onClick="{{ nav.help }}" aria-label="Search" style="width:44px;height:44px;border-radius:22px;border:1px solid rgba(255,255,255,.08);background:#15151F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer">{{ ic.search }}</button></div>
+<div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:20px 24px 4px">
+<sc-for list="{{ libChips }}" as="c" hint-placeholder-count="6"><button onClick="{{ c.go }}" aria-pressed="{{ c.active }}" style="flex:none;height:36px;padding:0 16px;border-radius:18px;border:{{ c.border }};background:{{ c.bg }};color:{{ c.color }};font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">{{ c.label }}</button></sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;padding:16px 24px 0">
+<sc-for list="{{ libPatterns }}" as="p" hint-placeholder-count="4">
+<div onClick="{{ p.open }}" role="button" tabindex="0" aria-label="{{ p.aria }}" style="background:#1D1D29;border:1px solid rgba(255,255,255,.06);border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:14px;cursor:pointer">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px"><div style="display:flex;flex-direction:column;gap:4px"><div style="font-size:17px;font-weight:600">{{ p.name }}</div><div style="font-size:13px;color:#A1A1B5">{{ p.meta }}</div></div><sc-if value="{{ p.locked }}"><span style="display:flex;align-items:center;gap:4px;height:24px;padding:0 10px;border-radius:12px;background:rgba(236,72,153,.14);color:#F9A8D4;font-size:12px;font-weight:600"><span style="display:flex;font-size:12px">{{ ic.lock }}</span>Premium</span></sc-if></div>
+<div style="display:flex;align-items:center;gap:2px;height:40px"><sc-for list="{{ p.bars }}" as="b"><div style="flex:1;height:{{ b.h }};border-radius:2px;background:{{ b.c }}"></div></sc-for></div>
+<div style="display:flex;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:10px"><div style="display:flex;gap:3px"><sc-for list="{{ p.level }}" as="l"><div style="width:4px;height:12px;border-radius:2px;background:{{ l.c }}"></div></sc-for></div><span style="font-size:13px;color:#A1A1B5">Intensity {{ p.int }}</span></div><div style="width:44px;height:44px;border-radius:22px;background:{{ p.playBg }};color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px">{{ p.playIcon }}</div></div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.detail }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding:54px 0 170px;box-sizing:border-box">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 16px;height:60px;box-sizing:border-box"><button onClick="{{ back }}" aria-label="Back" style="width:44px;height:44px;border-radius:22px;border:none;background:#1D1D29;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer">{{ ic.back }}</button><button onClick="{{ toggleFav }}" aria-label="Favorite" aria-pressed="{{ isFav }}" style="width:44px;height:44px;border-radius:22px;border:none;background:#1D1D29;color:{{ favColor }};display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer">{{ favIcon }}</button></div>
+<div style="padding:4px 24px 0;display:flex;flex-direction:column;gap:6px"><div style="font-size:12px;color:#C4B5FD;font-weight:600;letter-spacing:.1em;text-transform:uppercase">{{ pat.cat }} · {{ pat.dur }} min</div><h1 style="margin:0;font-size:30px;font-weight:700;letter-spacing:-.02em">{{ pat.name }}</h1><p style="margin:0;color:#A1A1B5;font-size:15px;line-height:1.5">{{ pat.desc }}</p></div>
+<div style="margin:16px 24px 0;height:56px">{{ detailWave }}</div>
+<div style="display:flex;justify-content:center;margin-top:8px"><div style="position:relative;width:184px;height:184px">{{ detailOrb }}<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px"><span style="font-size:36px;font-weight:700;font-variant-numeric:tabular-nums">{{ intensity }}</span><span style="font-size:12px;color:#EDE7FF;letter-spacing:.08em;text-transform:uppercase">Intensity</span></div></div></div>
+<div style="padding:16px 24px 0;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:4px"><div style="display:flex;justify-content:space-between;font-size:15px"><span style="font-weight:600">Intensity</span><span style="color:#A1A1B5;font-variant-numeric:tabular-nums">{{ intensity }} / 10</span></div>
+<div role="slider" tabindex="0" aria-label="Intensity" aria-valuemin="1" aria-valuemax="10" aria-valuenow="{{ intensity }}" onPointerDown="{{ sl.int.down }}" onKeyDown="{{ sl.int.key }}" style="position:relative;height:40px;cursor:pointer;touch-action:none;padding:0 13px"><div style="position:relative;top:17px;height:6px;border-radius:3px;background:#2A2A3A"><div style="position:absolute;left:0;top:0;bottom:0;width:{{ sl.int.pct }};border-radius:3px;background:linear-gradient(90deg,#8B5CF6,#C084FC)"></div><div style="position:absolute;left:{{ sl.int.pct }};top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.4),0 0 0 4px rgba(139,92,246,.25)"></div></div></div>
+<div style="display:flex;justify-content:space-between;font-size:12px;color:#8A8AA0"><span>1</span><span>10</span></div></div>
+<div style="display:flex;flex-direction:column;gap:4px"><div style="display:flex;justify-content:space-between;font-size:15px"><span style="font-weight:600">Rhythm</span><span style="color:#A1A1B5">{{ rhythmLabel }}</span></div>
+<div role="slider" tabindex="0" aria-label="Rhythm" aria-valuemin="1" aria-valuemax="10" aria-valuenow="{{ rhythm }}" onPointerDown="{{ sl.rhy.down }}" onKeyDown="{{ sl.rhy.key }}" style="position:relative;height:40px;cursor:pointer;touch-action:none;padding:0 13px"><div style="position:relative;top:17px;height:6px;border-radius:3px;background:#2A2A3A"><div style="position:absolute;left:0;top:0;bottom:0;width:{{ sl.rhy.pct }};border-radius:3px;background:linear-gradient(90deg,#8B5CF6,#C084FC)"></div><div style="position:absolute;left:{{ sl.rhy.pct }};top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.4),0 0 0 4px rgba(139,92,246,.25)"></div></div></div>
+<div style="display:flex;justify-content:space-between;font-size:12px;color:#8A8AA0"><span>Slow</span><span>Fast</span></div></div>
+<div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:15px;font-weight:600">Duration</span><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px"><sc-for list="{{ durChips }}" as="c" hint-placeholder-count="5"><button onClick="{{ c.go }}" aria-pressed="{{ c.active }}" style="height:48px;border-radius:14px;border:{{ c.border }};background:{{ c.bg }};color:{{ c.color }};font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">{{ c.label }}</button></sc-for></div></div>
+</div>
+</div>
+<div style="position:absolute;left:0;right:0;bottom:0;padding:24px 24px 40px;background:linear-gradient(180deg,rgba(11,11,18,0),#0B0B12 30%);display:flex;flex-direction:column;align-items:center;gap:12px;z-index:5">
+<button onClick="{{ startSession }}" style="height:56px;width:100%;border-radius:18px;border:none;background:linear-gradient(135deg,#8B5CF6,#9B5DF2 55%,#C45CC8);color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 24px rgba(139,92,246,.28)"><span style="display:flex;font-size:18px">{{ ic.play }}</span>Start Experience</button>
+<div style="display:flex;gap:8px;font-size:13px;color:#A1A1B5"><span>Stop anytime</span><span>·</span><span onClick="{{ nav.safety }}" role="link" style="color:#C4B5FD;cursor:pointer">Use responsibly</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.session }}" hint-placeholder-val="{{ false }}">
+<div onDoubleClick="{{ stopSession }}" style="position:absolute;inset:0;background:radial-gradient(80% 50% at 50% 42%,rgba(139,92,246,.16),transparent 70%),#0B0B12;display:flex;flex-direction:column;align-items:center;padding:70px 24px 40px;box-sizing:border-box">
+<div style="display:flex;flex-direction:column;align-items:center;gap:4px"><span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#A1A1B5">Current Pattern</span><span style="font-size:20px;font-weight:600">{{ pat.name }}</span></div>
+<div style="flex:1;display:flex;align-items:center;justify-content:center">
+<div style="position:relative;width:300px;height:300px;opacity:{{ sessOpacity }};transition:opacity .4s">{{ sessOrb }}
+<svg width="300" height="300" viewBox="0 0 300 300" style="position:absolute;inset:0;transform:rotate(-90deg)"><circle cx="150" cy="150" r="146" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="3"></circle><circle cx="150" cy="150" r="146" fill="none" stroke="#DDD3FF" stroke-width="3" stroke-linecap="round" stroke-dasharray="917.3" stroke-dashoffset="{{ ringOffset }}" style="transition:stroke-dashoffset 1s linear"></circle></svg>
+</div>
+<div style="position:absolute;display:flex;flex-direction:column;align-items:center;gap:6px">
+<sc-if value="{{ paused }}" hint-placeholder-val="{{ false }}"><span style="height:26px;padding:0 12px;border-radius:13px;background:rgba(255,255,255,.12);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center">Paused</span></sc-if>
+<span role="timer" aria-live="off" style="font-size:60px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums">{{ timeStr }}</span><span style="font-size:14px;color:#EDE7FF">remaining</span></div>
+</div>
+<div style="display:flex;align-items:center;gap:16px;margin-bottom:24px">
+<button onClick="{{ intDown }}" onDoubleClick="{{ swallow }}" aria-label="Lower intensity" style="width:44px;height:44px;border-radius:22px;border:1px solid rgba(255,255,255,.1);background:#15151F;color:#fff;font-family:inherit;font-size:22px;cursor:pointer">−</button>
+<div style="min-width:120px;text-align:center"><div style="font-size:12px;color:#A1A1B5;letter-spacing:.08em;text-transform:uppercase">Intensity</div><div style="font-size:18px;font-weight:600;font-variant-numeric:tabular-nums">{{ intensity }}/10</div></div>
+<button onClick="{{ intUp }}" onDoubleClick="{{ swallow }}" aria-label="Raise intensity" style="width:44px;height:44px;border-radius:22px;border:1px solid rgba(255,255,255,.1);background:#15151F;color:#fff;font-family:inherit;font-size:22px;cursor:pointer">+</button>
+</div>
+<div style="display:flex;gap:12px;width:100%">
+<sc-if value="{{ notPaused }}" hint-placeholder-val="{{ true }}"><button onClick="{{ pauseSession }}" onDoubleClick="{{ swallow }}" style="width:120px;height:72px;border-radius:36px;border:1px solid rgba(255,255,255,.12);background:#1D1D29;color:#fff;font-family:inherit;font-size:17px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer"><span style="display:flex;font-size:20px">{{ ic.pause }}</span>Pause</button></sc-if>
+<sc-if value="{{ paused }}" hint-placeholder-val="{{ false }}"><button onClick="{{ resumeSession }}" onDoubleClick="{{ swallow }}" style="width:140px;height:72px;border-radius:36px;border:none;background:linear-gradient(135deg,#8B5CF6,#9B5DF2 55%,#C45CC8);color:#fff;font-family:inherit;font-size:17px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer"><span style="display:flex;font-size:18px">{{ ic.play }}</span>Resume</button></sc-if>
+<button onClick="{{ stopSession }}" style="flex:1;height:72px;border-radius:36px;border:none;background:#F87171;color:#1F0A0A;font-family:inherit;font-size:19px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer"><span style="width:16px;height:16px;border-radius:3px;background:#1F0A0A"></span>Stop</button>
+</div>
+<div style="margin-top:14px;font-size:13px;color:#8A8AA0">Double-tap anywhere to stop</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.complete }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;padding:54px 24px 40px;box-sizing:border-box;display:flex;flex-direction:column;background:radial-gradient(70% 40% at 50% 30%,rgba(74,222,128,.08),transparent 70%),#0B0B12">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center">
+<div style="width:96px;height:96px;border-radius:48px;background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;font-size:40px;color:#4ADE80">{{ ic.check }}</div>
+<h1 style="margin:8px 0 0;font-size:30px;font-weight:700;letter-spacing:-.02em">{{ completeTitle }}</h1>
+<p style="margin:0;font-size:16px;color:#A1A1B5;max-width:280px;line-height:1.5">Nice work taking a few minutes for yourself.</p>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;margin-top:16px">
+<div style="background:#15151F;border-radius:18px;padding:14px 8px;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#A1A1B5">Time</span><span style="font-size:17px;font-weight:600">{{ elapsedStr }}</span></div>
+<div style="background:#15151F;border-radius:18px;padding:14px 8px;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#A1A1B5">Pattern</span><span style="font-size:17px;font-weight:600">{{ pat.name }}</span></div>
+<div style="background:#15151F;border-radius:18px;padding:14px 8px;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#A1A1B5">Intensity</span><span style="font-size:17px;font-weight:600">{{ intensity }}/10</span></div>
+</div>
+<div style="width:100%;margin-top:16px;display:flex;flex-direction:column;gap:12px"><span style="font-size:15px;font-weight:600">How do you feel?</span><div style="display:flex;gap:8px;justify-content:center"><sc-for list="{{ feelChips }}" as="c"><button onClick="{{ c.go }}" aria-pressed="{{ c.active }}" style="height:40px;padding:0 16px;border-radius:20px;border:{{ c.border }};background:{{ c.bg }};color:{{ c.color }};font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">{{ c.label }}</button></sc-for></div></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<button onClick="{{ tab.home }}" style="height:56px;border-radius:18px;border:none;background:linear-gradient(135deg,#8B5CF6,#9B5DF2 55%,#C45CC8);color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer">Done</button>
+<button onClick="{{ repeatSession }}" style="height:56px;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:#1D1D29;color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer">Start Again</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.builder }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding:54px 0 120px;box-sizing:border-box">
+<div style="padding:16px 24px 0;display:flex;flex-direction:column;gap:16px"><h1 style="margin:0;font-size:28px;font-weight:700;letter-spacing:-.02em">Create Your Pattern</h1>
+<div style="display:flex;padding:4px;border-radius:14px;background:#15151F;border:1px solid rgba(255,255,255,.06)"><button style="flex:1;height:36px;border-radius:10px;border:none;background:#2A2A3A;color:#fff;font-family:inherit;font-size:14px;font-weight:600">Create</button><button onClick="{{ tab.saved }}" style="flex:1;height:36px;border-radius:10px;border:none;background:none;color:#A1A1B5;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">Your Patterns</button></div></div>
+<div style="margin:16px 24px 0;padding:16px;border-radius:24px;background:#15151F;border:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;justify-content:space-between;font-size:13px"><span style="font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#A1A1B5">Timeline</span><span style="color:#A1A1B5">{{ cycleLabel }}</span></div>
+<div style="display:flex;gap:4px;height:92px">
+<sc-for list="{{ segsV }}" as="g" hint-placeholder-count="5"><div draggable="true" onDragStart="{{ g.dragStart }}" onDragOver="{{ g.dragOver }}" onDrop="{{ g.drop }}" onClick="{{ g.pick }}" role="button" tabindex="0" aria-label="{{ g.aria }}" aria-pressed="{{ g.selected }}" style="flex:{{ g.flex }};min-width:34px;border-radius:14px;background:{{ g.bg }};box-shadow:{{ g.ring }};padding:8px 6px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;cursor:grab;overflow:hidden"><div style="display:flex;align-items:flex-end;gap:2px;height:40px"><sc-for list="{{ g.bars }}" as="b"><div style="flex:1;height:{{ b.h }};border-radius:1.5px;background:rgba(255,255,255,.72)"></div></sc-for></div><div style="display:flex;flex-direction:column;gap:1px;white-space:nowrap"><span style="font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis">{{ g.short }}</span><span style="font-size:10px;color:rgba(255,255,255,.75)">{{ g.durLabel }}</span></div></div></sc-for>
+<button onClick="{{ openSheet }}" aria-label="Add segment" style="width:44px;flex:none;border-radius:14px;border:1.5px dashed rgba(196,181,253,.4);background:rgba(139,92,246,.06);color:#C4B5FD;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.plus }}</button>
+</div>
+<div style="font-size:12px;color:#8A8AA0">Drag to reorder · Tap a segment to edit</div>
+</div>
+<div style="margin:12px 24px 0;display:flex;padding:4px;border-radius:14px;background:#15151F;border:1px solid rgba(255,255,255,.06)"><sc-for list="{{ bTabs }}" as="t"><button onClick="{{ t.go }}" style="flex:1;height:36px;border-radius:10px;border:none;background:{{ t.bg }};color:{{ t.color }};font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">{{ t.label }}</button></sc-for></div>
+<sc-if value="{{ bSegTab }}" hint-placeholder-val="{{ true }}">
+<div style="margin:12px 24px 0;padding:16px;border-radius:24px;background:#15151F;border:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:17px;font-weight:600">Segment {{ selSeg.n }}</span><span style="font-size:13px;color:#A1A1B5">{{ selSeg.type }}</span></div>
+<div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ typeChips }}" as="c"><button onClick="{{ c.go }}" aria-pressed="{{ c.active }}" style="height:36px;padding:0 14px;border-radius:18px;border:{{ c.border }};background:{{ c.bg }};color:{{ c.color }};font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ c.label }}</button></sc-for></div>
+<div style="display:flex;flex-direction:column;gap:2px"><div style="display:flex;justify-content:space-between;font-size:14px"><span style="font-weight:600">Intensity</span><span style="color:#A1A1B5">{{ selSeg.int }} / 10</span></div>
+<div role="slider" tabindex="0" aria-label="Segment intensity" aria-valuemin="0" aria-valuemax="10" aria-valuenow="{{ selSeg.int }}" onPointerDown="{{ sl.sInt.down }}" onKeyDown="{{ sl.sInt.key }}" style="position:relative;height:40px;cursor:pointer;touch-action:none;padding:0 13px"><div style="position:relative;top:17px;height:6px;border-radius:3px;background:#2A2A3A"><div style="position:absolute;left:0;top:0;bottom:0;width:{{ sl.sInt.pct }};border-radius:3px;background:linear-gradient(90deg,#8B5CF6,#C084FC)"></div><div style="position:absolute;left:{{ sl.sInt.pct }};top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.4),0 0 0 4px rgba(139,92,246,.25)"></div></div></div></div>
+<div style="display:flex;flex-direction:column;gap:2px"><div style="display:flex;justify-content:space-between;font-size:14px"><span style="font-weight:600">Duration</span><span style="color:#A1A1B5">{{ selSeg.dur }} s</span></div>
+<div role="slider" tabindex="0" aria-label="Segment duration" aria-valuemin="1" aria-valuemax="20" aria-valuenow="{{ selSeg.dur }}" onPointerDown="{{ sl.sDur.down }}" onKeyDown="{{ sl.sDur.key }}" style="position:relative;height:40px;cursor:pointer;touch-action:none;padding:0 13px"><div style="position:relative;top:17px;height:6px;border-radius:3px;background:#2A2A3A"><div style="position:absolute;left:0;top:0;bottom:0;width:{{ sl.sDur.pct }};border-radius:3px;background:linear-gradient(90deg,#8B5CF6,#C084FC)"></div><div style="position:absolute;left:{{ sl.sDur.pct }};top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.4),0 0 0 4px rgba(139,92,246,.25)"></div></div></div></div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+<button onClick="{{ segLeft }}" style="height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:#1D1D29;color:#fff;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer">← Move</button>
+<button onClick="{{ segRight }}" style="height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:#1D1D29;color:#fff;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer">Move →</button>
+<button onClick="{{ segDup }}" style="height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:#1D1D29;color:#fff;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer">Duplicate</button>
+<button onClick="{{ segDel }}" style="height:44px;border-radius:12px;border:1px solid rgba(248,113,113,.25);background:rgba(248,113,113,.08);color:#FCA5A5;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer">Delete</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ bGlobalTab }}" hint-placeholder-val="{{ false }}">
+<div style="margin:12px 24px 0;padding:16px;border-radius:24px;background:#15151F;border:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:12px">
+<sc-for list="{{ globalSliders }}" as="g"><div style="display:flex;flex-direction:column;gap:2px"><div style="display:flex;justify-content:space-between;font-size:14px"><span style="font-weight:600">{{ g.label }}</span><span style="color:#A1A1B5">{{ g.value }}</span></div>
+<div role="slider" tabindex="0" aria-label="{{ g.label }}" aria-valuenow="{{ g.s.val }}" onPointerDown="{{ g.s.down }}" onKeyDown="{{ g.s.key }}" style="position:relative;height:40px;cursor:pointer;touch-action:none;padding:0 13px"><div style="position:relative;top:17px;height:6px;border-radius:3px;background:#2A2A3A"><div style="position:absolute;left:0;top:0;bottom:0;width:{{ g.s.pct }};border-radius:3px;background:linear-gradient(90deg,#8B5CF6,#C084FC)"></div><div style="position:absolute;left:{{ g.s.pct }};top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.4),0 0 0 4px rgba(139,92,246,.25)"></div></div></div></div></sc-for>
+<div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:14px;font-weight:600">Session duration</span><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px"><sc-for list="{{ bDurChips }}" as="c"><button onClick="{{ c.go }}" style="height:44px;border-radius:12px;border:{{ c.border }};background:{{ c.bg }};color:{{ c.color }};font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ c.label }}</button></sc-for></div></div>
+</div>
+</sc-if>
+<div style="display:flex;gap:12px;padding:16px 24px 0">
+<button onClick="{{ nav.preview }}" style="flex:1;height:56px;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:#1D1D29;color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span style="display:flex;font-size:16px">{{ ic.play }}</span>Preview</button>
+<button onClick="{{ savePattern }}" style="flex:1;height:56px;border-radius:18px;border:none;background:linear-gradient(135deg,#8B5CF6,#9B5DF2 55%,#C45CC8);color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer">Save Pattern</button>
+</div>
+</div>
+<sc-if value="{{ sheet }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(5,5,10,.6);z-index:30"></div>
+<div role="dialog" aria-label="Add segment" style="position:absolute;left:0;right:0;bottom:0;z-index:31;background:#15151F;border-radius:32px 32px 0 0;border-top:1px solid rgba(255,255,255,.08);padding:12px 24px 40px;display:flex;flex-direction:column;gap:8px">
+<div style="width:40px;height:5px;border-radius:3px;background:rgba(255,255,255,.2);align-self:center;margin-bottom:8px"></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:20px;font-weight:700">Add segment</span><button onClick="{{ closeSheet }}" aria-label="Close" style="width:36px;height:36px;border-radius:18px;border:none;background:#1D1D29;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.close }}</button></div>
+<sc-for list="{{ segOptions }}" as="o"><button onClick="{{ o.add }}" style="display:flex;align-items:center;gap:14px;padding:12px;border-radius:18px;border:none;background:#1D1D29;color:#fff;font-family:inherit;text-align:left;cursor:pointer"><div style="width:52px;height:40px;border-radius:10px;background:{{ o.bg }};display:flex;align-items:flex-end;gap:2px;padding:6px;box-sizing:border-box;flex:none"><sc-for list="{{ o.bars }}" as="b"><div style="flex:1;height:{{ b.h }};border-radius:1px;background:rgba(255,255,255,.75)"></div></sc-for></div><div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:600">{{ o.label }}</span><span style="font-size:13px;color:#A1A1B5">{{ o.desc }}</span></div><span style="font-size:18px;color:#C4B5FD;display:flex">{{ ic.plus }}</span></button></sc-for>
+</div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ s.preview }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding:54px 0 40px;box-sizing:border-box;display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;padding:8px 16px;height:60px;box-sizing:border-box"><button onClick="{{ back }}" aria-label="Back" style="width:44px;height:44px;border-radius:22px;border:none;background:#1D1D29;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer">{{ ic.back }}</button><div style="flex:1;text-align:center;font-size:17px;font-weight:600;margin-right:44px">Pattern Preview</div></div>
+<div style="padding:8px 24px 0;display:flex;flex-direction:column;gap:6px"><label style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#A1A1B5">Name</label><input value="{{ pvName }}" onChange="{{ onName }}" aria-label="Pattern name" style="height:52px;border-radius:16px;border:1px solid rgba(255,255,255,.1);background:#15151F;color:#fff;font-family:inherit;font-size:18px;font-weight:600;padding:0 16px;outline:none"></div>
+<div style="margin:16px 24px 0;padding:20px 16px 16px;border-radius:24px;background:#15151F;border:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:12px">
+<div style="position:relative;display:flex;align-items:center;gap:2px;height:150px"><sc-for list="{{ pvBars }}" as="b"><div style="flex:1;height:{{ b.h }};border-radius:2px;background:{{ b.c }}"></div></sc-for><sc-if value="{{ pvPlaying }}">{{ playhead }}</sc-if></div>
+<div style="display:flex;gap:3px;height:6px"><sc-for list="{{ segsV }}" as="g"><div style="flex:{{ g.flex }};border-radius:3px;background:{{ g.bg }}"></div></sc-for></div>
+<div style="display:flex;justify-content:space-between;font-size:12px;color:#8A8AA0"><span>0 s</span><span>Loops for {{ bDur }} min</span><span>{{ cycle }} s</span></div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 24px 0">
+<div style="background:#15151F;border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#A1A1B5">Duration</span><span style="font-size:18px;font-weight:600">{{ bDur }} min</span></div>
+<div style="background:#15151F;border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#A1A1B5">Intensity</span><span style="font-size:18px;font-weight:600">{{ avgInt }}</span></div>
+<div style="background:#15151F;border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#A1A1B5">Rhythm</span><span style="font-size:18px;font-weight:600">{{ bRhythmLabel }}</span></div>
+</div>
+<div style="flex:1;min-height:24px"></div>
+<div style="display:flex;flex-direction:column;gap:12px;padding:0 24px">
+<div style="display:flex;gap:12px">
+<button onClick="{{ pvPlay }}" style="flex:1;height:56px;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:{{ pvPlayBg }};color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span style="display:flex;font-size:16px">{{ ic.play }}</span>{{ pvPlayLabel }}</button>
+<button onClick="{{ pvStop }}" style="width:120px;height:56px;border-radius:18px;border:1px solid rgba(248,113,113,.3);background:rgba(248,113,113,.1);color:#FCA5A5;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span style="width:12px;height:12px;border-radius:2px;background:#FCA5A5"></span>Stop</button>
+</div>
+<button onClick="{{ savePattern }}" style="height:56px;border-radius:18px;border:none;background:linear-gradient(135deg,#8B5CF6,#9B5DF2 55%,#C45CC8);color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer">Save</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.savedAny }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding:54px 0 120px;box-sizing:border-box;display:flex;flex-direction:column">
+<div style="padding:16px 24px 0;display:flex;flex-direction:column;gap:16px"><h1 style="margin:0;font-size:28px;font-weight:700;letter-spacing:-.02em">Your Patterns</h1>
+<div style="display:flex;padding:4px;border-radius:14px;background:#15151F;border:1px solid rgba(255,255,255,.06)"><button onClick="{{ tab.builder }}" style="flex:1;height:36px;border-radius:10px;border:none;background:none;color:#A1A1B5;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">Create</button><button style="flex:1;height:36px;border-radius:10px;border:none;background:#2A2A3A;color:#fff;font-family:inherit;font-size:14px;font-weight:600">Your Patterns</button></div></div>
+<sc-if value="{{ savedHas }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:12px;padding:16px 24px 0">
+<sc-for list="{{ savedV }}" as="p" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:14px;padding:14px;border-radius:22px;background:#1D1D29;border:1px solid rgba(255,255,255,.06)"><div style="width:64px;height:48px;border-radius:12px;background:#15151F;display:flex;align-items:center;gap:2px;padding:0 8px;box-sizing:border-box;flex:none"><sc-for list="{{ p.bars }}" as="b"><div style="flex:1;height:{{ b.h }};border-radius:1px;background:#B197FC"></div></sc-for></div><div style="flex:1;display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-size:16px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.name }}</span><span style="font-size:13px;color:#A1A1B5">{{ p.meta }}</span></div><button onClick="{{ p.del }}" aria-label="Delete pattern" style="width:44px;height:44px;border-radius:22px;border:none;background:none;color:#8A8AA0;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.trash }}</button><button onClick="{{ p.play }}" aria-label="Preview pattern" style="width:44px;height:44px;border-radius:22px;border:none;background:#8B5CF6;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.play }}</button></div></sc-for>
+<button onClick="{{ tab.builder }}" style="height:56px;border-radius:18px;border:1.5px dashed rgba(196,181,253,.35);background:none;color:#C4B5FD;font-family:inherit;font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span style="display:flex">{{ ic.plus }}</span>Create Pattern</button>
+</div>
+</sc-if>
+<sc-if value="{{ savedEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px 40px;text-align:center">
+<div style="width:200px;height:96px;border-radius:24px;border:1.5px dashed rgba(196,181,253,.28);display:flex;align-items:center;justify-content:center;gap:6px;padding:0 20px;box-sizing:border-box"><div style="flex:2;height:40px;border-radius:10px;background:rgba(139,92,246,.18)"></div><div style="flex:1;height:40px;border-radius:10px;background:rgba(255,255,255,.05)"></div><div style="flex:3;height:40px;border-radius:10px;background:rgba(196,181,253,.14)"></div></div>
+<h2 style="margin:8px 0 0;font-size:22px;font-weight:700">No saved patterns yet.</h2>
+<p style="margin:0;font-size:15px;line-height:1.5;color:#A1A1B5">Patterns you create and save will appear here.</p>
+<button onClick="{{ tab.builder }}" style="margin-top:8px;height:56px;padding:0 28px;border-radius:18px;border:none;background:linear-gradient(135deg,#8B5CF6,#9B5DF2 55%,#C45CC8);color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer">Create Your First Pattern</button>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.insights }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding:54px 0 120px;box-sizing:border-box">
+<div style="padding:16px 24px 0;display:flex;flex-direction:column;gap:4px"><h1 style="margin:0;font-size:28px;font-weight:700;letter-spacing:-.02em">Your Insights</h1><span style="font-size:15px;color:#A1A1B5">This week · Sep 21 – 27</span></div>
+<div style="margin:20px 24px 0;padding:20px;border-radius:24px;background:linear-gradient(160deg,rgba(139,92,246,.2),rgba(139,92,246,0) 70%),#15151F;border:1px solid rgba(196,181,253,.12);display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:52px;font-weight:700;letter-spacing:-.03em;line-height:1">7</span><span style="font-size:17px;color:#DDD3FF">sessions this week</span></div>
+<div style="display:flex;flex-direction:column;gap:10px"><div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:#A1A1B5">Weekly consistency</span><span style="font-weight:600">5 of 7 days</span></div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px"><sc-for list="{{ week }}" as="d"><div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:100%;height:8px;border-radius:4px;background:{{ d.dot }}"></div><span style="font-size:11px;color:#A1A1B5">{{ d.l }}</span></div></sc-for></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px 24px 0">
+<div style="background:#15151F;border:1px solid rgba(255,255,255,.06);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;color:#A1A1B5">Total minutes</span><span style="font-size:26px;font-weight:700">42</span></div>
+<div style="background:#15151F;border:1px solid rgba(255,255,255,.06);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;color:#A1A1B5">Average intensity</span><span style="font-size:26px;font-weight:700">5.4<span style="font-size:15px;color:#A1A1B5;font-weight:500"> /10</span></span></div>
+<div style="background:#15151F;border:1px solid rgba(255,255,255,.06);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;color:#A1A1B5">Most used time</span><span style="font-size:18px;font-weight:600">Evening</span><span style="font-size:13px;color:#A1A1B5">9 – 11 PM</span></div>
+<div style="background:#15151F;border:1px solid rgba(255,255,255,.06);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;color:#A1A1B5">Favorite pattern</span><span style="font-size:18px;font-weight:600">Soft Wave</span><span style="font-size:13px;color:#A1A1B5">3 sessions</span></div>
+</div>
+<div style="margin:12px 24px 0;padding:16px;border-radius:24px;background:#15151F;border:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:14px">
+<span style="font-size:15px;font-weight:600">Minutes per day</span>
+<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:10px;align-items:end;height:120px"><sc-for list="{{ week }}" as="d"><div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;height:100%"><span style="font-size:11px;color:#A1A1B5">{{ d.m }}</span><div style="width:100%;height:{{ d.h }};min-height:4px;border-radius:8px;background:{{ d.bar }}"></div></div></sc-for></div>
+<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:10px"><sc-for list="{{ week }}" as="d"><span style="text-align:center;font-size:11px;color:#8A8AA0">{{ d.l }}</span></sc-for></div>
+</div>
+<div style="margin:12px 24px 0;padding:16px;border-radius:24px;background:#15151F;border:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:14px">
+<span style="font-size:15px;font-weight:600">Favorite patterns</span>
+<sc-for list="{{ favs }}" as="f"><div style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between;font-size:14px"><span>{{ f.name }}</span><span style="color:#A1A1B5">{{ f.n }}</span></div><div style="height:6px;border-radius:3px;background:#262634"><div style="height:100%;width:{{ f.w }};border-radius:3px;background:#B197FC"></div></div></div></sc-for>
+</div>
+<p style="margin:16px 32px 0;font-size:12px;line-height:1.5;color:#8A8AA0;text-align:center">Insights reflect how you use Onde. They aren't health measurements.</p>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.profile }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding:54px 0 120px;box-sizing:border-box">
+<div style="padding:16px 24px 0"><h1 style="margin:0;font-size:28px;font-weight:700;letter-spacing:-.02em">Profile</h1></div>
+<div style="margin:20px 24px 0;display:flex;align-items:center;gap:16px"><div style="width:64px;height:64px;border-radius:32px;background:linear-gradient(135deg,#8B5CF6,#C45CC8);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700">E</div><div style="flex:1;display:flex;flex-direction:column;gap:4px"><span style="font-size:20px;font-weight:600">Elif</span><span style="font-size:14px;color:#A1A1B5">{{ planLabel }}</span></div></div>
+<sc-if value="{{ notPremium }}" hint-placeholder-val="{{ true }}"><div onClick="{{ nav.subscription }}" role="button" tabindex="0" style="margin:20px 24px 0;padding:16px;border-radius:22px;background:linear-gradient(135deg,rgba(139,92,246,.28),rgba(236,72,153,.16)),#15151F;border:1px solid rgba(196,181,253,.18);display:flex;align-items:center;gap:14px;cursor:pointer"><span style="width:44px;height:44px;border-radius:22px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:20px">{{ ic.crown }}</span><div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:600">Onde Premium</span><span style="font-size:13px;color:#DDD3FF">All patterns and the advanced builder</span></div><span style="font-size:18px;display:flex">{{ ic.chev }}</span></div></sc-if>
+<sc-for list="{{ profileGroups }}" as="g"><div style="padding:24px 24px 0"><div style="font-size:12px;font-weight:600;color:#A1A1B5;letter-spacing:.1em;text-transform:uppercase;margin:0 0 10px 4px">{{ g.title }}</div><div style="display:flex;flex-direction:column;gap:1px;background:rgba(255,255,255,.06);border-radius:20px;overflow:hidden"><sc-for list="{{ g.rows }}" as="r"><button onClick="{{ r.go }}" style="display:flex;align-items:center;gap:14px;min-height:56px;padding:0 16px;border:none;background:#15151F;color:{{ r.color }};font-family:inherit;font-size:16px;text-align:left;cursor:pointer"><span style="font-size:20px;display:flex;color:{{ r.iconColor }}">{{ r.icon }}</span><span style="flex:1">{{ r.label }}</span><span style="font-size:14px;color:#A1A1B5">{{ r.value }}</span><span style="font-size:16px;display:flex;color:#6E6E85">{{ ic.chev }}</span></button></sc-for></div></div></sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.listPage }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding:54px 0 48px;box-sizing:border-box">
+<div style="display:flex;align-items:center;padding:8px 16px;height:60px;box-sizing:border-box"><button onClick="{{ back }}" aria-label="Back" style="width:44px;height:44px;border-radius:22px;border:none;background:#1D1D29;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer">{{ ic.back }}</button></div>
+<div style="padding:4px 24px 0;display:flex;flex-direction:column;gap:6px"><h1 style="margin:0;font-size:28px;font-weight:700;letter-spacing:-.02em">{{ lp.title }}</h1><p style="margin:0;font-size:15px;color:#A1A1B5;line-height:1.5">{{ lp.sub }}</p></div>
+<sc-if value="{{ s.privacy }}" hint-placeholder-val="{{ false }}"><div style="margin:20px 24px 0;padding:16px;border-radius:24px;background:linear-gradient(160deg,rgba(139,92,246,.16),rgba(139,92,246,0) 70%),#15151F;border:1px solid rgba(196,181,253,.12);display:flex;flex-direction:column;gap:14px"><span style="font-size:15px;font-weight:600">How your data is handled</span><sc-for list="{{ privFacts }}" as="f"><div style="display:flex;gap:12px"><span style="width:36px;height:36px;border-radius:18px;background:rgba(139,92,246,.18);color:#DDD3FF;display:flex;align-items:center;justify-content:center;font-size:18px;flex:none">{{ f.icon }}</span><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">{{ f.t }}</span><span style="font-size:13px;line-height:1.45;color:#A1A1B5">{{ f.d }}</span></div></div></sc-for></div></sc-if>
+<sc-if value="{{ s.settings }}" hint-placeholder-val="{{ false }}"><div style="margin:20px 24px 0;padding:16px;border-radius:20px;background:#15151F;display:flex;flex-direction:column;gap:2px"><div style="display:flex;justify-content:space-between;font-size:16px"><span>Haptic intensity limit</span><span style="color:#A1A1B5">{{ limit }} / 10</span></div>
+<div role="slider" tabindex="0" aria-label="Haptic intensity limit" aria-valuemin="1" aria-valuemax="10" aria-valuenow="{{ limit }}" onPointerDown="{{ sl.lim.down }}" onKeyDown="{{ sl.lim.key }}" style="position:relative;height:40px;cursor:pointer;touch-action:none;padding:0 13px"><div style="position:relative;top:17px;height:6px;border-radius:3px;background:#2A2A3A"><div style="position:absolute;left:0;top:0;bottom:0;width:{{ sl.lim.pct }};border-radius:3px;background:linear-gradient(90deg,#8B5CF6,#C084FC)"></div><div style="position:absolute;left:{{ sl.lim.pct }};top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.4),0 0 0 4px rgba(139,92,246,.25)"></div></div></div>
+<span style="font-size:13px;color:#8A8AA0">No session will go above this level.</span></div></sc-if>
+<sc-if value="{{ s.notifications }}" hint-placeholder-val="{{ false }}"><div style="margin:20px 24px 0;display:flex;flex-direction:column;gap:8px"><sc-for list="{{ notifPreviews }}" as="n"><div style="padding:12px 14px;border-radius:20px;background:rgba(40,40,56,.75);border:1px solid rgba(255,255,255,.06);display:flex;gap:12px;align-items:center"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#6D3FE0,#B45CC8);display:flex;align-items:center;justify-content:center;flex:none;font-size:20px">{{ ic.waves }}</div><div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="display:flex;justify-content:space-between;font-size:13px"><span style="font-weight:600">Onde</span><span style="color:#A1A1B5">{{ n.t }}</span></div><span style="font-size:14px;color:#E6E6F0">{{ n.m }}</span></div></div></sc-for></div></sc-if>
+<sc-for list="{{ lp.groups }}" as="g"><div style="padding:24px 24px 0"><sc-if value="{{ g.title }}"><div style="font-size:12px;font-weight:600;color:#A1A1B5;letter-spacing:.1em;text-transform:uppercase;margin:0 0 10px 4px">{{ g.title }}</div></sc-if><div style="display:flex;flex-direction:column;gap:1px;background:rgba(255,255,255,.06);border-radius:20px;overflow:hidden"><sc-for list="{{ g.rows }}" as="r"><div onClick="{{ r.go }}" role="{{ r.role }}" aria-checked="{{ r.on }}" tabindex="0" style="display:flex;align-items:center;gap:14px;min-height:60px;padding:10px 16px;box-sizing:border-box;background:#15151F;color:{{ r.color }};cursor:pointer"><sc-if value="{{ r.icon }}"><span style="font-size:20px;display:flex;color:{{ r.iconColor }}">{{ r.icon }}</span></sc-if><div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:16px">{{ r.label }}</span><sc-if value="{{ r.sub }}"><span style="font-size:13px;line-height:1.4;color:#A1A1B5">{{ r.sub }}</span></sc-if></div><sc-if value="{{ r.isToggle }}"><span style="width:51px;height:31px;border-radius:16px;padding:2px;box-sizing:border-box;background:{{ r.track }};display:flex;flex:none;transition:background .2s"><span style="width:27px;height:27px;border-radius:50%;background:#fff;transform:{{ r.knob }};transition:transform .2s;box-shadow:0 2px 4px rgba(0,0,0,.3)"></span></span></sc-if><sc-if value="{{ r.isNav }}"><span style="font-size:14px;color:#A1A1B5">{{ r.value }}</span><span style="font-size:16px;display:flex;color:#6E6E85">{{ ic.chev }}</span></sc-if></div></sc-for></div></div></sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.safety }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding:54px 0 48px;box-sizing:border-box">
+<div style="display:flex;align-items:center;padding:8px 16px;height:60px;box-sizing:border-box"><button onClick="{{ back }}" aria-label="Back" style="width:44px;height:44px;border-radius:22px;border:none;background:#1D1D29;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer">{{ ic.back }}</button></div>
+<div style="padding:4px 24px 0;display:flex;flex-direction:column;gap:6px"><h1 style="margin:0;font-size:28px;font-weight:700;letter-spacing:-.02em">Use responsibly</h1><p style="margin:0;font-size:15px;color:#A1A1B5;line-height:1.5">A few simple guidelines for a comfortable experience.</p></div>
+<div style="display:flex;flex-direction:column;gap:10px;padding:20px 24px 0"><sc-for list="{{ safety }}" as="f"><div style="display:flex;gap:14px;align-items:center;padding:16px;border-radius:20px;background:#15151F;border:1px solid rgba(255,255,255,.06)"><span style="width:40px;height:40px;border-radius:20px;background:rgba(139,92,246,.16);color:#DDD3FF;display:flex;align-items:center;justify-content:center;font-size:19px;flex:none">{{ f.icon }}</span><span style="font-size:15px;line-height:1.45">{{ f.t }}</span></div></sc-for></div>
+<div style="margin:16px 24px 0;display:flex;flex-direction:column;gap:12px"><button onClick="{{ nav.settings }}" style="height:56px;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:#1D1D29;color:#fff;font-family:inherit;font-size:16px;font-weight:600;cursor:pointer">Set an intensity limit</button><p style="margin:0;font-size:12px;line-height:1.5;color:#8A8AA0;text-align:center">Onde is a relaxation tool and isn't intended to diagnose, treat or prevent any condition.</p></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.subscription }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding:54px 0 40px;box-sizing:border-box;background:radial-gradient(90% 40% at 50% 0%,rgba(139,92,246,.25),transparent 70%),#0B0B12">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px;height:60px;box-sizing:border-box"><button onClick="{{ back }}" aria-label="Close" style="width:44px;height:44px;border-radius:22px;border:none;background:rgba(255,255,255,.08);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer">{{ ic.close }}</button><button onClick="{{ restore }}" style="height:44px;padding:0 12px;border:none;background:none;color:#DDD3FF;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer">Restore</button></div>
+<div style="padding:0 24px;display:flex;flex-direction:column;gap:8px"><h1 style="margin:0;font-size:30px;line-height:1.15;font-weight:700;letter-spacing:-.02em">Unlock Your Personal Experience</h1><p style="margin:0;font-size:15px;color:#A1A1B5">Everything in Onde, on all your devices.</p></div>
+<div style="margin:20px 24px 0;border-radius:22px;background:#15151F;border:1px solid rgba(255,255,255,.06);overflow:hidden">
+<div style="display:grid;grid-template-columns:1fr 64px 72px;padding:12px 16px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#A1A1B5"><span></span><span style="text-align:center">Free</span><span style="text-align:center;color:#DDD3FF">Premium</span></div>
+<sc-for list="{{ features }}" as="f"><div style="display:grid;grid-template-columns:1fr 64px 72px;align-items:center;min-height:44px;padding:0 16px;border-top:1px solid rgba(255,255,255,.05);font-size:14px"><span>{{ f.l }}</span><span style="text-align:center;color:#A1A1B5;font-size:13px">{{ f.free }}</span><span style="display:flex;justify-content:center;color:#C4B5FD;font-size:18px">{{ ic.check }}</span></div></sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;padding:16px 24px 0">
+<sc-for list="{{ plans }}" as="p"><button onClick="{{ p.go }}" role="radio" aria-checked="{{ p.active }}" style="position:relative;display:flex;align-items:center;gap:14px;padding:16px;border-radius:20px;border:{{ p.border }};background:{{ p.bg }};color:#fff;font-family:inherit;text-align:left;cursor:pointer"><span style="width:22px;height:22px;border-radius:11px;border:2px solid {{ p.radio }};display:flex;align-items:center;justify-content:center;box-sizing:border-box;flex:none"><span style="width:10px;height:10px;border-radius:5px;background:{{ p.dot }}"></span></span><span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:600">{{ p.name }}<sc-if value="{{ p.badge }}"><span style="height:22px;padding:0 8px;border-radius:11px;background:#EC4899;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center">{{ p.badge }}</span></sc-if></span><span style="font-size:13px;color:#A1A1B5">{{ p.note }}</span></span><span style="font-size:17px;font-weight:600">{{ p.price }}</span></button></sc-for>
+</div>
+<div style="padding:16px 24px 0;display:flex;flex-direction:column;gap:12px">
+<button onClick="{{ nav.payment }}" style="height:56px;border-radius:18px;border:none;background:linear-gradient(135deg,#8B5CF6,#9B5DF2 55%,#C45CC8);color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer;box-shadow:0 8px 24px rgba(139,92,246,.28)">{{ planCta }}</button>
+<p style="margin:0;font-size:12px;line-height:1.5;color:#8A8AA0;text-align:center">{{ planFine }}</p>
+<div style="display:flex;justify-content:center;gap:16px;font-size:13px"><span onClick="{{ restore }}" role="link" style="color:#C4B5FD;cursor:pointer">Restore Purchases</span><span onClick="{{ manage }}" role="link" style="color:#C4B5FD;cursor:pointer">Manage Subscription</span><span onClick="{{ nav.terms }}" role="link" style="color:#C4B5FD;cursor:pointer">Terms</span></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.payment }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;padding:54px 24px 40px;box-sizing:border-box;display:flex;flex-direction:column;background:radial-gradient(80% 40% at 50% 28%,rgba(139,92,246,.22),transparent 70%),#0B0B12">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center">
+<div style="position:relative;width:140px;height:140px">{{ payOrb }}<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px">{{ ic.check }}</div></div>
+<h1 style="margin:12px 0 0;font-size:30px;font-weight:700;letter-spacing:-.02em">You're all set</h1>
+<p style="margin:0;font-size:16px;color:#A1A1B5">Onde Premium is now active.</p>
+<div style="width:100%;margin-top:16px;border-radius:22px;background:#15151F;border:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:1px;overflow:hidden;text-align:left"><sc-for list="{{ receipt }}" as="r"><div style="display:flex;justify-content:space-between;min-height:48px;align-items:center;padding:0 16px;font-size:15px;border-top:1px solid rgba(255,255,255,.04)"><span style="color:#A1A1B5">{{ r.k }}</span><span style="font-weight:600">{{ r.v }}</span></div></sc-for></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<button onClick="{{ finishPurchase }}" style="height:56px;border-radius:18px;border:none;background:linear-gradient(135deg,#8B5CF6,#9B5DF2 55%,#C45CC8);color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer">Start Exploring</button>
+<button onClick="{{ manage }}" style="height:56px;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:#1D1D29;color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer">Manage Subscription</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.error }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;padding:54px 24px 40px;box-sizing:border-box;display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;height:60px"><button onClick="{{ back }}" aria-label="Back" style="width:44px;height:44px;border-radius:22px;border:none;background:#1D1D29;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer">{{ ic.back }}</button></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center">
+<div style="width:88px;height:88px;border-radius:44px;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);display:flex;align-items:center;justify-content:center;font-size:38px;color:#F87171">{{ ic.alert }}</div>
+<h1 style="margin:8px 0 0;font-size:26px;font-weight:700;letter-spacing:-.02em">Haptic feedback isn't available.</h1>
+<p style="margin:0;font-size:15px;line-height:1.5;color:#A1A1B5;max-width:300px">Your device doesn't support this feature, or vibration is turned off.</p>
+<div style="width:100%;margin-top:12px;padding:16px;border-radius:22px;background:#15151F;border:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:12px;text-align:left"><span style="font-size:14px;font-weight:600">Please check your device settings</span><sc-for list="{{ errSteps }}" as="e"><div style="display:flex;gap:12px;align-items:center;font-size:14px;color:#D6D6E2"><span style="width:26px;height:26px;border-radius:13px;background:#262634;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none">{{ e.n }}</span>{{ e.t }}</div></sc-for></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<button onClick="{{ retryHaptics }}" style="height:56px;border-radius:18px;border:none;background:linear-gradient(135deg,#8B5CF6,#9B5DF2 55%,#C45CC8);color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer">Try Again</button>
+<button onClick="{{ tab.home }}" style="height:56px;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:#1D1D29;color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer">Continue with visual mode</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.permission }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;padding:54px 24px 40px;box-sizing:border-box;display:flex;flex-direction:column">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center">
+<div style="position:relative;width:200px;height:200px">{{ permOrb }}<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px">{{ ic.bell }}</div></div>
+<h1 style="margin:16px 0 0;font-size:28px;font-weight:700;letter-spacing:-.02em">Allow Notifications?</h1>
+<p style="margin:0;font-size:16px;color:#A1A1B5">Stay updated with your wellness routines.</p>
+<div style="width:100%;margin-top:16px;display:flex;flex-direction:column;gap:12px;text-align:left"><sc-for list="{{ permPoints }}" as="p"><div style="display:flex;gap:12px;align-items:center;font-size:15px"><span style="width:28px;height:28px;border-radius:14px;background:rgba(139,92,246,.18);color:#DDD3FF;display:flex;align-items:center;justify-content:center;font-size:15px;flex:none">{{ ic.check }}</span>{{ p }}</div></sc-for></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<button onClick="{{ allowNotif }}" style="height:56px;border-radius:18px;border:none;background:linear-gradient(135deg,#8B5CF6,#9B5DF2 55%,#C45CC8);color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer">Allow</button>
+<button onClick="{{ back }}" style="height:56px;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:#1D1D29;color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer">Not Now</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.help }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding:54px 0 48px;box-sizing:border-box">
+<div style="display:flex;align-items:center;padding:8px 16px;height:60px;box-sizing:border-box"><button onClick="{{ back }}" aria-label="Back" style="width:44px;height:44px;border-radius:22px;border:none;background:#1D1D29;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer">{{ ic.back }}</button></div>
+<div style="padding:4px 24px 0;display:flex;flex-direction:column;gap:16px"><h1 style="margin:0;font-size:28px;font-weight:700;letter-spacing:-.02em">Help &amp; Support</h1>
+<div style="display:flex;align-items:center;gap:10px;height:48px;padding:0 14px;border-radius:14px;background:#15151F;border:1px solid rgba(255,255,255,.08)"><span style="font-size:18px;color:#A1A1B5;display:flex">{{ ic.search }}</span><input value="{{ helpQ }}" onChange="{{ onHelpQ }}" placeholder="Search help" aria-label="Search help" style="flex:1;border:none;background:none;outline:none;color:#fff;font-family:inherit;font-size:16px"></div></div>
+<div style="padding:24px 24px 0"><div style="font-size:12px;font-weight:600;color:#A1A1B5;letter-spacing:.1em;text-transform:uppercase;margin:0 0 10px 4px">Common questions</div><div style="display:flex;flex-direction:column;gap:1px;background:rgba(255,255,255,.06);border-radius:20px;overflow:hidden"><sc-for list="{{ faqs }}" as="f"><div style="background:#15151F"><button onClick="{{ f.toggle }}" aria-expanded="{{ f.open }}" style="width:100%;display:flex;align-items:center;gap:12px;min-height:56px;padding:12px 16px;border:none;background:none;color:#fff;font-family:inherit;font-size:15px;font-weight:600;text-align:left;cursor:pointer"><span style="flex:1">{{ f.q }}</span><span style="display:flex;font-size:16px;color:#A1A1B5;transform:{{ f.rot }};transition:transform .2s">{{ ic.chev }}</span></button><sc-if value="{{ f.open }}"><p style="margin:0;padding:0 16px 16px;font-size:14px;line-height:1.55;color:#A1A1B5">{{ f.a }}</p></sc-if></div></sc-for></div></div>
+<div style="padding:24px 24px 0"><div style="font-size:12px;font-weight:600;color:#A1A1B5;letter-spacing:.1em;text-transform:uppercase;margin:0 0 10px 4px">Contact</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><button onClick="{{ emailSupport }}" style="padding:16px;border-radius:20px;border:1px solid rgba(255,255,255,.06);background:#15151F;color:#fff;font-family:inherit;text-align:left;display:flex;flex-direction:column;gap:10px;cursor:pointer"><span style="font-size:20px;display:flex;color:#C4B5FD">{{ ic.mail }}</span><span style="font-size:15px;font-weight:600">Email us</span><span style="font-size:12px;color:#A1A1B5">Reply within 24h</span></button><button onClick="{{ nav.safety }}" style="padding:16px;border-radius:20px;border:1px solid rgba(255,255,255,.06);background:#15151F;color:#fff;font-family:inherit;text-align:left;display:flex;flex-direction:column;gap:10px;cursor:pointer"><span style="font-size:20px;display:flex;color:#C4B5FD">{{ ic.info }}</span><span style="font-size:15px;font-weight:600">Safety</span><span style="font-size:12px;color:#A1A1B5">Use responsibly</span></button></div></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.delete }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding:54px 24px 40px;box-sizing:border-box;display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;height:60px"><button onClick="{{ back }}" aria-label="Back" style="width:44px;height:44px;border-radius:22px;border:none;background:#1D1D29;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer">{{ ic.back }}</button></div>
+<div style="display:flex;flex-direction:column;gap:12px;margin-top:8px"><div style="width:56px;height:56px;border-radius:28px;background:rgba(248,113,113,.12);color:#F87171;display:flex;align-items:center;justify-content:center;font-size:26px">{{ ic.trash }}</div><h1 style="margin:4px 0 0;font-size:28px;font-weight:700;letter-spacing:-.02em">{{ delTitle }}</h1><p style="margin:0;font-size:15px;line-height:1.5;color:#A1A1B5">This can't be undone. The following will be permanently removed:</p></div>
+<div style="margin-top:16px;padding:16px;border-radius:20px;background:#15151F;display:flex;flex-direction:column;gap:12px"><sc-for list="{{ delItems }}" as="d"><div style="display:flex;gap:12px;align-items:center;font-size:15px"><span style="width:6px;height:6px;border-radius:3px;background:#F87171;flex:none"></span>{{ d }}</div></sc-for></div>
+<p style="margin:12px 4px 0;font-size:13px;line-height:1.5;color:#A1A1B5">Your subscription isn't cancelled automatically. <span onClick="{{ manage }}" role="link" style="color:#C4B5FD;cursor:pointer">Manage Subscription</span></p>
+<div style="margin-top:20px;display:flex;flex-direction:column;gap:8px"><label style="font-size:14px;color:#D6D6E2">Type <b>DELETE</b> to confirm</label><input value="{{ delText }}" onChange="{{ onDelText }}" aria-label="Type DELETE to confirm" autocomplete="off" style="height:52px;border-radius:16px;border:1px solid rgba(255,255,255,.1);background:#15151F;color:#fff;font-family:inherit;font-size:17px;padding:0 16px;outline:none;letter-spacing:.08em"></div>
+<div style="flex:1;min-height:24px"></div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<button onClick="{{ doDelete }}" disabled="{{ delDisabled }}" style="height:56px;border-radius:18px;border:none;background:#F87171;color:#1F0A0A;font-family:inherit;font-size:17px;font-weight:700;cursor:pointer;opacity:{{ delOpacity }}">{{ delTitleShort }}</button>
+<button onClick="{{ exportData }}" style="height:56px;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:#1D1D29;color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer">Export My Data First</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s.terms }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding:54px 0 48px;box-sizing:border-box">
+<div style="display:flex;align-items:center;padding:8px 16px;height:60px;box-sizing:border-box"><button onClick="{{ back }}" aria-label="Back" style="width:44px;height:44px;border-radius:22px;border:none;background:#1D1D29;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer">{{ ic.back }}</button></div>
+<div style="padding:4px 24px 0;display:flex;flex-direction:column;gap:16px"><h1 style="margin:0;font-size:28px;font-weight:700;letter-spacing:-.02em">Legal</h1>
+<div style="display:flex;padding:4px;border-radius:14px;background:#15151F;border:1px solid rgba(255,255,255,.06)"><sc-for list="{{ legalTabs }}" as="t"><button onClick="{{ t.go }}" style="flex:1;height:36px;border-radius:10px;border:none;background:{{ t.bg }};color:{{ t.color }};font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">{{ t.label }}</button></sc-for></div>
+<span style="font-size:13px;color:#8A8AA0">Last updated September 1, 2026</span></div>
+<div style="padding:8px 24px 0;display:flex;flex-direction:column;gap:20px"><sc-for list="{{ legal }}" as="l"><div style="display:flex;flex-direction:column;gap:6px"><h2 style="margin:0;font-size:17px;font-weight:600">{{ l.h }}</h2><p style="margin:0;font-size:15px;line-height:1.6;color:#A1A1B5;text-wrap:pretty">{{ l.p }}</p></div></sc-for></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showTabs }}" hint-placeholder-val="{{ false }}">
+<nav style="position:absolute;left:0;right:0;bottom:0;height:88px;padding:6px 8px 30px;box-sizing:border-box;background:rgba(11,11,18,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.06);display:flex;z-index:20">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5"><button onClick="{{ t.go }}" aria-current="{{ t.active }}" style="flex:1;border:none;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:{{ t.color }};font-family:inherit;font-size:11px;font-weight:600;cursor:pointer"><span style="font-size:24px;display:flex">{{ t.icon }}</span>{{ t.label }}</button></sc-for>
+</nav>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+<div role="status" style="position:absolute;left:24px;right:24px;bottom:108px;z-index:50;display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:18px;background:#2A2A3A;border:1px solid rgba(255,255,255,.1);box-shadow:0 12px 32px rgba(0,0,0,.45);font-size:15px;font-weight:500"><span style="display:flex;color:#4ADE80;font-size:18px">{{ ic.check }}</span>{{ toast }}</div>
+</sc-if>
+
+<div style="position:absolute;bottom:8px;left:50%;width:134px;height:5px;margin-left:-67px;border-radius:3px;background:rgba(255,255,255,.85);z-index:60;pointer-events:none"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:413,&quot;height&quot;:872},&quot;start&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;splash&quot;,&quot;onb1&quot;,&quot;onb2&quot;,&quot;onb3&quot;,&quot;onb4&quot;,&quot;home&quot;,&quot;library&quot;,&quot;detail&quot;,&quot;session&quot;,&quot;paused&quot;,&quot;complete&quot;,&quot;builder&quot;,&quot;preview&quot;,&quot;saved&quot;,&quot;insights&quot;,&quot;profile&quot;,&quot;privacy&quot;,&quot;settings&quot;,&quot;notifications&quot;,&quot;safety&quot;,&quot;subscription&quot;,&quot;payment&quot;,&quot;empty&quot;,&quot;error&quot;,&quot;permission&quot;,&quot;help&quot;,&quot;delete&quot;,&quot;terms&quot;],&quot;default&quot;:&quot;splash&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;live&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;premium&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;reduceMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  P = [
+    {id:'soft',name:'Soft Wave',cat:'Gentle',tags:['Gentle','Wave','Relax'],dur:5,int:4,shape:'sine',f:2,desc:'Slow, rolling waves that rise and fall gently.'},
+    {id:'calm',name:'Calm Pulse',cat:'Pulse',tags:['Pulse','Relax'],dur:3,int:5,shape:'pulse',f:5,desc:'Even, steady pulses at a resting pace.'},
+    {id:'deep',name:'Deep Rhythm',cat:'Rhythmic',tags:['Rhythmic'],dur:10,int:7,shape:'rhythm',f:6,locked:true,desc:'A layered rhythm with strong and soft beats.'},
+    {id:'slow',name:'Slow Flow',cat:'Relax',tags:['Wave','Relax','Sleep'],dur:15,int:3,shape:'sine',f:1,desc:'One long, unhurried wave on repeat.'},
+    {id:'night',name:'Night Wave',cat:'Sleep',tags:['Sleep','Gentle','Wave'],dur:10,int:2,shape:'fade',f:2,desc:'Softens gradually as the session winds down.'},
+    {id:'balanced',name:'Balanced Pulse',cat:'Focus',tags:['Focus','Pulse','Rhythmic'],dur:5,int:6,shape:'pulse',f:7,desc:'A clear, even pulse that helps you settle in.'},
+    {id:'tide',name:'Evening Tide',cat:'Wave',tags:['Wave','Relax'],dur:10,int:5,shape:'swell',f:3,locked:true,desc:'Builds like a tide, then slowly recedes.'},
+    {id:'still',name:'Still Point',cat:'Focus',tags:['Focus','Gentle'],dur:3,int:3,shape:'rhythm',f:3,desc:'Minimal taps with long, quiet pauses.'}
+  ];
+  SEG = {
+    'Pulse':{bg:'linear-gradient(180deg,#8B5CF6,#6A3DE0)',c:'#8B5CF6',short:'Pulse',desc:'Short, distinct taps'},
+    'Wave':{bg:'linear-gradient(180deg,#B197FC,#7C5CE6)',c:'#B197FC',short:'Wave',desc:'Smooth rise and fall'},
+    'Ramp Up':{bg:'linear-gradient(90deg,#4C2FA6,#C45CC8)',c:'#C45CC8',short:'Ramp ↑',desc:'Gradually builds intensity'},
+    'Ramp Down':{bg:'linear-gradient(90deg,#C45CC8,#4C2FA6)',c:'#A560D8',short:'Ramp ↓',desc:'Gradually softens'},
+    'Pause':{bg:'#2A2A38',c:'#3A3A4D',short:'Pause',desc:'A moment of stillness'}
+  };
+  I = {
+    home:{d:['M3.5 10.5 12 3.5l8.5 7V20a1 1 0 0 1-1 1H15v-6H9v6H4.5a1 1 0 0 1-1-1z']},
+    wave:{d:['M2 12h2.5l2-5 3 10 3-14 3 16 2.5-9 1.5 2H22']},
+    sliders:{d:['M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1'],c:[[15,6,2],[9,12,2],[17,18,2]]},
+    activity:{d:['M3 12h4l3-8 4 16 3-8h4']},
+    user:{d:['M4.5 20.5c.6-3.6 3.8-5.5 7.5-5.5s6.9 1.9 7.5 5.5'],c:[[12,8,4]]},
+    back:{d:['M15 5l-7 7 7 7']}, chev:{d:['M9 5l7 7-7 7']}, close:{d:['M6 6l12 12M18 6 6 18']},
+    play:{d:['M8 5.5v13a.6.6 0 0 0 .9.5l10.4-6.5a.6.6 0 0 0 0-1L8.9 5a.6.6 0 0 0-.9.5z'],fill:true},
+    pause:{d:['M8.5 5v14M15.5 5v14'],sw:2.6},
+    plus:{d:['M12 5v14M5 12h14']},
+    heart:{d:['M12 20s-7.5-4.6-7.5-10.2A4.1 4.1 0 0 1 12 7.3a4.1 4.1 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z']},
+    heartF:{d:['M12 20s-7.5-4.6-7.5-10.2A4.1 4.1 0 0 1 12 7.3a4.1 4.1 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z'],fill:true},
+    lock:{d:['M8.5 11V8a3.5 3.5 0 0 1 7 0v3'],r:[[5.5,11,13,9.5,2.5]]},
+    shield:{d:['M12 3l7.5 3v5.5c0 4.8-3.2 8-7.5 9.5-4.3-1.5-7.5-4.7-7.5-9.5V6z']},
+    bell:{d:['M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 1.5h-15zM10 20.5a2 2 0 0 0 4 0']},
+    check:{d:['M5 12.5l4.5 4.5L19 7']},
+    info:{d:['M12 11v5.5M12 7.8v.1'],c:[[12,12,9]]},
+    alert:{d:['M12 4 2.8 19.5h18.4zM12 10v4.5M12 17.2v.1']},
+    search:{d:['M20 20l-4.3-4.3'],c:[[11,11,6.5]]},
+    help:{d:['M9.6 9.4a2.5 2.5 0 1 1 3.6 2.3c-.7.3-1.2.9-1.2 1.7v.4M12 16.8v.1'],c:[[12,12,9]]},
+    doc:{d:['M7 3h7l4 4v14H7zM14 3v4h4M10 12h5M10 16h5']},
+    trash:{d:['M5 7h14M10 7V4.5h4V7M7 7l1 13h8l1-13']},
+    download:{d:['M12 4v11M7.5 10.5 12 15l4.5-4.5M5 20h14']},
+    crown:{d:['M4 8l4.5 4L12 5l3.5 7L20 8l-2 11H6z']},
+    moon:{d:['M19.5 14.5A7.8 7.8 0 1 1 9.5 4.5a6.2 6.2 0 0 0 10 10z']},
+    globe:{d:['M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18'],c:[[12,12,9]]},
+    cloud:{d:['M7 18.5h10a4 4 0 0 0 .6-8 6 6 0 0 0-11.4 1.7A3.4 3.4 0 0 0 7 18.5z']},
+    device:{d:['M11 18h2'],r:[[7,3,10,18,2.5]]},
+    chart:{d:['M5 20V11M12 20V5M19 20v-6']},
+    clock:{d:['M12 7.5V12l3 2'],c:[[12,12,9]]},
+    mail:{d:['M3.5 7l8.5 6 8.5-6'],r:[[3,5.5,18,13,2.5]]},
+    card:{d:['M3 10h18'],r:[[3,5.5,18,13,2.5]]},
+    waves:{d:['M3 8c2-2 4-2 6 0s4 2 6 0 4-2 6 0','M3 12.5c2-2 4-2 6 0s4 2 6 0 4-2 6 0','M3 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0']},
+    leaf:{d:['M5 19C5 11 11 5 19 5c0 8-6 14-14 14zM5 19l7-7']},
+    target:{c:[[12,12,8.5],[12,12,4.5],[12,12,.8]]},
+    breath:{c:[[12,12,3],[12,12,8]]},
+    battery:{d:['M20 10.5v3'],r:[[3,7.5,16,9,2.5]]},
+    sound:{d:['M4 9.5h3.5L12 6v12l-4.5-3.5H4zM16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11']},
+    eye:{d:['M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z'],c:[[12,12,3]]},
+    timer:{d:['M12 13.5V10M10 3h4'],c:[[12,13.5,7.5]]},
+    car:{d:['M5 16v-4l2-5h10l2 5v4zM5 16v2.5M19 16v2.5M4 12h16']},
+    thermo:{d:['M10 13.5V5a2 2 0 0 1 4 0v8.5a4 4 0 1 1-4 0z']},
+    hand:{d:['M8 12V5.5a1.5 1.5 0 0 1 3 0V11M11 10V4.5a1.5 1.5 0 0 1 3 0V11M14 10.5V6a1.5 1.5 0 0 1 3 0v8a6 6 0 0 1-6 6h-.5a5.5 5.5 0 0 1-4.6-2.5L3.8 14a1.5 1.5 0 0 1 2.4-1.8L8 14']},
+    pauseC:{d:['M10 9v6M14 9v6'],c:[[12,12,9]]}
+  };
+
+  state = this.initial();
+
+  initial() {
+    const p = this.props || {};
+    const start = p.start || 'splash';
+    const map = { paused:['session',{paused:true}], onb1:['onb',{onb:0}], onb2:['onb',{onb:1}], onb3:['onb',{onb:2}], onb4:['onb',{onb:3}], empty:['empty',{saved:[]}], legal:['terms',{}], complete:['complete',{remaining:0}] };
+    const [screen, extra] = map[start] || [start, {}];
+    return Object.assign({
+      screen, hist: [], onb: 0, pid: 'soft', intensity: 6, rhythm: 4, duration: 5,
+      remaining: 272, total: 300, paused: false, ended: false,
+      cat: 'All', fav: { soft: true }, feel: null,
+      segs: [{type:'Pulse',int:6,dur:4},{type:'Pause',int:0,dur:2},{type:'Pulse',int:5,dur:3},{type:'Wave',int:7,dur:8},{type:'Ramp Down',int:6,dur:5}],
+      sel: 3, sheet: false, bTab: 'segment', freq: 5, bRhythm: 4, pulseLen: 250, pauseLen: 600, bDur: 5,
+      pvPlaying: false, pvName: 'Evening Drift',
+      saved: [{name:'Morning Reset',segs:4,dur:3,int:5,shape:'pulse'},{name:'Evening Drift',segs:6,dur:10,int:3,shape:'sine'},{name:'Focus Loop',segs:3,dur:5,int:6,shape:'rhythm'}],
+      toast: null, premium: null, plan: 'yearly', faq: 0, delText: '', delMode: 'account', legalTab: 'terms', helpQ: '',
+      tg: { analytics:false, personalization:true, notif:true, local:true, cloud:false, sound:false, dark:true, autostop:true, battery:true, rm:false, visual:true, lockStop:true, n_routine:true, n_checkin:true, n_tips:false },
+      limit: 8, defDur: 5
+    }, extra);
+  }
+
+  componentDidMount() {
+    this.iv = setInterval(() => this.tick(), 1000);
+    if (this.isLive() && this.state.screen === 'splash') this.st = setTimeout(() => this.setState({ screen: 'onb', hist: [] }), 1300);
+  }
+  componentWillUnmount() { clearInterval(this.iv); clearTimeout(this.st); clearTimeout(this.tt); clearTimeout(this.pt); if (this.running) this.vib(0); }
+  isLive() { const l = this.props.live; return l === true || l === 'true' || !this.props.start; }
+  vib(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
+  isPremium() { return this.state.premium != null ? this.state.premium : (this.props.premium === true || this.props.premium === 'true'); }
+  rm() { return this.state.tg.rm || this.props.reduceMotion === true || this.props.reduceMotion === 'true'; }
+
+  tick() {
+    const s = this.state;
+    if (s.screen !== 'session' || s.paused) return;
+    this.n = (this.n || 0) + 1;
+    if (this.running && this.n % 4 === 1) this.vib(this.sessPattern());
+    if (s.remaining <= 1) { this.running = false; this.vib(0); this.setState({ remaining: 0, screen: 'complete', ended: false }); }
+    else this.setState({ remaining: s.remaining - 1 });
+  }
+  sessPattern() {
+    const lim = Math.min(this.state.intensity, this.state.limit);
+    const on = 60 + lim * 22, off = Math.max(120, 1000 - this.state.rhythm * 85);
+    const a = []; let t = 0; while (t < 4000) { a.push(on, off); t += on + off; } return a;
+  }
+  go(screen, extra) { this.setState(s => Object.assign({ screen, hist: [...s.hist, s.screen], sheet: false }, extra || {})); }
+  back = () => { this.vib(0); clearTimeout(this.pt); this.setState(s => { const h = s.hist.slice(); const prev = h.pop() || 'home'; return { screen: prev, hist: h, pvPlaying: false }; }); };
+  tabTo(k) { this.setState({ screen: k, hist: [], sheet: false }); }
+  toast(msg) { clearTimeout(this.tt); this.setState({ toast: msg }); this.tt = setTimeout(() => this.setState({ toast: null }), 2200); }
+  flip(k) { this.setState(s => ({ tg: Object.assign({}, s.tg, { [k]: !s.tg[k] }) })); }
+  openPattern(id) {
+    const p = this.P.find(x => x.id === id);
+    if (p.locked && !this.isPremium()) return this.go('subscription');
+    this.go('detail', { pid: id, intensity: Math.min(p.int + 2, 10), duration: p.dur });
+  }
+  startSession(fromComplete) {
+    const t = this.state.duration * 60;
+    this.running = true; this.n = 0;
+    this.setState(s => ({ screen: 'session', hist: fromComplete ? s.hist : [...s.hist, s.screen], remaining: t, total: t, paused: false, feel: null }));
+    this.vib(this.sessPattern());
+  }
+  stopSession() { this.running = false; this.vib(0); this.setState({ screen: 'complete', ended: true, paused: false }); }
+
+  icon(name) {
+    const s = this.I[name], h = React.createElement, k = [];
+    (s.d || []).forEach((d, i) => k.push(h('path', { key: 'p' + i, d })));
+    (s.c || []).forEach((c, i) => k.push(h('circle', { key: 'c' + i, cx: c[0], cy: c[1], r: c[2] })));
+    (s.r || []).forEach((r, i) => k.push(h('rect', { key: 'r' + i, x: r[0], y: r[1], width: r[2], height: r[3], rx: r[4] || 0 })));
+    return h('svg', { width: '1em', height: '1em', viewBox: '0 0 24 24', fill: s.fill ? 'currentColor' : 'none', stroke: s.fill ? 'none' : 'currentColor', strokeWidth: s.sw || 1.7, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true }, k);
+  }
+  sine(w, h, amp, per, ph, steps) {
+    let d = ''; steps = steps || 160;
+    for (let i = 0; i <= steps; i++) { const x = i / steps * w, y = h / 2 + amp * Math.sin((i / steps) * per * 2 * Math.PI + (ph || 0)); d += (i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1); }
+    return d;
+  }
+  waves(w, h, lines) {
+    const e = React.createElement, rm = this.rm();
+    return e('div', { style: { position: 'relative', width: w, height: h, overflow: 'hidden' }, 'aria-hidden': true },
+      lines.map((l, i) => e('div', { key: i, style: { position: 'absolute', left: 0, top: 0, width: w * 2, height: h, animation: rm ? 'none' : `hw-slide ${l.s}s linear infinite`, animationDirection: l.rev ? 'reverse' : 'normal' } },
+        e('svg', { width: w * 2, height: h, viewBox: `0 0 ${w * 2} ${h}` }, e('path', { d: this.sine(w * 2, h, l.a, l.p * 2, l.ph || 0, 320), fill: 'none', stroke: l.c, strokeWidth: l.sw || 1.5, strokeOpacity: l.o == null ? 1 : l.o, strokeLinecap: 'round' })))));
+  }
+  orb(size, o) {
+    o = o || {};
+    const e = React.createElement, rm = this.rm() || o.still;
+    const rh = o.rhythm || 4, dur = Math.max(1.4, 5.6 - rh * 0.42), ps = o.paused ? 'paused' : 'running';
+    const inset = (26 - (o.intensity || 5) * 0.9) + '%';
+    const rings = [0, 1, 2].map(i => e('div', { key: i, style: { position: 'absolute', inset: 0, borderRadius: '50%', border: '1.5px solid rgba(196,181,253,.55)', animation: rm ? 'none' : `hw-ripple ${dur * 1.4}s ease-out ${-(i * dur * 1.4 / 3)}s infinite`, animationPlayState: ps, transform: rm ? `scale(${0.72 + i * 0.14})` : undefined, opacity: rm ? 0.35 - i * 0.1 : undefined } }));
+    return e('div', { style: { position: 'absolute', inset: 0 }, 'aria-hidden': true },
+      e('div', { style: { position: 'absolute', inset: '-18%', borderRadius: '50%', background: 'radial-gradient(circle,rgba(139,92,246,.28),transparent 62%)' } }),
+      rings,
+      e('div', { style: { position: 'absolute', inset, borderRadius: '50%', background: 'radial-gradient(circle at 34% 28%,#C9B8FF 0%,#8B5CF6 38%,#5B2FC9 72%,#2A1660 100%)', boxShadow: '0 0 60px rgba(139,92,246,.45), inset 0 0 30px rgba(255,255,255,.08)', animation: rm ? 'none' : `hw-breathe ${dur * 1.6}s ease-in-out infinite`, animationPlayState: ps } }),
+      e('div', { style: { position: 'absolute', inset: '40%', borderRadius: '50%', background: 'radial-gradient(circle,rgba(249,168,212,.55),transparent 70%)', filter: 'blur(10px)', animation: rm ? 'none' : `hw-breathe ${dur * 1.6}s ease-in-out ${-dur * 0.8}s infinite`, animationPlayState: ps } }));
+  }
+  logo(size) {
+    const e = React.createElement;
+    const svg = e('svg', { width: size * 0.56, height: size * 0.56, viewBox: '0 0 48 48' },
+      [[16, 4, '#C4B5FD'], [24, 6, '#A78BFA'], [32, 4, '#F0ABFC']].map((l, i) => e('path', { key: i, d: this.sine(32, 8, l[1] / 2, 1.5, 0, 40), transform: `translate(8 ${l[0] - 4})`, fill: 'none', stroke: l[2], strokeWidth: 3, strokeLinecap: 'round' })));
+    return e('div', { style: { width: size, height: size, borderRadius: size * 0.26, background: 'linear-gradient(145deg,#231A3F,#15151F)', border: '1px solid rgba(196,181,253,.18)', boxShadow: '0 20px 60px rgba(139,92,246,.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', animation: this.rm() ? 'none' : 'hw-rise .9s ease-out both' } }, svg);
+  }
+  shapeVal(shape, t, f) {
+    const s = Math.sin;
+    switch (shape) {
+      case 'pulse': return (Math.floor(t * f * 2) % 2 === 0) ? .85 : .2;
+      case 'rhythm': return [.9, .35, .62, .25][Math.floor(t * f * 4) % 4];
+      case 'fade': return (.55 + .4 * s(t * 2 * Math.PI * f)) * (1 - t * .65);
+      case 'swell': return .15 + .8 * s(t * Math.PI) * (.75 + .25 * s(t * 2 * Math.PI * f * 2));
+      case 'Pulse': return (Math.floor(t * f) % 2 === 0) ? .9 : .25;
+      case 'Wave': return .5 + .45 * s(t * 2 * Math.PI);
+      case 'Ramp Up': return .12 + .85 * t;
+      case 'Ramp Down': return .97 - .85 * t;
+      case 'Pause': return .05;
+      default: return .5 + .42 * s(t * 2 * Math.PI * f);
+    }
+  }
+  bars(shape, f, n, scale, c) {
+    const a = [];
+    for (let i = 0; i < n; i++) { const t = n === 1 ? 0 : i / (n - 1); const v = this.shapeVal(shape, t, f) * (scale == null ? 1 : scale); a.push({ h: Math.max(8, Math.round(v * 100)) + '%', c }); }
+    return a;
+  }
+  segBars(g, n) { return this.bars(g.type, 6, n, g.type === 'Pause' ? 1 : (.35 + g.int * .065)); }
+  slider(val, min, max, step, set) {
+    const pct = ((val - min) / (max - min) * 100).toFixed(1) + '%';
+    const down = e => {
+      e.stopPropagation();
+      const el = e.currentTarget;
+      const upd = ev => { const r = el.getBoundingClientRect(); const sc = r.width / (el.offsetWidth || r.width); const pad = 13 * sc; let f = (ev.clientX - r.left - pad) / (r.width - 2 * pad); f = Math.max(0, Math.min(1, f)); set(+(Math.round((min + f * (max - min)) / step) * step).toFixed(2)); };
+      upd(e);
+      const mv = ev => upd(ev), up = () => { window.removeEventListener('pointermove', mv); window.removeEventListener('pointerup', up); };
+      window.addEventListener('pointermove', mv); window.addEventListener('pointerup', up);
+    };
+    const key = e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { e.preventDefault(); set(Math.min(max, +(val + step).toFixed(2))); }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { e.preventDefault(); set(Math.max(min, +(val - step).toFixed(2))); }
+    };
+    return { pct, down, key, val };
+  }
+  chip(label, active, go, accent) {
+    return { label, active, go, bg: active ? (accent || '#F2EEFF') : '#1D1D29', color: active ? (accent ? '#fff' : '#1A1030') : '#C9C9D6', border: active ? '1px solid transparent' : '1px solid rgba(255,255,255,.08)' };
+  }
+  rhythmLabel(r) { return r <= 3 ? 'Slow' : r <= 7 ? 'Moderate' : 'Fast'; }
+  updSeg(k, v) { this.setState(s => { const segs = s.segs.map((g, i) => i === s.sel ? Object.assign({}, g, { [k]: v }) : g); return { segs }; }); }
+  moveSeg(from, to) {
+    if (from == null || from === to || to < 0 || to >= this.state.segs.length) return;
+    this.setState(s => { const a = s.segs.slice(); const [g] = a.splice(from, 1); a.splice(to, 0, g); return { segs: a, sel: to }; });
+  }
+  segPattern() {
+    const s = this.state, a = [];
+    s.segs.forEach(g => {
+      const ms = g.dur * 1000;
+      if (g.type === 'Pause') { a.push(0, ms); return; }
+      if (g.type === 'Pulse') { let t = 0; while (t < ms) { a.push(s.pulseLen, s.pauseLen); t += s.pulseLen + s.pauseLen; } return; }
+      a.push(Math.round(ms * .85), Math.round(ms * .15));
+    });
+    return a;
+  }
+  toggleRow(label, sub, k, icon, onClick) {
+    const on = !!this.state.tg[k];
+    return { label, sub, icon: icon ? this.icon(icon) : null, iconColor: '#C4B5FD', color: '#fff', isToggle: true, isNav: false, on, role: 'switch', go: onClick || (() => this.flip(k)), track: on ? '#8B5CF6' : '#3A3A4D', knob: on ? 'translateX(20px)' : 'translateX(0)' };
+  }
+  navRow(label, value, go, icon, danger, sub) {
+    return { label, value: value || '', sub, icon: icon ? this.icon(icon) : null, iconColor: danger ? '#F87171' : '#C4B5FD', color: danger ? '#F87171' : '#fff', isToggle: false, isNav: true, role: 'button', go };
+  }
+
+  renderVals() {
+    const s = this.state, sc = s.screen, rm = this.rm(), premium = this.isPremium();
+    if (!this._ic) { this._ic = {}; Object.keys(this.I).forEach(k => this._ic[k] = this.icon(k)); }
+    const ic = this._ic;
+    const nav = {}; ['notifications','help','safety','preview','subscription','payment','terms','settings','privacy','delete','error','permission'].forEach(k => nav[k] = () => this.go(k));
+    const tab = {}; ['home','library','builder','saved','insights','profile'].forEach(k => tab[k] = () => { this.running = false; this.vib(0); this.tabTo(k); });
+    const pat = this.P.find(p => p.id === s.pid) || this.P[0];
+    const S = { splash:1,onb:1,home:1,library:1,detail:1,session:1,complete:1,builder:1,preview:1,insights:1,profile:1,privacy:1,settings:1,notifications:1,safety:1,subscription:1,payment:1,error:1,permission:1,help:1,delete:1,terms:1 };
+    const sv = {}; Object.keys(S).forEach(k => sv[k] = sc === k);
+    sv.savedAny = sc === 'saved' || sc === 'empty';
+    sv.listPage = sc === 'privacy' || sc === 'settings' || sc === 'notifications';
+    const savedEmpty = sc === 'empty' || s.saved.length === 0;
+    const curTab = sv.savedAny ? 'builder' : sc;
+    const showTabs = ['home','library','builder','insights','profile'].includes(sc) || sv.savedAny;
+    const tabs = [['home','Home','home'],['library','Patterns','wave'],['builder','Custom','sliders'],['insights','Insights','activity'],['profile','Profile','user']].map(([k, label, i]) => ({ label, icon: ic[i], go: tab[k], active: curTab === k, color: curTab === k ? '#fff' : '#77778C' }));
+
+    const onbT = [['Your Personal Haptic Wellness','Create personalized vibration experiences designed around your preferences.'],['Find Your Rhythm','Explore different vibration patterns, rhythms and intensities.'],['Make It Yours','Fine-tune intensity, rhythm and duration to create your own experience.'],['Your Privacy Comes First','Your preferences stay private and under your control.']];
+    const finishOnb = () => this.setState({ screen: 'home', hist: [] });
+    const eA = React.createElement;
+    const onbBars = eA('div', { style: { display: 'flex', alignItems: 'center', gap: 4, height: 140 }, 'aria-hidden': true },
+      Array.from({ length: 26 }, (_, i) => eA('div', { key: i, style: { flex: 1, height: `${30 + 60 * Math.abs(Math.sin(i * .5))}%`, borderRadius: 3, background: i % 5 === 0 ? '#F0ABFC' : '#A78BFA', opacity: .55 + .45 * Math.abs(Math.cos(i * .3)), animation: rm ? 'none' : `hw-bar ${1.6 + (i % 4) * .25}s ease-in-out ${-(i * .12)}s infinite`, transformOrigin: 'center' } })));
+
+    const moods = [
+      ['Relax','Soft Wave · 5 min','waves','soft','rgba(139,92,246,.45)'],['Unwind','Slow Flow · 15 min','leaf','slow','rgba(236,72,153,.3)'],
+      ['Focus','Balanced Pulse · 5 min','target','balanced','rgba(110,120,250,.38)'],['Calm','Calm Pulse · 3 min','breath','calm','rgba(196,181,253,.3)'],
+      ['Sleep','Night Wave · 10 min','moon','night','rgba(91,47,201,.55)']
+    ].map(([label, sub, i, pid, g]) => ({ label, sub, icon: ic[i], open: () => this.openPattern(pid), bg: `radial-gradient(120% 90% at 100% 0%,${g},transparent 62%),#1D1D29`, border: '1px solid rgba(255,255,255,.06)' }));
+    moods.push({ label: 'Custom', sub: 'Build your own', icon: ic.plus, open: tab.builder, bg: 'rgba(139,92,246,.05)', border: '1.5px dashed rgba(196,181,253,.3)' });
+
+    const cats = ['All','Gentle','Rhythmic','Pulse','Wave','Relax','Focus','Sleep'];
+    const libChips = cats.map(c => this.chip(c, s.cat === c, () => this.setState({ cat: c })));
+    const libPatterns = this.P.filter(p => s.cat === 'All' || p.tags.includes(s.cat)).map(p => {
+      const locked = p.locked && !premium;
+      return { name: p.name, meta: `${p.cat} · ${p.dur} min`, int: p.int, locked, aria: `${p.name}, ${p.dur} minutes, intensity ${p.int}${locked ? ', premium' : ''}`,
+        bars: this.bars(p.shape, p.f, 36, 1, locked ? '#4A4A5E' : '#A78BFA'),
+        level: Array.from({ length: 10 }, (_, i) => ({ c: i < p.int ? '#C4B5FD' : '#33334A' })),
+        open: () => this.openPattern(p.id), playBg: locked ? '#2A2A3A' : '#8B5CF6', playIcon: locked ? ic.lock : ic.play };
+    });
+
+    const sl = {
+      int: this.slider(s.intensity, 1, 10, 1, v => this.setState({ intensity: v })),
+      rhy: this.slider(s.rhythm, 1, 10, 1, v => this.setState({ rhythm: v })),
+      lim: this.slider(s.limit, 1, 10, 1, v => this.setState({ limit: v }))
+    };
+    const selG = s.segs[Math.min(s.sel, s.segs.length - 1)];
+    sl.sInt = this.slider(selG.int, 0, 10, 1, v => this.updSeg('int', v));
+    sl.sDur = this.slider(selG.dur, 1, 20, 1, v => this.updSeg('dur', v));
+    const durChips = [1, 3, 5, 10, 15].map(d => this.chip(d + ' min', s.duration === d, () => this.setState({ duration: d })));
+    const isFav = !!s.fav[pat.id];
+
+    const mm = Math.floor(s.remaining / 60), ss = s.remaining % 60;
+    const elapsed = Math.max(0, s.total - s.remaining);
+    const cycle = s.segs.reduce((a, g) => a + g.dur, 0);
+    const segsV = s.segs.map((g, i) => ({
+      short: this.SEG[g.type].short, durLabel: g.dur + 's', flex: String(g.dur), bg: this.SEG[g.type].bg, selected: i === s.sel,
+      ring: i === s.sel ? '0 0 0 2px #0B0B12,0 0 0 4px #fff' : 'none', bars: this.segBars(g, Math.max(3, Math.min(10, Math.round(g.dur * 1.1)))),
+      aria: `Segment ${i + 1}: ${g.type}, ${g.dur} seconds, intensity ${g.int}`,
+      pick: () => this.setState({ sel: i, bTab: 'segment' }),
+      dragStart: e => { this.dragI = i; try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', String(i)); } catch (x) {} },
+      dragOver: e => e.preventDefault(), drop: e => { e.preventDefault(); this.moveSeg(this.dragI, i); this.dragI = null; }
+    }));
+    const pvBars = [];
+    const N = 48;
+    for (let k = 0; k < N; k++) {
+      let t = (k + .5) / N * cycle, acc = 0, g = s.segs[0];
+      for (const x of s.segs) { if (t < acc + x.dur) { g = x; break; } acc += x.dur; }
+      const lt = (t - acc) / g.dur;
+      const v = this.shapeVal(g.type, lt, Math.max(1, Math.round(g.dur * s.freq / 6))) * (g.type === 'Pause' ? 1 : .35 + g.int * .065);
+      pvBars.push({ h: Math.max(4, Math.round(v * 100)) + '%', c: this.SEG[g.type].c });
+    }
+    const act = s.segs.filter(g => g.type !== 'Pause');
+    const avgInt = act.length ? (act.reduce((a, g) => a + g.int, 0) / act.length).toFixed(1) : '0';
+    const playhead = eA('div', { style: { position: 'absolute', top: -6, bottom: -6, width: 2, marginLeft: -1, borderRadius: 1, background: '#fff', boxShadow: '0 0 12px rgba(255,255,255,.6)', animation: `hw-play ${cycle}s linear infinite` } });
+
+    const week = [['M',6],['T',0],['W',9],['T',5],['F',12],['S',4],['S',6]].map(([l, m], i) => ({ l, m: m ? m : '–', h: Math.round(m / 12 * 80) + '%', bar: i === 6 ? 'linear-gradient(180deg,#F0ABFC,#A78BFA)' : (m ? '#7C5CE6' : '#262634'), dot: m ? '#A78BFA' : '#262634' }));
+    const profileGroups = [
+      { title: 'Account', rows: [['Preferences','sliders','settings'],['Haptic Settings','wave','settings'],['Notifications','bell','notifications'],['Subscription','crown','subscription', premium ? 'Premium' : 'Free']] },
+      { title: 'Privacy', rows: [['Privacy','shield','privacy'],['Data','device','privacy']] },
+      { title: 'Support', rows: [['Help & Support','help','help'],['Safety','info','safety'],['Terms','doc','terms'],['Privacy Policy','doc','terms'],['About','waves',null,'Version 1.0']] },
+      { title: ' ', rows: [['Delete Account','trash','delete']] }
+    ].map(g => ({ title: g.title, rows: g.rows.map(([label, i, to, value]) => ({ label, icon: ic[i], value: value || '', color: label === 'Delete Account' ? '#F87171' : '#fff', iconColor: label === 'Delete Account' ? '#F87171' : '#C4B5FD',
+      go: () => { if (!to) return this.toast('Onde 1.0 · Made with care'); if (to === 'delete') return this.go('delete', { delMode: 'account', delText: '' }); if (to === 'terms') return this.go('terms', { legalTab: label === 'Privacy Policy' ? 'privacy' : 'terms' }); this.go(to); } })) }));
+
+    let lp = { title: '', sub: '', groups: [] };
+    if (sc === 'privacy') lp = { title: 'Your Privacy', sub: 'You control your data.', groups: [
+      { title: 'Permissions', rows: [this.toggleRow('Analytics','Anonymous usage stats to improve the app','analytics','chart'), this.toggleRow('Personalization','Suggest patterns based on your history','personalization','sliders'), this.toggleRow('Notifications','Routine reminders only','notif','bell')] },
+      { title: 'Storage', rows: [this.toggleRow('Local Data','Keep history on this device','local','device'), this.toggleRow('Cloud Sync','Encrypted backup across your devices','cloud','cloud')] },
+      { title: 'Your data', rows: [this.navRow('Export My Data','',() => this.toast('Export ready — saved to Files'),'download'), this.navRow('Delete My Data','',() => this.go('delete',{delMode:'data',delText:''}),'trash',true), this.navRow('Delete Account','',() => this.go('delete',{delMode:'account',delText:''}),'user',true)] }
+    ] };
+    if (sc === 'settings') {
+      const locks = ['Stop session','Pause session','Keep running'];
+      lp = { title: 'Settings', sub: 'Tune how Onde works for you.', groups: [
+        { title: 'Haptics', rows: [this.navRow('Default duration', s.defDur + ' min', () => this.setState(x => ({ defDur: { 1: 3, 3: 5, 5: 10, 10: 15, 15: 1 }[x.defDur] })), 'timer'), this.toggleRow('Auto stop','End sessions when the timer finishes','autostop','clock'), this.navRow('Screen lock behavior', locks[s.lockMode || 0], () => this.setState(x => ({ lockMode: ((x.lockMode || 0) + 1) % 3 })), 'lock')] },
+        { title: 'App', rows: [this.toggleRow('Sound effects',null,'sound','sound'), this.toggleRow('Dark mode',null,'dark','moon'), this.navRow('Notifications','',nav.notifications,'bell'), this.navRow('Language','English',() => this.toast('More languages coming soon'),'globe')] },
+        { title: 'Accessibility', rows: [this.toggleRow('Reduce Motion','Calmer, static visuals','rm','eye'), this.toggleRow('Visual pulse cues','On-screen pulses as a haptic alternative','visual','waves')] },
+        { title: 'Device', rows: [this.toggleRow('Battery optimization','Lower haptic power in Low Power Mode','battery','battery'), this.navRow('Privacy','',nav.privacy,'shield')] }
+      ] };
+    }
+    if (sc === 'notifications') lp = { title: 'Notifications', sub: 'Gentle reminders, only when you want them.', groups: [
+      { title: null, rows: [this.toggleRow('Allow notifications',null,'notif','bell', () => s.tg.notif ? this.flip('notif') : this.go('permission'))] },
+      { title: 'Types', rows: [this.toggleRow('Evening routine','Daily at 9:00 PM','n_routine','moon'), this.toggleRow('Gentle check-ins','If you haven\u2019t taken a break in a while','n_checkin','breath'), this.toggleRow('New patterns & tips',null,'n_tips','waves')] },
+      { title: 'Schedule', rows: [this.navRow('Quiet hours','11 PM – 8 AM',() => {},'clock')] }
+    ] };
+
+    const plans = [['yearly','Yearly','$39.99','$3.33/mo · billed yearly','Save 52%'],['monthly','Monthly','$6.99','Billed monthly',null]].map(([k, name, price, note, badge]) => {
+      const a = s.plan === k;
+      return { name, price, note, badge, active: a, go: () => this.setState({ plan: k }), border: a ? '1.5px solid #A78BFA' : '1px solid rgba(255,255,255,.08)', bg: a ? 'rgba(139,92,246,.12)' : '#15151F', radio: a ? '#A78BFA' : '#4A4A5E', dot: a ? '#A78BFA' : 'transparent' };
+    });
+    const yearly = s.plan === 'yearly';
+    const legalTexts = {
+      terms: [['Using Onde','Onde is a personal relaxation app for adults 18+. By using it you agree to these terms and to use the app responsibly.'],['Your account','You can use Onde without an account. If you create one, keep your sign-in details private. You can delete your account at any time from Profile.'],['Subscriptions','Premium renews automatically until cancelled. Manage or cancel any time in your App Store or Google Play settings, at least 24 hours before renewal.'],['Not medical advice','Onde does not diagnose, treat or prevent any condition. Stop using it if you feel any discomfort.']],
+      privacy: [['What we collect','By default, nothing leaves your phone. Patterns, sessions and settings are stored locally.'],['Optional data','If you turn on Analytics, we receive anonymous usage events. If you turn on Cloud Sync, your data is encrypted in transit and at rest.'],['What we never do','We don\u2019t sell your data, show ads, or share it with third parties for marketing.'],['Your rights','Export or delete your data at any time from the Privacy Center.']]
+    };
+    const faqsRaw = [['How do I stop a session?','Tap Stop at the bottom of the screen, or double-tap anywhere during a session. Locking your phone stops it too.'],['Why can\u2019t I feel the vibration?','Check that System Haptics are on and Low Power Mode is off. Some devices have limited vibration motors.'],['Can I use Onde without an account?','Yes. Everything works offline and stays on your device.'],['How do I cancel my subscription?','Open Profile → Subscription → Manage Subscription. This opens your store account settings.'],['Where is my data stored?','On your device. Cloud Sync is optional and encrypted.']];
+    const q = (s.helpQ || '').toLowerCase();
+
+    return {
+      s: sv, ic, nav, tab, back: this.back, showTabs, tabs, toast: s.toast,
+      splashTap: () => { clearTimeout(this.st); this.setState({ screen: 'onb', hist: [] }); },
+      splashLogo: this.logo(96),
+      splashWaves: this.waves(393, 240, [{ a: 30, p: 2, c: '#8B5CF6', s: 14, o: .5 }, { a: 22, p: 3, c: '#EC4899', s: 18, o: .3, rev: true }, { a: 40, p: 1, c: '#C4B5FD', s: 22, o: .25 }]),
+      o: { v1: s.onb === 0, v2: s.onb === 1, v3: s.onb === 2, v4: s.onb === 3 },
+      onbTitle: onbT[s.onb][0], onbText: onbT[s.onb][1], onbCta: s.onb === 3 ? 'Get Started' : 'Next', onbSkip: s.onb === 3 ? '' : 'Skip',
+      onbDots: onbT.map((_, i) => ({ w: i === s.onb ? '24px' : '8px', bg: i === s.onb ? '#fff' : '#3A3A4D', label: 'Step ' + (i + 1), go: () => this.setState({ onb: i }) })),
+      nextOnb: () => s.onb === 3 ? finishOnb() : this.setState({ onb: s.onb + 1 }), skipOnb: finishOnb,
+      onbWaves: this.waves(345, 240, [{ a: 60, p: 1, c: '#8B5CF6', s: 10, sw: 2 }, { a: 44, p: 2, c: '#C4B5FD', s: 14, o: .8, rev: true }, { a: 30, p: 2, c: '#EC4899', s: 9, o: .6, ph: 1 }, { a: 18, p: 3, c: '#F9A8D4', s: 16, o: .4, rev: true }]),
+      onbBars, o3bars: this.bars('swell', 3, 30, 1, '#A78BFA'), onbOrb: this.orb(260, { rhythm: 3, intensity: 4 }),
+      greeting: (() => { const h = new Date().getHours(); return h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening'; })(),
+      homeBars: this.bars('sine', 2, 22, 1), moods, continueLast: () => this.go('detail', { pid: 'soft', intensity: 6, duration: 5 }),
+      libChips, libPatterns,
+      pat, intensity: s.intensity, rhythm: s.rhythm, rhythmLabel: this.rhythmLabel(s.rhythm), sl, durChips,
+      detailWave: this.waves(345, 56, [{ a: 10 + s.intensity * 1.6, p: Math.max(1, Math.round(s.rhythm / 2)), c: '#C4B5FD', s: Math.max(2, 9 - s.rhythm * .6), sw: 2 }, { a: 6 + s.intensity, p: Math.max(1, Math.round(s.rhythm / 2)) + 1, c: '#EC4899', s: Math.max(2, 11 - s.rhythm * .6), o: .5, rev: true }]),
+      detailOrb: this.orb(184, { rhythm: s.rhythm, intensity: s.intensity }),
+      isFav, favColor: isFav ? '#F9A8D4' : '#fff', favIcon: isFav ? ic.heartF : ic.heart,
+      toggleFav: () => this.setState(x => ({ fav: Object.assign({}, x.fav, { [pat.id]: !x.fav[pat.id] }) })),
+      startSession: () => this.startSession(),
+      sessOrb: this.orb(300, { rhythm: s.rhythm, intensity: s.intensity, paused: s.paused }),
+      sessOpacity: s.paused ? .45 : 1, paused: s.paused, notPaused: !s.paused,
+      timeStr: String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0'),
+      ringOffset: (917.3 * (1 - s.remaining / Math.max(1, s.total))).toFixed(1),
+      pauseSession: () => { this.vib(0); this.setState({ paused: true }); },
+      resumeSession: () => { this.setState({ paused: false }); if (this.running) this.vib(this.sessPattern()); },
+      stopSession: () => this.stopSession(), swallow: e => e.stopPropagation(),
+      intDown: () => this.setState(x => ({ intensity: Math.max(1, x.intensity - 1) })), intUp: () => this.setState(x => ({ intensity: Math.min(x.limit, x.intensity + 1) })),
+      completeTitle: s.ended ? 'Session ended' : 'Session complete',
+      elapsedStr: Math.floor(elapsed / 60) + 'm ' + String(elapsed % 60).padStart(2, '0') + 's',
+      feelChips: ['Calmer', 'About the same', 'Not for me'].map(f => this.chip(f, s.feel === f, () => this.setState({ feel: f }))),
+      repeatSession: () => this.startSession(true),
+      segsV, cycle, cycleLabel: `${cycle} s loop · ${s.segs.length} segments`,
+      openSheet: () => this.setState({ sheet: true }), closeSheet: () => this.setState({ sheet: false }), sheet: s.sheet,
+      bTabs: [['segment','Segment'],['global','Global']].map(([k, label]) => ({ label, go: () => this.setState({ bTab: k }), bg: s.bTab === k ? '#2A2A3A' : 'transparent', color: s.bTab === k ? '#fff' : '#A1A1B5' })),
+      bSegTab: s.bTab === 'segment', bGlobalTab: s.bTab === 'global',
+      selSeg: { n: s.sel + 1, type: selG.type, int: selG.int, dur: selG.dur },
+      typeChips: Object.keys(this.SEG).map(t => this.chip(t, selG.type === t, () => this.updSeg('type', t), '#8B5CF6')),
+      segLeft: () => this.moveSeg(s.sel, s.sel - 1), segRight: () => this.moveSeg(s.sel, s.sel + 1),
+      segDup: () => { if (s.segs.length >= 10) return this.toast('Up to 10 segments'); this.setState(x => { const a = x.segs.slice(); a.splice(x.sel + 1, 0, Object.assign({}, a[x.sel])); return { segs: a, sel: x.sel + 1 }; }); },
+      segDel: () => { if (s.segs.length <= 1) return; this.setState(x => { const a = x.segs.filter((_, i) => i !== x.sel); return { segs: a, sel: Math.max(0, Math.min(x.sel, a.length - 1)) }; }); },
+      segOptions: Object.keys(this.SEG).map(t => ({ label: t, desc: this.SEG[t].desc, bg: this.SEG[t].bg, bars: this.segBars({ type: t, int: 7 }, 6),
+        add: () => { if (s.segs.length >= 10) return this.toast('Up to 10 segments'); this.setState(x => ({ segs: [...x.segs, { type: t, int: t === 'Pause' ? 0 : 6, dur: t === 'Pause' ? 2 : 4 }], sel: x.segs.length, sheet: false, bTab: 'segment' })); } })),
+      globalSliders: [
+        { label: 'Frequency', value: s.freq + ' / 10', s: this.slider(s.freq, 1, 10, 1, v => this.setState({ freq: v })) },
+        { label: 'Rhythm', value: this.rhythmLabel(s.bRhythm), s: this.slider(s.bRhythm, 1, 10, 1, v => this.setState({ bRhythm: v })) },
+        { label: 'Pulse length', value: s.pulseLen + ' ms', s: this.slider(s.pulseLen, 100, 800, 50, v => this.setState({ pulseLen: v })) },
+        { label: 'Pause length', value: s.pauseLen + ' ms', s: this.slider(s.pauseLen, 100, 1500, 50, v => this.setState({ pauseLen: v })) }
+      ],
+      bDurChips: [1, 3, 5, 10, 15].map(d => this.chip(d + 'm', s.bDur === d, () => this.setState({ bDur: d }))),
+      bDur: s.bDur, bRhythmLabel: this.rhythmLabel(s.bRhythm), avgInt,
+      savePattern: () => { this.vib(0); clearTimeout(this.pt); this.setState(x => ({ saved: [{ name: x.pvName || 'My Pattern', segs: x.segs.length, dur: x.bDur, int: Math.round(+avgInt), shape: 'sine' }, ...x.saved], screen: 'saved', hist: [], pvPlaying: false })); this.toast('Pattern saved'); },
+      pvName: s.pvName, onName: e => this.setState({ pvName: e.target.value }), pvBars, playhead, pvPlaying: s.pvPlaying,
+      pvPlayLabel: s.pvPlaying ? 'Playing…' : 'Play Preview', pvPlayBg: s.pvPlaying ? 'rgba(139,92,246,.22)' : '#1D1D29',
+      pvPlay: () => { this.vib(this.segPattern()); clearTimeout(this.pt); this.setState({ pvPlaying: true }); this.pt = setTimeout(() => this.setState({ pvPlaying: false }), cycle * 1000); },
+      pvStop: () => { this.vib(0); clearTimeout(this.pt); this.setState({ pvPlaying: false }); },
+      savedHas: !savedEmpty, savedEmpty,
+      savedV: s.saved.map((p, i) => ({ name: p.name, meta: `${p.segs} segments · ${p.dur} min · Intensity ${p.int}`, bars: this.bars(p.shape, 2, 10, 1), play: nav.preview, del: () => { this.setState(x => ({ saved: x.saved.filter((_, j) => j !== i) })); this.toast('Pattern deleted'); } })),
+      week, favs: [['Soft Wave', 3], ['Calm Pulse', 2], ['Slow Flow', 1]].map(([name, n]) => ({ name, n: n + (n > 1 ? ' sessions' : ' session'), w: Math.round(n / 3 * 100) + '%' })),
+      planLabel: premium ? 'Premium member' : 'Free plan · Member since March 2026', notPremium: !premium, profileGroups,
+      lp, limit: s.limit,
+      privFacts: [['device','Stored on your device','Patterns, sessions and settings stay on this phone by default.'],['shield','Never sold or shared','We don\u2019t sell your data or use it for advertising.'],['cloud','Sync is optional','Cloud Sync stays off unless you turn it on. Synced data is encrypted.']].map(([i, t, d]) => ({ icon: ic[i], t, d })),
+      notifPreviews: [['now','Take a few minutes for yourself.'],['9:00 PM','Your evening wellness routine is ready.'],['Yesterday','Time to unwind.']].map(([t, m]) => ({ t, m })),
+      safety: [['hand','Use responsibly.'],['pauseC','Stop if you experience discomfort.'],['clock','Take breaks between sessions.'],['thermo','Your device may warm slightly during extended use.'],['car','Never use while driving or operating machinery.']].map(([i, t]) => ({ icon: ic[i], t })),
+      features: [['All patterns','8 of 24'],['Advanced pattern builder','Basic'],['Unlimited saved patterns','3'],['Advanced controls','—'],['Detailed insights','Basic'],['Premium themes','—']].map(([l, free]) => ({ l, free })),
+      plans, planCta: yearly ? 'Continue — $39.99 / year' : 'Continue — $6.99 / month',
+      planFine: yearly ? 'Billed $39.99 once a year. Renews automatically. Cancel anytime in your store settings.' : 'Billed $6.99 every month. Renews automatically. Cancel anytime in your store settings.',
+      restore: () => this.toast('No previous purchases found'), manage: () => this.toast('Opening store subscriptions…'),
+      payOrb: this.orb(140, { rhythm: 3, intensity: 5 }),
+      receipt: [['Plan', yearly ? 'Premium Yearly' : 'Premium Monthly'], ['Price', yearly ? '$39.99 / year' : '$6.99 / month'], ['Renews', yearly ? 'Sep 27, 2027' : 'Oct 27, 2026'], ['Paid with', 'App Store']].map(([k, v]) => ({ k, v })),
+      finishPurchase: () => { this.setState({ premium: true, screen: 'home', hist: [] }); this.toast('Premium unlocked'); },
+      errSteps: [['1','Open Settings → Sounds & Haptics'],['2','Turn on System Haptics'],['3','Turn off Low Power Mode']].map(([n, t]) => ({ n, t })),
+      retryHaptics: () => { if (navigator.vibrate) { this.vib(80); this.toast('Haptics are working'); this.tabTo('home'); } else this.toast('Something went wrong. Try again.'); },
+      permOrb: this.orb(200, { rhythm: 2, intensity: 3 }),
+      permPoints: ['Evening routine reminders', 'Only what you choose — never marketing', 'Change anytime in Settings'],
+      allowNotif: () => { this.setState(x => ({ tg: Object.assign({}, x.tg, { notif: true }) })); this.back(); this.toast('Notifications on'); },
+      helpQ: s.helpQ, onHelpQ: e => this.setState({ helpQ: e.target.value }),
+      faqs: faqsRaw.map((f, i) => ({ q: f[0], a: f[1], i })).filter(f => !q || (f.q + f.a).toLowerCase().includes(q)).map(f => ({ q: f.q, a: f.a, open: s.faq === f.i, rot: s.faq === f.i ? 'rotate(90deg)' : 'none', toggle: () => this.setState(x => ({ faq: x.faq === f.i ? -1 : f.i })) })),
+      emailSupport: () => this.toast('support@onde.app copied'),
+      delTitle: s.delMode === 'data' ? 'Delete your data?' : 'Delete your account?', delTitleShort: s.delMode === 'data' ? 'Delete My Data' : 'Delete Account',
+      delItems: s.delMode === 'data' ? ['Saved patterns', 'Session history & insights', 'Favorites'] : ['Your profile', 'Saved patterns', 'Session history & insights', 'Preferences and settings'],
+      delText: s.delText, onDelText: e => this.setState({ delText: e.target.value }),
+      delDisabled: s.delText.trim().toUpperCase() !== 'DELETE', delOpacity: s.delText.trim().toUpperCase() === 'DELETE' ? 1 : .4,
+      doDelete: () => { if (s.delText.trim().toUpperCase() !== 'DELETE') return; if (s.delMode === 'data') { this.setState({ saved: [], delText: '' }); this.back(); this.toast('Your data has been deleted'); } else { this.setState({ screen: 'onb', onb: 0, hist: [], delText: '' }); this.toast('Your account has been deleted'); } },
+      exportData: () => this.toast('Export ready — saved to Files'),
+      legalTabs: [['terms','Terms'],['privacy','Privacy Policy']].map(([k, label]) => ({ label, go: () => this.setState({ legalTab: k }), bg: s.legalTab === k ? '#2A2A3A' : 'transparent', color: s.legalTab === k ? '#fff' : '#A1A1B5' })),
+      legal: legalTexts[s.legalTab].map(([h, p]) => ({ h, p }))
+    };
+  }
+}
+</script>
+</body>
+</html>
