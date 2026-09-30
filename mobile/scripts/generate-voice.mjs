@@ -129,7 +129,7 @@ async function main() {
   }
   writeManifest();
   console.log(`\nDone: ${made} generated, ${failed} failed. Manifest updated.`);
-  if (failed) process.exit(1);
+  if (failed) process.exitCode = 1;
 }
 
 main();
