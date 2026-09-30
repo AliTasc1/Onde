@@ -8,8 +8,8 @@
  *
  * Settings come from the environment or from mobile/.env.local (git-ignored):
  *   ELEVENLABS_API_KEY=...          (required)
- *   ELEVENLABS_FEMALE_VOICE_ID=...  (required: the woman's voice)
- *   ELEVENLABS_MALE_VOICE_ID=...    (optional: the man's voice; defaults to ELEVENLABS_VOICE_ID)
+ *   ELEVENLABS_FEMALE_VOICE_ID=...  (optional: overrides voices.female in voice/murmurs.tr.json)
+ *   ELEVENLABS_MALE_VOICE_ID=...    (optional: overrides voices.male in voice/murmurs.tr.json)
  *   ELEVENLABS_MODEL=eleven_v3      (other models ignore the [tags])
  */
 import { Buffer } from 'node:buffer';
@@ -34,14 +34,14 @@ function loadEnvFile() {
 loadEnvFile();
 const force = process.argv.includes('--force');
 const apiKey = process.env.ELEVENLABS_API_KEY;
-const voices = {
-  female: process.env.ELEVENLABS_FEMALE_VOICE_ID,
-  male: process.env.ELEVENLABS_MALE_VOICE_ID || process.env.ELEVENLABS_VOICE_ID,
-};
 const model = process.env.ELEVENLABS_MODEL || 'eleven_multilingual_v2';
 const isV3 = model.startsWith('eleven_v3');
 
 const lines = JSON.parse(fs.readFileSync(path.join(root, 'voice', 'murmurs.tr.json'), 'utf8'));
+const voices = {
+  female: process.env.ELEVENLABS_FEMALE_VOICE_ID || lines.voices?.female,
+  male: process.env.ELEVENLABS_MALE_VOICE_ID || lines.voices?.male || process.env.ELEVENLABS_VOICE_ID,
+};
 const outDir = path.join(root, 'assets', 'ambience', 'murmurs');
 fs.mkdirSync(outDir, { recursive: true });
 
@@ -69,10 +69,11 @@ async function synth(voiceId, text) {
 
 async function main() {
   if (!apiKey || !voices.female || !voices.male) {
-    console.error('Set ELEVENLABS_API_KEY, ELEVENLABS_FEMALE_VOICE_ID and ELEVENLABS_VOICE_ID (or ELEVENLABS_MALE_VOICE_ID) in mobile/.env.local.');
+    console.error('Set ELEVENLABS_API_KEY in mobile/.env.local, and the voice IDs in voice/murmurs.tr.json.');
     process.exitCode = 1;
     return;
   }
+  console.log(`Model ${model}, woman ${voices.female}, man ${voices.male}`);
   let made = 0;
   let failed = 0;
   const keep = new Set();

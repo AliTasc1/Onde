@@ -1,29 +1,99 @@
 {
-  "note": "Rare background phrases from the couple. Text in [brackets] is an eleven_v3 delivery tag; it is removed for other models.",
+  "note": "Rare background phrases from the couple. Text in [brackets] is an eleven_v3 delivery tag; it is removed for other models. Voice IDs below can be overridden with ELEVENLABS_FEMALE_VOICE_ID / ELEVENLABS_MALE_VOICE_ID in .env.local.",
+  "voices": {
+    "female": "rLJ7D0HWntXLTYVyw4Rm",
+    "male": "Y5JXXvUD3rmjDInkLVA2"
+  },
   "female": [
-    { "id": "f_01", "text": "[breathy] Aşkım… çok iyisin." },
-    { "id": "f_02", "text": "[breathy] Seni istiyorum bebeğim." },
-    { "id": "f_03", "text": "[breathy] Böyle… çok güzel." },
-    { "id": "f_04", "text": "[breathy] Daha hızlı aşkım." },
-    { "id": "f_05", "text": "[breathy] Durma… sakın durma." },
-    { "id": "f_06", "text": "[breathy] Evet… tam orada." },
-    { "id": "f_07", "text": "[breathy] Ah… nefesim kesiliyor." },
-    { "id": "f_08", "text": "[breathy] Beni deli ediyorsun." },
-    { "id": "f_09", "text": "[breathy] Daha sıkı sarıl bana." },
-    { "id": "f_10", "text": "[breathy] Hı hı… devam et aşkım." },
-    { "id": "f_11", "text": "[breathy] Tamamen seninim." },
-    { "id": "f_12", "text": "[breathy] Bitanem… bırakma beni." }
+    {
+      "id": "f_01",
+      "text": "[breathy] Aşkım… çok iyisin."
+    },
+    {
+      "id": "f_02",
+      "text": "[breathy] Seni istiyorum bebeğim."
+    },
+    {
+      "id": "f_03",
+      "text": "[breathy] Böyle… çok güzel."
+    },
+    {
+      "id": "f_04",
+      "text": "[breathy] Daha hızlı aşkım."
+    },
+    {
+      "id": "f_05",
+      "text": "[breathy] Durma… sakın durma."
+    },
+    {
+      "id": "f_06",
+      "text": "[breathy] Evet… tam orada."
+    },
+    {
+      "id": "f_07",
+      "text": "[breathy] Ah… nefesim kesiliyor."
+    },
+    {
+      "id": "f_08",
+      "text": "[breathy] Beni deli ediyorsun."
+    },
+    {
+      "id": "f_09",
+      "text": "[breathy] Daha sıkı sarıl bana."
+    },
+    {
+      "id": "f_10",
+      "text": "[breathy] Hı hı… devam et aşkım."
+    },
+    {
+      "id": "f_11",
+      "text": "[breathy] Tamamen seninim."
+    },
+    {
+      "id": "f_12",
+      "text": "[breathy] Bitanem… bırakma beni."
+    }
   ],
   "male": [
-    { "id": "m_01", "text": "[breathy] Böyle güzel mi?" },
-    { "id": "m_02", "text": "[breathy] Çok güzelsin aşkım." },
-    { "id": "m_03", "text": "[breathy] Seni istiyorum." },
-    { "id": "m_04", "text": "[breathy] Hissediyor musun beni?" },
-    { "id": "m_05", "text": "[breathy] Bırak kendini bebeğim." },
-    { "id": "m_06", "text": "[breathy] Böyle mi seviyorsun?" },
-    { "id": "m_07", "text": "[breathy] Sesini duymak istiyorum." },
-    { "id": "m_08", "text": "[breathy] Daha hızlı mı istiyorsun?" },
-    { "id": "m_09", "text": "[breathy] Aklımı başımdan alıyorsun." },
-    { "id": "m_10", "text": "[breathy] Benimsin… sadece benim." }
+    {
+      "id": "m_01",
+      "text": "[breathy] Böyle güzel mi?"
+    },
+    {
+      "id": "m_02",
+      "text": "[breathy] Çok güzelsin aşkım."
+    },
+    {
+      "id": "m_03",
+      "text": "[breathy] Seni istiyorum."
+    },
+    {
+      "id": "m_04",
+      "text": "[breathy] Hissediyor musun beni?"
+    },
+    {
+      "id": "m_05",
+      "text": "[breathy] Bırak kendini bebeğim."
+    },
+    {
+      "id": "m_06",
+      "text": "[breathy] Böyle mi seviyorsun?"
+    },
+    {
+      "id": "m_07",
+      "text": "[breathy] Sesini duymak istiyorum."
+    },
+    {
+      "id": "m_08",
+      "text": "[breathy] Daha hızlı mı istiyorsun?"
+    },
+    {
+      "id": "m_09",
+      "text": "[breathy] Aklımı başımdan alıyorsun."
+    },
+    {
+      "id": "m_10",
+      "text": "[breathy] Benimsin… sadece benim."
+    }
   ]
 }
