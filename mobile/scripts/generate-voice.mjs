@@ -99,7 +99,7 @@ function writeManifest() {
     const files = fs.readdirSync(path.join(base, l)).filter((f) => f.endsWith('.mp3')).sort();
     if (!files.length) continue;
     out.push(`  ${JSON.stringify(l)}: {`);
-    for (const f of files) out.push(`    ${JSON.stringify(f.replace(/\.mp3$/, ''))}: require('../../assets/voice/${l}/${f}'), // eslint-disable-line @typescript-eslint/no-require-imports`);
+    for (const f of files) out.push(`    ${JSON.stringify(f.replace(/\.mp3$/, ''))}: require('../../assets/voice/${l}/${f}'),`);
     out.push('  },');
   }
   out.push('};', '');

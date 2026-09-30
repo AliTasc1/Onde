@@ -2,9 +2,31 @@
 
 export const AMBIENCE: { bed: number[]; rhythm: number[]; accents: number[] } = {
   bed: [
+    require('../../assets/ambience/bed/breathing_deep_01.mp3'),
+    require('../../assets/ambience/bed/breathing_duo_01.mp3'),
   ],
   rhythm: [
+    require('../../assets/ambience/rhythm/rustle_01.mp3'),
+    require('../../assets/ambience/rhythm/rustle_02.mp3'),
+    require('../../assets/ambience/rhythm/rustle_03.mp3'),
+    require('../../assets/ambience/rhythm/rustle_04.mp3'),
   ],
   accents: [
+    require('../../assets/ambience/accents/breath_deep_01.mp3'),
+    require('../../assets/ambience/accents/breath_deep_02.mp3'),
+    require('../../assets/ambience/accents/breath_ear_01.mp3'),
+    require('../../assets/ambience/accents/breath_ear_02.mp3'),
+    require('../../assets/ambience/accents/breath_heavy_01.mp3'),
+    require('../../assets/ambience/accents/breath_heavy_02.mp3'),
+    require('../../assets/ambience/accents/hum_female_01.mp3'),
+    require('../../assets/ambience/accents/hum_female_02.mp3'),
+    require('../../assets/ambience/accents/hum_male_01.mp3'),
+    require('../../assets/ambience/accents/hum_male_02.mp3'),
+    require('../../assets/ambience/accents/inhale_sharp_01.mp3'),
+    require('../../assets/ambience/accents/inhale_sharp_02.mp3'),
+    require('../../assets/ambience/accents/sigh_female_01.mp3'),
+    require('../../assets/ambience/accents/sigh_female_02.mp3'),
+    require('../../assets/ambience/accents/sigh_male_01.mp3'),
+    require('../../assets/ambience/accents/sigh_male_02.mp3'),
   ],
 };

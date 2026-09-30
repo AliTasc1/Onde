@@ -25,7 +25,7 @@ export function writeAmbienceManifest() {
     const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => EXT.test(f)).sort() : [];
     counts[group] = files.length;
     out.push(`  ${group}: [`);
-    for (const f of files) out.push(`    require('../../assets/ambience/${group}/${f}'), // eslint-disable-line @typescript-eslint/no-require-imports`);
+    for (const f of files) out.push(`    require('../../assets/ambience/${group}/${f}'),`);
     out.push('  ],');
   }
   out.push('};', '');
