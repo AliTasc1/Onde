@@ -10,6 +10,8 @@ export type Toggles = {
   n_routine: boolean; n_checkin: boolean; n_tips: boolean;
   /** Voice companion (18+). Only switchable after the age confirmation. */
   voice: boolean;
+  /** Background sounds (18+). */
+  ambience: boolean;
 };
 
 export type SavedPattern = {
@@ -56,6 +58,7 @@ const DEFAULT_TOGGLES: Toggles = {
   analytics: false, personalization: true, notif: true, local: true, cloud: false, sound: false, dark: true,
   autostop: true, battery: true, rm: false, visual: true, n_routine: true, n_checkin: true, n_tips: false,
   voice: false,
+  ambience: false,
 };
 
 const newDraft = (dur = 5): Draft => ({
@@ -71,6 +74,7 @@ type Persisted = {
   adultConfirmed: boolean;
   voiceVolume: number;
   voiceFreq: 0 | 1 | 2;
+  ambienceVolume: number;
   createdAt: number;
   name: string;
   premium: boolean;
@@ -123,6 +127,7 @@ const initialPersisted = (): Persisted => ({
   adultConfirmed: false,
   voiceVolume: 0.8,
   voiceFreq: 1,
+  ambienceVolume: 0.6,
   createdAt: Date.now(),
   name: '',
   premium: false,
@@ -209,7 +214,7 @@ export const useStore = create<Store>()(
       },
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (s): Persisted => ({
-        onboarded: s.onboarded, adultAsked: s.adultAsked, adultConfirmed: s.adultConfirmed, voiceVolume: s.voiceVolume, voiceFreq: s.voiceFreq, createdAt: s.createdAt, name: s.name, premium: s.premium, plan: s.plan, tg: s.tg, limit: s.limit,
+        onboarded: s.onboarded, adultAsked: s.adultAsked, adultConfirmed: s.adultConfirmed, voiceVolume: s.voiceVolume, voiceFreq: s.voiceFreq, ambienceVolume: s.ambienceVolume, createdAt: s.createdAt, name: s.name, premium: s.premium, plan: s.plan, tg: s.tg, limit: s.limit,
         defDur: s.defDur, lockMode: s.lockMode, fav: s.fav, saved: s.saved, history: s.history, last: s.last, draft: s.draft,
       }),
       // Shallow merge would drop newly added toggles from older saves.

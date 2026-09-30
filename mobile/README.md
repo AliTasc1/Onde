@@ -74,6 +74,15 @@ The voice is an optional whispered voice that plays alongside a session. It is o
   3. Commit `assets/voice/` together with `src/data/voiceManifest.ts`. The script writes the manifest, which bundles the clips into the app.
 - **Audio setup:** playback uses `expo-audio`. It ducks other audio and keeps playing in silent mode. The config plugin is set up so the app never requests microphone access.
 
+## Background sounds (18+)
+
+The background sounds sit under the voice, behind the same 18+ confirmation. Users switch them on under Settings → Voice companion → Background sounds, which is off by default.
+
+- **Bed:** `assets/ambience/bed/` holds looping tracks. One is picked per session; its speed follows rhythm (0.86×–1.4×) and its loudness follows intensity.
+- **Accents:** `assets/ambience/accents/` holds short one-shots (breaths, sighs…). They play every few seconds, more often as intensity rises and the session nears its peak.
+- **Adding sounds:** drop `.mp3`, `.m4a`, `.aac` or `.wav` files into those folders, then run `npm run ambience` to rebuild `src/data/ambienceManifest.ts`.
+- **Generating sounds (optional):** `npm run sfx` creates the prompts in `ambience/prompts.json` with ElevenLabs Sound Effects. The API key needs the Sound Effects permission.
+
 ## Where the app differs from the prototype
 
 - **Insights and Continue use real data.** Insights is computed from the device's session history instead of sample numbers. The Continue card resumes the last session.

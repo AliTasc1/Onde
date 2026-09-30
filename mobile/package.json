@@ -41,7 +41,9 @@
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
-    "voice": "node scripts/generate-voice.mjs"
+    "voice": "node scripts/generate-voice.mjs",
+    "ambience": "node scripts/build-ambience.mjs",
+    "sfx": "node scripts/generate-sfx.mjs"
   },
   "private": true
 }

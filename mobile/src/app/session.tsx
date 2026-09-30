@@ -6,6 +6,7 @@ import { Animated, AppState, Easing, Pressable, StyleSheet, View } from 'react-n
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Circle } from 'react-native-svg';
 
+import { ambience, ambienceCounts } from '../audio/ambience';
 import { voice, voiceClipCount } from '../audio/voice';
 import { Icon } from '../components/Icon';
 import { Txt } from '../components/ui';
@@ -31,6 +32,8 @@ export default function Session() {
   const adultConfirmed = useStore((s) => s.adultConfirmed);
   const voiceOn = useStore((s) => s.tg.voice) && adultConfirmed && voiceClipCount() > 0;
   const voiceVolume = useStore((s) => s.voiceVolume);
+  const ambienceOn = useStore((s) => s.tg.ambience) && adultConfirmed && ambienceCounts().bed + ambienceCounts().accents > 0;
+  const ambienceVolume = useStore((s) => s.ambienceVolume);
   const pat = findPattern(play.pid);
 
   const total = play.duration * 60;
@@ -46,6 +49,7 @@ export default function Session() {
     finished.current = true;
     haptics.stop();
     voice.stop();
+    ambience.stop();
     const st = useStore.getState();
     st.recordSession({ ended, elapsed: elapsed.current, pid: st.play.pid, intensity: Math.min(st.play.intensity, st.limit) });
     router.replace('/complete');
@@ -72,8 +76,15 @@ export default function Session() {
   useEffect(() => { voice.setVolume(voiceVolume); }, [voiceVolume]);
 
   useEffect(() => {
-    if (paused) voice.pause();
-    else voice.resume();
+    if (!ambienceOn) { ambience.stop(); return; }
+    ambience.start({ volume: useStore.getState().ambienceVolume, getContext: () => voiceCtx.current });
+    return () => ambience.stop();
+  }, [ambienceOn]);
+
+  useEffect(() => { ambience.setVolume(ambienceVolume); }, [ambienceVolume]);
+
+  useEffect(() => {
+    if (paused) { voice.pause(); ambience.pause(); } else { voice.resume(); ambience.resume(); }
   }, [paused]);
 
   useEffect(() => {
@@ -81,6 +92,7 @@ export default function Session() {
     return () => {
       haptics.stop();
       voice.stop();
+      ambience.stop();
       deactivateKeepAwake(KEEP_AWAKE_TAG).catch(() => {});
     };
   }, []);

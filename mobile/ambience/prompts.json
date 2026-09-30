@@ -1,0 +1,10 @@
+{
+  "note": "Optional: 'npm run sfx' generates these with ElevenLabs Sound Effects (the API key needs the Sound Effects permission). Add your own prompts; 'group' is bed (looping background) or accents (short one-shots). Existing files are skipped unless you pass --force.",
+  "sounds": [
+    { "id": "breath_slow_01", "group": "accents", "duration": 4, "text": "Close-up slow deep breathing, a long soft inhale and a relaxed exhale, intimate, quiet room, no music" },
+    { "id": "breath_sigh_01", "group": "accents", "duration": 3, "text": "A soft breathy sigh very close to the microphone, warm and relaxed, quiet room, no music" },
+    { "id": "breath_heavy_01", "group": "accents", "duration": 5, "text": "Heavy excited breathing close to the microphone, quickening breaths, quiet room, no music" },
+    { "id": "breath_hum_01", "group": "accents", "duration": 3, "text": "A low relaxed hum 'mmm' on an exhale, close microphone, intimate, no music" },
+    { "id": "sheets_rhythm_01", "group": "bed", "duration": 20, "text": "Soft rhythmic rustling of bed sheets at a slow steady tempo, close microphone, seamless loop, no music" }
+  ]
+}

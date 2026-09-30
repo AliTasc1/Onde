@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { ListPage } from '../components/ListPage';
 import { Slider } from '../components/Slider';
 import { Group, NavRow, ToggleRow, Txt } from '../components/ui';
+import { ambienceCounts } from '../audio/ambience';
 import { FREQUENCY_LABELS, voiceClipCount } from '../audio/voice';
 import { go } from '../lib/nav';
 import { LOCK_MODES, useStore } from '../store';
@@ -23,6 +24,8 @@ export default function Settings() {
   const voiceVolume = useStore((s) => s.voiceVolume);
   const voiceFreq = useStore((s) => s.voiceFreq);
   const clips = voiceClipCount();
+  const ambienceVolume = useStore((s) => s.ambienceVolume);
+  const amb = ambienceCounts();
 
   return (
     <ListPage title="Settings" sub="Tune how Onde works for you.">
@@ -50,6 +53,12 @@ export default function Settings() {
               onPress={() => showToast(clips ? 'More voices and languages are coming' : 'The voice pack has not been added to this build yet')} />
           </>
         ) : null}
+        <ToggleRow label="Background sounds" sub="Breaths and sounds under the voice" icon="waves" on={tg.ambience && adultConfirmed}
+          onPress={() => (adultConfirmed ? flip('ambience') : go('/adult'))} />
+        {tg.ambience && adultConfirmed ? (
+          <NavRow label="Sound pack" value={amb.bed + amb.accents ? `${amb.bed} loop · ${amb.accents} sounds` : 'Not installed'} icon="headphones"
+            onPress={() => showToast(amb.bed + amb.accents ? 'Add more sounds to assets/ambience' : 'No background sounds in this build yet')} />
+        ) : null}
       </Group>
       {tg.voice && adultConfirmed ? (
         <View style={{ marginTop: 12, marginHorizontal: 24, padding: 16, borderRadius: 20, backgroundColor: C.surface, gap: 2 }}>
@@ -58,6 +67,15 @@ export default function Settings() {
             <Txt style={{ fontSize: 16, color: C.muted }}>{Math.round(voiceVolume * 100)}%</Txt>
           </View>
           <Slider label="Voice volume" value={Math.round(voiceVolume * 10)} min={1} max={10} onChange={(v) => set({ voiceVolume: v / 10 })} valueText={`${Math.round(voiceVolume * 100)} percent`} />
+        </View>
+      ) : null}
+      {tg.ambience && adultConfirmed ? (
+        <View style={{ marginTop: 12, marginHorizontal: 24, padding: 16, borderRadius: 20, backgroundColor: C.surface, gap: 2 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Txt style={{ fontSize: 16 }}>Background volume</Txt>
+            <Txt style={{ fontSize: 16, color: C.muted }}>{Math.round(ambienceVolume * 100)}%</Txt>
+          </View>
+          <Slider label="Background volume" value={Math.round(ambienceVolume * 10)} min={1} max={10} onChange={(v) => set({ ambienceVolume: v / 10 })} valueText={`${Math.round(ambienceVolume * 100)} percent`} />
         </View>
       ) : null}
       <Group title="App">
