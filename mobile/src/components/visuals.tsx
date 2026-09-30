@@ -71,6 +71,10 @@ function useLoop(duration: number, run: boolean, opts: { yoyo?: boolean; easing?
 }
 
 /** (v + offset) mod 1, expressed as an interpolation. */
+// The native driver can't run `easing` inside interpolate, so ease-out-quad is sampled into stops instead.
+const EASE_IN = [0, 0.1, 0.2, 0.3, 0.45, 0.6, 0.8, 1];
+const EASE_OUT = EASE_IN.map(Easing.out(Easing.quad));
+
 const phase = (v: Animated.Value, o: number) => (o === 0 ? v : v.interpolate({ inputRange: [0, 1 - o, 1 - o + 0.0001, 1], outputRange: [o, 1, 0, o] }));
 
 export type WaveLine = { a: number; p: number; c: string; s: number; o?: number; sw?: number; ph?: number; rev?: boolean };
@@ -131,8 +135,8 @@ export function Orb({ size, rhythm = 4, intensity = 5, paused = false, still = f
           const ringStyle = rm
             ? { opacity: 0.35 - i * 0.1, transform: [{ scale: 0.72 + i * 0.14 }] }
             : {
-              opacity: p.interpolate({ inputRange: [0, 1], outputRange: [0.8, 0], easing: Easing.out(Easing.quad) }),
-              transform: [{ scale: p.interpolate({ inputRange: [0, 1], outputRange: [0.62, 1.18], easing: Easing.out(Easing.quad) }) }],
+              opacity: p.interpolate({ inputRange: EASE_IN, outputRange: EASE_OUT.map((e) => 0.8 - 0.8 * e) }),
+              transform: [{ scale: p.interpolate({ inputRange: EASE_IN, outputRange: EASE_OUT.map((e) => 0.62 + 0.56 * e) }) }],
             };
           return <Animated.View key={i} style={[StyleSheet.absoluteFill, { borderRadius: size / 2, borderWidth: 1.5, borderColor: 'rgba(196,181,253,0.55)' }, ringStyle]} />;
         })}
