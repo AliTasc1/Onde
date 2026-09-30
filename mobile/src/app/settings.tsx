@@ -56,8 +56,8 @@ export default function Settings() {
         <ToggleRow label="Background sounds" sub="Breaths and sounds under the voice" icon="waves" on={tg.ambience && adultConfirmed}
           onPress={() => (adultConfirmed ? flip('ambience') : go('/adult'))} />
         {tg.ambience && adultConfirmed ? (
-          <NavRow label="Sound pack" value={ambienceTotal() ? `${amb.bed + amb.rhythm + amb.accents} sounds` : 'Not installed'} icon="headphones"
-            onPress={() => showToast(ambienceTotal() ? `${amb.bed} loop · ${amb.rhythm} rhythm · ${amb.accents} accents` : 'No background sounds in this build yet')} />
+          <NavRow label="Sound pack" value={ambienceTotal() ? `${ambienceTotal()} sounds` : 'Not installed'} icon="headphones"
+            onPress={() => showToast(ambienceTotal() ? `${amb.bed} loop · ${amb.rhythm} rhythm · ${amb.accents} accents · ${amb.cries} cries` : 'No background sounds in this build yet')} />
         ) : null}
       </Group>
       {tg.voice && adultConfirmed ? (

@@ -32,6 +32,11 @@ class VoiceCompanion {
   private running = false;
   private paused = false;
   private speaking = false;
+
+  /** True while a line is being spoken — the background layer ducks under it. */
+  get isSpeaking() {
+    return this.running && !this.paused && this.speaking;
+  }
   private played = 0;
   private bags: Partial<Record<VoiceGroup, string[]>> = {};
   private lang = VOICE_LANG;

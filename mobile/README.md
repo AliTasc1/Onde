@@ -81,6 +81,8 @@ The background sounds sit under the voice, behind the same 18+ confirmation. Use
 - **Bed:** `assets/ambience/bed/` holds looping tracks. One is picked per session; its speed follows rhythm (0.86×–1.4×) and its loudness follows intensity.
 - **Rhythm:** `assets/ambience/rhythm/` holds short (1–2 s) sounds. One fires on every beat, in time with the vibration pulse (the beat length comes from rhythm), with slight pitch and timing variation. This turns short clips into one continuous rhythmic texture.
 - **Accents:** `assets/ambience/accents/` holds short one-shots (breaths, sighs…). They play densely, roughly every 1.5–4 s and faster at high intensity near the peak.
+- **Cries:** `assets/ambience/cries/` holds louder exclamations. They only play in the voice's pauses, once the session has warmed up, every ~12–25 s and more often near the peak.
+- **Mix:** the background default is 35 %, and every layer ducks to 40 % while the voice speaks, so the voice always stays on top.
 - All layers start the moment a session starts. Confirming the 18+ screen turns on both the voice and the background sounds.
 - **Adding sounds:** drop `.mp3`, `.m4a`, `.aac` or `.wav` files into those folders, then run `npm run ambience` to rebuild `src/data/ambienceManifest.ts`.
 - **Generating sounds (optional):** `npm run sfx` creates the prompts in `ambience/prompts.json` with ElevenLabs Sound Effects. The API key needs the Sound Effects permission.

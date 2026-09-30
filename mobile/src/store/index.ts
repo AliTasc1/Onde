@@ -127,7 +127,7 @@ const initialPersisted = (): Persisted => ({
   adultConfirmed: false,
   voiceVolume: 0.8,
   voiceFreq: 1,
-  ambienceVolume: 0.7,
+  ambienceVolume: 0.35,
   createdAt: Date.now(),
   name: '',
   premium: false,
@@ -205,11 +205,13 @@ export const useStore = create<Store>()(
     }),
     {
       name: 'onde-store-v1',
-      version: 1,
+      version: 2,
       // v1: the default intensity limit went from 8 to 10 (full strength).
       migrate: (persisted, version) => {
         const p = (persisted ?? {}) as Partial<Persisted>;
         if (version < 1 && p.limit === 8) p.limit = 10;
+        // v2: background sounds sit much lower under the voice by default.
+        if (version < 2 && (p.ambienceVolume ?? 0) > 0.35) p.ambienceVolume = 0.35;
         return p as Persisted;
       },
       storage: createJSONStorage(() => AsyncStorage),
