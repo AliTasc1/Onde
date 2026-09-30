@@ -61,7 +61,7 @@ src/lib/            waveform maths, insights, navigation helpers
 
 The voice is an optional whispered voice that plays alongside a session. It is off by default. The 18+ screen (`/adult`) opens once, after onboarding or on the next launch for existing users. The voice only turns on if the user confirms they are an adult; declining leaves it off. After confirming, users can switch it in Settings and on the session screen.
 
-- **Lines:** `voice/lines.tr.json` holds the lines, in groups for the opening, steady flow, check-in questions, rising intensity and winding down. The player picks a group based on session progress, intensity and rhythm. It never repeats a line until every line in that group has played, and a faster rhythm means shorter pauses between lines.
+- **Lines:** `voice/lines.tr.json` holds long, whispered lines in five stages that follow the session as a story: open → warm → build → peak → close. The voice starts as soon as a session starts and leaves only a short breath between lines; the "How often" setting (Relaxed / Normal / Continuous) sets that gap. Intensity 7+ pulls the build and peak stages forward. A line doesn't repeat until every line in its stage has played.
 - **Generating the audio.** Clips are generated once with ElevenLabs and bundled with the app. They are never generated live.
   1. Create `mobile/.env.local` (it is git-ignored):
      ```

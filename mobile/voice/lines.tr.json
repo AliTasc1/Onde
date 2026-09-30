@@ -1,57 +1,55 @@
 {
   "lang": "tr",
-  "note": "Sesli eşlik (18+) ifadeleri. Her satır ayrı bir ses dosyası olur: assets/voice/tr/<id>.mp3. Metni değiştirirseniz o id'nin mp3'ünü silip scripti yeniden çalıştırın.",
+  "note": "Sesli eşlik (18+). Gruplar seansın akışına göre sırayla çalar: open → warm → build → peak → close. Yoğunluk 7+ olunca 'peak' öne çekilir. Her satır ayrı mp3 olur (assets/voice/tr/<id>.mp3). Metni değiştirdiğiniz satırın mp3'ünü silip 'npm run voice' çalıştırın; listeden çıkarılan satırların mp3'leri otomatik silinir.",
+  "petNames": ["aşkım", "bitanem", "hayatım", "güzelim", "minik kelebeğim", "meleğim", "tatlım", "bebeğim", "sevgilim", "canım", "ay parçam", "yıldızım", "papatyam", "ceylanım", "prensesim", "kalbimin sahibi", "gül yüzlüm", "biricik sevgilim"],
   "groups": {
     "open": [
-      { "id": "tr_open_01", "text": "Merhaba... ben buradayım. Sadece nefes al ve rahatla." },
-      { "id": "tr_open_02", "text": "Acele yok... bu an tamamen senin." },
-      { "id": "tr_open_03", "text": "Gözlerini kapat... sesime odaklan." },
-      { "id": "tr_open_04", "text": "Omuzlarını bırak... yavaşça... çok güzel." },
-      { "id": "tr_open_05", "text": "Yavaştan başlıyoruz... sen nasıl istersen." },
-      { "id": "tr_open_06", "text": "Bugün kendine zaman ayırdın... bunu hak ediyorsun." },
-      { "id": "tr_open_07", "text": "Derin bir nefes al... ve yavaşça ver." }
+      { "id": "tr_open_01", "text": "Merhaba aşkım... geldin mi? Gel, şöyle yanıma sokul. Bu gece sadece ikimiz varız, hiç acele etmeyeceğiz. Derin bir nefes al benim için... ve yavaşça bırak." },
+      { "id": "tr_open_02", "text": "Bitanem... gözlerini kapat ve sadece sesimi dinle. Şu an kulağının hemen dibindeyim, nefesimi tenine yakın hissedebiliyor musun? İşte böyle... rahatla." },
+      { "id": "tr_open_03", "text": "Hayatım, bütün günün yorgunluğunu şimdi kapının dışında bırak. Omuzlarını gevşet, çeneni gevşet... Bu an tamamen senin, ben de tamamen seninim." },
+      { "id": "tr_open_04", "text": "Güzelim... seni öyle özledim ki. Gel, saçlarını yavaşça kulağının arkasına alayım. Sadece bana odaklan, gerisini düşünme... ben buradayım." },
+      { "id": "tr_open_05", "text": "Minik kelebeğim... yavaş yavaş başlıyoruz. Önce sadece nefesini dinle, sonra bedenini. Her dokunuşu, her titreşimi sonuna kadar hisset benim için." }
     ],
-    "flow": [
-      { "id": "tr_flow_01", "text": "Nasıl... böyle güzel mi?" },
-      { "id": "tr_flow_02", "text": "Bu şekilde hoşuna gidiyor mu?" },
-      { "id": "tr_flow_03", "text": "Şimdi kendini daha rahat hissediyor musun?" },
-      { "id": "tr_flow_04", "text": "Biraz daha kendini geriye çeker misin... bırak kendini." },
-      { "id": "tr_flow_05", "text": "Seni çok beğeniyorum... çok güzel görünüyorsun." },
-      { "id": "tr_flow_06", "text": "Her zaman harikasın." },
-      { "id": "tr_flow_07", "text": "Mükemmelsin... tam olduğun gibi." },
-      { "id": "tr_flow_08", "text": "Nefesini hissediyorum... yavaş... sakin." },
-      { "id": "tr_flow_09", "text": "Kendini bırak... ben buradayım." },
-      { "id": "tr_flow_10", "text": "Hiçbir şey düşünme... sadece bu ânı hisset." },
-      { "id": "tr_flow_11", "text": "Bu ritim sana iyi geliyor, değil mi?" },
-      { "id": "tr_flow_12", "text": "Çok güzel gidiyorsun... devam et." },
-      { "id": "tr_flow_13", "text": "Tenin... nefesin... her şey çok güzel." },
-      { "id": "tr_flow_14", "text": "Seninle olmak... çok özel." }
+    "warm": [
+      { "id": "tr_warm_01", "text": "Meleğim... parmak uçlarım boynunda, yavaşça omzuna doğru iniyor. Tenin ne kadar yumuşak... Titremeni hissediyorum, çok güzel... devam et, kendini bırak." },
+      { "id": "tr_warm_02", "text": "Tatlım, dudaklarım kulağının hemen yanında. Sana fısıldamak, nefesinin değişmesini dinlemek... inan bana, bu gecenin en güzel anı bu." },
+      { "id": "tr_warm_03", "text": "Bebeğim... belini yavaşça kavrıyorum ve seni kendime çekiyorum. Kalbinin atışını göğsümde hissediyorum. Sakın acele etme, bu ritim tam sana göre." },
+      { "id": "tr_warm_04", "text": "Sevgilim, boynundan başlayıp omzuna kadar küçük öpücükler bırakıyorum. Her birinde biraz daha gevşiyorsun... Evet, işte böyle, çok güzelsin." },
+      { "id": "tr_warm_05", "text": "Canım... ellerim sırtında, yavaş yavaş aşağı iniyor. Tenin ısınıyor, hissediyorum. Nasıl, böyle hoşuna gidiyor mu? Söyle bana..." },
+      { "id": "tr_warm_06", "text": "Ay parçam... seni izliyorum ve gözlerimi senden alamıyorum. Öyle güzel görünüyorsun ki... Her nefesinle biraz daha yakınıma geliyorsun." },
+      { "id": "tr_warm_07", "text": "Yıldızım, biraz daha geriye yaslan... başını omzuma koy. Bırak ben taşıyayım seni. Sen sadece hisset, gerisini bana bırak." },
+      { "id": "tr_warm_08", "text": "Papatyam... dokunuşlarım yavaş, sabırlı. Seni keşfetmek için bütün gece vaktimiz var. Hiçbir yere gitmiyorum, tam buradayım, seninleyim." },
+      { "id": "tr_warm_09", "text": "Ceylanım, nefesin biraz hızlandı, duyuyorum. Bu benim en sevdiğim ses... Devam et, benim için kendini biraz daha bırak." },
+      { "id": "tr_warm_10", "text": "Prensesim... seni kollarımın arasında tutmak öyle güzel ki. Her şeyinle mükemmelsin. Şimdi gözlerini kapalı tut ve sadece beni hisset." }
     ],
-    "ask": [
-      { "id": "tr_ask_01", "text": "Daha hızlı yapmamı ister misin, tatlım?" },
-      { "id": "tr_ask_02", "text": "Biraz daha yavaş mı olsun... söyle bana." },
-      { "id": "tr_ask_03", "text": "Böyle mi seviyorsun... tam böyle mi?" },
-      { "id": "tr_ask_04", "text": "İstediğin an durabiliriz... kontrol sende." },
-      { "id": "tr_ask_05", "text": "Biraz daha mı... ister misin?" },
-      { "id": "tr_ask_06", "text": "Nasıl hissettiğini merak ediyorum... anlat bana." }
+    "build": [
+      { "id": "tr_build_01", "text": "Aşkım... şimdi biraz daha hızlanıyoruz. Hissediyor musun, dalga dalga yükseliyor. Nefesini tutma, bırak aksın... ben seninleyim." },
+      { "id": "tr_build_02", "text": "Bitanem, daha hızlı yapmamı ister misin? Sadece nefesinle söyle bana... Evet, anladım seni. Tam istediğin gibi, tam istediğin kadar." },
+      { "id": "tr_build_03", "text": "Hayatım... seni öyle çok istiyorum ki. Bedeninin bana nasıl cevap verdiğini hissediyorum. Kendini benden saklama, bu an ikimizin." },
+      { "id": "tr_build_04", "text": "Güzelim, bu şekilde hoşuna gidiyor mu? Evet... biliyorum gidiyor. Titreşimi bütün bedeninde hisset, her dalgada biraz daha derine." },
+      { "id": "tr_build_05", "text": "Kalbimin sahibi... sıcaklığın beni sarıyor. Seni daha sıkı tutuyorum şimdi, daha yakından. Biraz daha... evet, işte tam böyle." },
+      { "id": "tr_build_06", "text": "Minik kelebeğim, kanatların titriyor... ne kadar güzel. Bırak, tutma kendini. Hiçbir şey düşünme, sadece bu anı yaşa benimle." },
+      { "id": "tr_build_07", "text": "Gül yüzlüm... sesini duymak istiyorum. Nefesinin her değişimi beni deli ediyor. Devam et, durma... sen harikasın." },
+      { "id": "tr_build_08", "text": "Tatlım, kontrol tamamen sende. İstersen yavaşlatırız, istersen biraz daha artırırız... Ama bence şu an tam olması gerektiği yerdesin." },
+      { "id": "tr_build_09", "text": "Meleğim... seninle her an daha da yükseliyoruz. Bedenin gerildikçe sana daha sıkı sarılıyorum. Hissediyor musun? Ben buradayım." },
+      { "id": "tr_build_10", "text": "Bebeğim, şimdi kendini bana bırak. Düşünceler uzaklaşsın, sadece his kalsın. Her dalgada biraz daha yükseğe... benimle birlikte." }
     ],
-    "rising": [
-      { "id": "tr_rise_01", "text": "Evet... tam böyle... çok güzel." },
-      { "id": "tr_rise_02", "text": "Hissediyor musun... gittikçe artıyor." },
-      { "id": "tr_rise_03", "text": "Bırak kendini... tutma." },
-      { "id": "tr_rise_04", "text": "Nefesin hızlanıyor... bunu seviyorum." },
-      { "id": "tr_rise_05", "text": "Biraz daha... az kaldı." },
-      { "id": "tr_rise_06", "text": "Harikasın... devam et... durma." },
-      { "id": "tr_rise_07", "text": "Tam şimdi... sadece hisset." },
-      { "id": "tr_rise_08", "text": "Çok güzelsin böyle... gerçekten." }
+    "peak": [
+      { "id": "tr_peak_01", "text": "Evet aşkım... tam böyle. Hissediyorum seni, çok yakınsın. Durma, bırak kendini... ben seni tutuyorum, hiçbir yere gitmiyorum." },
+      { "id": "tr_peak_02", "text": "Bitanem, az kaldı... nefesin hızlandı, bedenin titriyor. Bırak gelsin, tutma... Benim için bırak kendini, şimdi." },
+      { "id": "tr_peak_03", "text": "Hayatım... sen muhteşemsin. Şu an, tam şu an... her şeyi hisset. Ben buradayım, seninle birlikte, sonuna kadar." },
+      { "id": "tr_peak_04", "text": "Güzelim, biraz daha... evet... tam orada. Harikasın, mükemmelsin. Durma sakın, benim için devam et." },
+      { "id": "tr_peak_05", "text": "Sevgilim... seni öyle istiyorum ki. Bütün dalgalar bir araya geliyor, hissediyor musun? Şimdi... bırak kendini bana." },
+      { "id": "tr_peak_06", "text": "Minik kelebeğim, uç benim için... Yükseğe, daha yükseğe. Seni tutuyorum, düşmeyeceksin. Sadece bırak ve hisset." },
+      { "id": "tr_peak_07", "text": "Canım... sesin, nefesin, titreyişin... hepsi çok güzel. Az kaldı aşkım, çok az. Evet... evet... işte böyle." },
+      { "id": "tr_peak_08", "text": "Prensesim... bu an senin. Hiçbir şeyi tutma, her şeyi bırak. Ben buradayım, kollarımdasın... şimdi." }
     ],
     "close": [
-      { "id": "tr_close_01", "text": "Şimdi yavaşla... nefesini dinle." },
-      { "id": "tr_close_02", "text": "Çok güzeldin... gerçekten." },
-      { "id": "tr_close_03", "text": "Biraz böyle kal... acele etme." },
-      { "id": "tr_close_04", "text": "Kendine iyi bak... sen bunu hak ediyorsun." },
-      { "id": "tr_close_05", "text": "Yanındaydım... ve yine burada olacağım." },
-      { "id": "tr_close_06", "text": "Gülümse... bugün kendin için güzel bir şey yaptın." }
+      { "id": "tr_close_01", "text": "Şşş... aşkım, yavaşla şimdi. Nefesini dinle, kalbin yavaş yavaş sakinleşiyor. Seni kollarımda tutuyorum, hiçbir yere gitmiyorum." },
+      { "id": "tr_close_02", "text": "Bitanem... çok güzeldin. Gerçekten. Biraz böyle kal, acele etme. Bu sıcaklığın tadını çıkar, bunu hak ettin." },
+      { "id": "tr_close_03", "text": "Hayatım, yüzündeki o gülümsemeyi hayal ediyorum... Başını göğsüme koy, dinlen. Bugün kendin için çok güzel bir şey yaptın." },
+      { "id": "tr_close_04", "text": "Güzelim... ne zaman istersen yine buradayım. Sesimi özlediğinde gözlerini kapatman yeter. Şimdi derin bir nefes al... ve bırak." },
+      { "id": "tr_close_05", "text": "Minik kelebeğim, kanatlarını dinlendir artık. Sen harikasın, her zaman harikasın. Tatlı bir huzurla kal... ben hep yanındayım." }
     ]
   }
 }

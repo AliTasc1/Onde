@@ -127,6 +127,16 @@ async function main() {
       console.error(`✗ ${l.id}: ${e.message}`);
     }
   }
+  // Remove clips whose line was deleted from the line file.
+  if (!only) {
+    const keep = new Set(lines.map((l) => `${l.id}.mp3`));
+    for (const f of fs.readdirSync(outDir)) {
+      if (f.endsWith('.mp3') && !keep.has(f)) {
+        fs.unlinkSync(path.join(outDir, f));
+        console.log(`– removed old clip ${f}`);
+      }
+    }
+  }
   writeManifest();
   console.log(`\nDone: ${made} generated, ${failed} failed. Manifest updated.`);
   if (failed) process.exitCode = 1;

@@ -3,7 +3,7 @@ import { createAudioPlayer, setAudioModeAsync, type AudioPlayer } from 'expo-aud
 import linesTr from '../../voice/lines.tr.json';
 import { VOICE_CLIPS } from '../data/voiceManifest';
 
-export type VoiceGroup = 'open' | 'flow' | 'ask' | 'rising' | 'close';
+export type VoiceGroup = 'open' | 'warm' | 'build' | 'peak' | 'close';
 export type VoiceContext = { progress: number; intensity: number; rhythm: number };
 export type VoiceFrequency = 0 | 1 | 2;
 
@@ -11,8 +11,9 @@ type LineFile = { groups: Record<VoiceGroup, { id: string; text: string }[]> };
 const LINE_FILES: Record<string, LineFile> = { tr: linesTr as LineFile };
 
 export const VOICE_LANG = 'tr';
-export const FREQUENCY_LABELS = ['Rarely', 'Normal', 'Often'] as const;
-const FREQUENCY_FACTOR = [1.6, 1, 0.6];
+export const FREQUENCY_LABELS = ['Relaxed', 'Normal', 'Continuous'] as const;
+/** Pause between lines, seconds [min, max], per frequency setting. */
+const GAPS: [number, number][] = [[3, 5], [0.8, 2], [0.2, 0.6]];
 
 /** Number of bundled clips for a language (0 until the voice pack is generated). */
 export const voiceClipCount = (lang = VOICE_LANG) => Object.keys(VOICE_CLIPS[lang] ?? {}).length;
@@ -20,9 +21,9 @@ export const voiceClipCount = (lang = VOICE_LANG) => Object.keys(VOICE_CLIPS[lan
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 
 /**
- * Whispered voice companion. Picks lines that fit the moment (opening,
- * steady flow, check-ins, rising intensity, winding down) and leaves
- * natural pauses between them. Faster rhythm → shorter pauses.
+ * Whispered voice companion. Speaks from the moment a session starts, with
+ * only short breaths between lines, and follows the session as a story:
+ * open → warm → build → peak → close. High intensity pulls the peak forward.
  */
 class VoiceCompanion {
   private player: AudioPlayer | null = null;
@@ -61,7 +62,7 @@ class VoiceCompanion {
       this.running = false;
       return;
     }
-    this.schedule(2500);
+    this.schedule(400);
   }
 
   pause() {
@@ -75,7 +76,7 @@ class VoiceCompanion {
   resume() {
     if (!this.running || !this.paused) return;
     this.paused = false;
-    this.schedule(1500);
+    this.schedule(300);
   }
 
   setVolume(v: number) {
@@ -102,17 +103,18 @@ class VoiceCompanion {
 
   private gap() {
     const { rhythm } = this.getContext();
-    const [lo, hi] = rhythm <= 3 ? [10, 16] : rhythm <= 7 ? [7, 12] : [4, 8];
-    return rand(lo, hi) * 1000 * FREQUENCY_FACTOR[this.frequency];
+    const [lo, hi] = GAPS[this.frequency];
+    // Faster rhythm → slightly shorter breaths between lines.
+    return rand(lo, hi) * 1000 * (rhythm >= 7 ? 0.7 : 1);
   }
 
   private pickGroup(): VoiceGroup {
-    const { progress, intensity, rhythm } = this.getContext();
-    if (this.played < 2 && progress < 0.25) return 'open';
-    if (progress >= 0.88) return 'close';
-    const r = Math.random();
-    if (intensity >= 7 || rhythm >= 7) return r < 0.55 ? 'rising' : r < 0.8 ? 'ask' : 'flow';
-    return r < 0.7 ? 'flow' : 'ask';
+    const { progress, intensity } = this.getContext();
+    if (this.played === 0 || (this.played < 2 && progress < 0.1)) return 'open';
+    if (progress >= 0.9) return 'close';
+    if (progress >= 0.7 || intensity >= 8) return 'peak';
+    if (progress >= 0.35 || intensity >= 7) return 'build';
+    return 'warm';
   }
 
   /** Shuffle-bag per group so lines don't repeat until all have played. */
@@ -133,7 +135,7 @@ class VoiceCompanion {
   private speak() {
     if (!this.running || this.paused || !this.player) return;
     const group = this.pickGroup();
-    const id = this.nextId(group) ?? this.nextId('flow');
+    const id = this.nextId(group) ?? this.nextId('warm') ?? this.nextId('build');
     const src = id ? VOICE_CLIPS[this.lang]?.[id] : undefined;
     if (src == null) return this.schedule(this.gap());
     try {
