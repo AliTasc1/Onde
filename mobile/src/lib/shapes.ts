@@ -5,6 +5,8 @@ import { SEG } from '../data/patterns';
 export function shapeVal(shape: string, t: number, f: number): number {
   const s = Math.sin;
   switch (shape) {
+    case 'constant': return 0.92;
+    case 'Constant': return 0.95;
     case 'pulse': return Math.floor(t * f * 2) % 2 === 0 ? 0.85 : 0.2;
     case 'rhythm': return [0.9, 0.35, 0.62, 0.25][Math.floor(t * f * 4) % 4];
     case 'fade': return (0.55 + 0.4 * s(t * 2 * Math.PI * f)) * (1 - t * 0.65);

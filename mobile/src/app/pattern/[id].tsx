@@ -78,7 +78,7 @@ export default function PatternDetail() {
               <Txt style={{ fontSize: 12, color: C.faint }}>10</Txt>
             </View>
           </View>
-          <View style={{ gap: 4 }}>
+          {pat.shape !== 'constant' ? <View style={{ gap: 4 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Txt style={{ fontSize: 15, fontWeight: '600' }}>Rhythm</Txt>
               <Txt style={{ fontSize: 15, color: C.muted }}>{rhythmLabel(rhythm)}</Txt>
@@ -88,7 +88,7 @@ export default function PatternDetail() {
               <Txt style={{ fontSize: 12, color: C.faint }}>Slow</Txt>
               <Txt style={{ fontSize: 12, color: C.faint }}>Fast</Txt>
             </View>
-          </View>
+          </View> : null}
           <View style={{ gap: 12 }}>
             <Txt style={{ fontSize: 15, fontWeight: '600' }}>Duration</Txt>
             <View style={{ flexDirection: 'row', gap: 8 }}>

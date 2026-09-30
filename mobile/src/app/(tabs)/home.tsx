@@ -66,7 +66,7 @@ export default function Home() {
             </MoodCard>
           );
         })}
-        <MoodCard width={cardW} label="Custom" sub="Build your own" dashed icon={<Icon name="plus" size={20} color={C.iconTint} />} onPress={() => goTab('custom')} />
+        <MoodCard width={MOODS.length % 2 ? cardW : cardW * 2 + 12} label="Custom" sub="Build your own" dashed icon={<Icon name="plus" size={20} color={C.iconTint} />} onPress={() => goTab('custom')} />
       </View>
 
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 24 }}>

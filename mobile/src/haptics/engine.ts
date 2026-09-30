@@ -4,17 +4,22 @@ import { Platform, Vibration } from 'react-native';
 /**
  * One haptic step: vibrate for `on` ms at `level` (0–1), then rest for `off` ms.
  *
- * Android plays steps through the system vibrator (duration-based, so strength
- * is carried by `on`). iOS can't run duration patterns from JS, so each "on"
- * window is rendered as a train of Taptic Engine impacts whose weight follows
- * `level`. A Core Haptics module would give continuous events; this is the
- * portable baseline.
+ * Android plays steps through the system vibrator at full motor strength;
+ * lower levels trim the "on" time slightly. iOS has no duration API from JS,
+ * so strong steps (level ≥ 0.45) use the system vibration — the same strong
+ * buzz as an incoming call — re-fired every ~400 ms for as long as the step
+ * lasts, which gives a continuous vibration. Gentle steps use Taptic impacts.
+ * A Core Haptics / VibrationEffect module (development build) would add true
+ * amplitude control; this is the strongest option available in Expo Go.
  */
 export type Step = { on: number; off: number; level: number };
 
 type ErrorListener = (e: unknown) => void;
 
-const IMPACT_SPACING = 90;
+const IMPACT_SPACING = 45;
+/** iOS system vibration lasts ~400 ms; re-fire just before it ends. */
+const IOS_BUZZ_MS = 380;
+const IOS_STRONG_LEVEL = 0.45;
 
 class HapticEngine {
   private timers: ReturnType<typeof setTimeout>[] = [];
@@ -30,10 +35,11 @@ class HapticEngine {
     if (!steps.length) return;
     const token = ++this.token;
     if (Platform.OS === 'android') {
-      // RN's vibrator has no amplitude control, so strength becomes duty cycle.
+      // Full motor strength; only very low levels shorten the pulse a little.
       const pattern = [0];
       steps.forEach((s) => {
-        const on = s.on * (0.35 + 0.65 * Math.max(0, Math.min(1, s.level)));
+        // Unbroken steps (off = 0) stay unbroken whatever the level.
+        const on = s.level <= 0.02 ? 0 : s.off === 0 ? s.on : s.on * (0.7 + 0.3 * Math.max(0, Math.min(1, s.level)));
         pattern.push(Math.round(on), Math.round(s.off + s.on - on));
       });
       try {
@@ -96,10 +102,17 @@ class HapticEngine {
       return;
     }
     const s = steps[i];
-    if (s.on > 0 && s.level > 0.02) {
-      const style = s.level < 0.34 ? ExpoHaptics.ImpactFeedbackStyle.Soft
-        : s.level < 0.67 ? ExpoHaptics.ImpactFeedbackStyle.Medium
-          : ExpoHaptics.ImpactFeedbackStyle.Heavy;
+    if (s.on > 0 && s.level >= IOS_STRONG_LEVEL) {
+      // Strong: chain system vibrations across the whole "on" window.
+      const count = Math.max(1, Math.ceil(s.on / IOS_BUZZ_MS));
+      for (let k = 0; k < count; k++) {
+        this.timers.push(setTimeout(() => {
+          if (token !== this.token) return;
+          try { Vibration.vibrate(); } catch (e) { this.fail(e); }
+        }, k * IOS_BUZZ_MS));
+      }
+    } else if (s.on > 0 && s.level > 0.02) {
+      const style = s.level < 0.25 ? ExpoHaptics.ImpactFeedbackStyle.Medium : ExpoHaptics.ImpactFeedbackStyle.Heavy;
       const count = Math.max(1, Math.floor(s.on / IMPACT_SPACING));
       for (let k = 0; k < count; k++) {
         this.timers.push(setTimeout(() => {

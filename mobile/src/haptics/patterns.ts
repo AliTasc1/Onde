@@ -3,26 +3,32 @@ import { shapeVal } from '../lib/shapes';
 import type { Step } from './engine';
 
 /**
- * ~4 s looping pattern for a library session. Pulse length grows with
- * intensity and the gap shrinks as rhythm speeds up (same maths as the
- * prototype); the pattern's shape modulates strength across the loop.
+ * ~4 s looping pattern for a library session.
+ * - `constant`: one unbroken vibration (strength from intensity).
+ * - others: rhythm sets the pulse rate; intensity sets how much of each
+ *   pulse is "on" (10 ≈ almost continuous) and how strong it is. The
+ *   pattern's shape still colours the loop.
  */
 export function sessionSteps(shape: Shape, intensity: number, rhythm: number): Step[] {
-  const on = 60 + intensity * 22;
-  const off = Math.max(120, 1000 - rhythm * 85);
-  const n = Math.max(1, Math.round(4000 / (on + off)));
+  const strength = 0.35 + 0.065 * intensity; // 1 → 0.42, 10 → 1.0
+  if (shape === 'constant') return [{ on: 4000, off: 0, level: Math.min(1, strength) }];
+  const period = Math.max(260, 1500 - rhythm * 120); // slow 1380 ms … fast 300 ms
+  const duty = Math.min(0.92, 0.45 + intensity * 0.05); // 1 → 50 %, 10 → 92 %
+  const on = Math.round(period * duty);
+  const off = period - on;
+  const n = Math.max(1, Math.round(4000 / period));
   const steps: Step[] = [];
   for (let i = 0; i < n; i++) {
-    const mod = 0.55 + 0.45 * shapeVal(shape, n === 1 ? 0 : i / (n - 1), 1);
-    steps.push({ on, off, level: Math.min(1, (intensity / 10) * mod) });
+    const mod = 0.75 + 0.25 * shapeVal(shape, n === 1 ? 0 : i / (n - 1), 1);
+    steps.push({ on, off, level: Math.min(1, strength * mod) });
   }
   return steps;
 }
 
 export type GlobalParams = { pulseLen: number; pauseLen: number };
 
-const SLICE_ON = 110;
-const SLICE_OFF = 40;
+const SLICE_ON = 130;
+const SLICE_OFF = 20;
 
 /** One pass through a custom timeline. */
 export function timelineSteps(segs: Segment[], g: GlobalParams, limit = 10): Step[] {
@@ -32,6 +38,10 @@ export function timelineSteps(segs: Segment[], g: GlobalParams, limit = 10): Ste
     const lvl = Math.min(seg.int, limit) / 10;
     if (seg.type === 'Pause' || lvl <= 0) {
       out.push({ on: 0, off: ms, level: 0 });
+      return;
+    }
+    if (seg.type === 'Constant') {
+      out.push({ on: ms, off: 0, level: Math.max(lvl, 0.5) });
       return;
     }
     if (seg.type === 'Pulse') {

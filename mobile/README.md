@@ -53,8 +53,9 @@ src/lib/            waveform maths, insights, navigation helpers
 
 ## Haptics
 
-- **Android** plays the pattern through the system vibrator. React Native's vibrator has no amplitude control, so strength is expressed as duty cycle.
-- **iOS** plays each "on" window as a train of Taptic Engine impacts (Soft, Medium or Heavy, depending on level). A custom Core Haptics module would add continuous, amplitude-shaped events. That upgrade stays inside `src/haptics/engine.ts`.
+- **Constant Vibe** (and the builder's *Constant* segment) plays one unbroken vibration. Other patterns pulse: rhythm sets the pulse rate, and intensity sets how much of each pulse is on (intensity 10 is almost continuous).
+- **Android** runs the system vibrator at full motor strength. React Native can't control amplitude, so lower levels shorten each pulse slightly; unbroken steps stay unbroken.
+- **iOS** uses the system vibration (the incoming-call buzz), re-fired every ~380 ms, for strong steps. This is the strongest vibration reachable from Expo Go. Gentle steps use Taptic impacts. True amplitude control would need a Core Haptics / VibrationEffect native module and a development build; that work stays inside `src/haptics/engine.ts`.
 - The intensity limit in Settings caps every session and preview. Stop is always the largest control. Double-tapping anywhere also stops. The "Screen lock behavior" setting decides whether leaving the app stops the session, pauses it, or keeps it running.
 
 ## Voice companion (18+)

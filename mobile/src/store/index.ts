@@ -128,7 +128,7 @@ const initialPersisted = (): Persisted => ({
   premium: false,
   plan: 'yearly',
   tg: { ...DEFAULT_TOGGLES },
-  limit: 8,
+  limit: 10,
   defDur: 5,
   lockMode: 0,
   fav: {},
@@ -200,6 +200,13 @@ export const useStore = create<Store>()(
     }),
     {
       name: 'onde-store-v1',
+      version: 1,
+      // v1: the default intensity limit went from 8 to 10 (full strength).
+      migrate: (persisted, version) => {
+        const p = (persisted ?? {}) as Partial<Persisted>;
+        if (version < 1 && p.limit === 8) p.limit = 10;
+        return p as Persisted;
+      },
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (s): Persisted => ({
         onboarded: s.onboarded, adultAsked: s.adultAsked, adultConfirmed: s.adultConfirmed, voiceVolume: s.voiceVolume, voiceFreq: s.voiceFreq, createdAt: s.createdAt, name: s.name, premium: s.premium, plan: s.plan, tg: s.tg, limit: s.limit,

@@ -9,6 +9,7 @@ export const ONBOARDING: [string, string][] = [
 
 /** Home mood cards: label, subtitle, icon, pattern id, corner glow colour. */
 export const MOODS: [string, string, IconName, string, string][] = [
+  ['Intense', 'Constant Vibe · 10 min', 'wave', 'constant', 'rgba(236,72,153,.5)'],
   ['Relax', 'Soft Wave · 5 min', 'waves', 'soft', 'rgba(139,92,246,.45)'],
   ['Unwind', 'Slow Flow · 15 min', 'leaf', 'slow', 'rgba(236,72,153,.3)'],
   ['Focus', 'Balanced Pulse · 5 min', 'target', 'balanced', 'rgba(110,120,250,.38)'],
