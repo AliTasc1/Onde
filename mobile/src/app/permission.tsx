@@ -12,12 +12,15 @@ import { C } from '../theme';
 /** 25 · Permission Screen — explains before the OS prompt. */
 export default function Permission() {
   const allow = async () => {
-    const granted = await requestNotificationPermission();
+    const result = await requestNotificationPermission();
     const st = useStore.getState();
-    if (granted) {
+    if (result === 'granted') {
       st.setToggle('notif', true);
       goBack();
       st.showToast('Notifications on');
+    } else if (result === 'unsupported') {
+      goBack();
+      st.showToast('Reminders need the installed app build');
     } else {
       goBack();
       st.showToast('Turn on notifications for Onde in your device settings');
