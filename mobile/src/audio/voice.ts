@@ -13,7 +13,10 @@ const LINE_FILES: Record<string, LineFile> = { tr: linesTr as LineFile };
 export const VOICE_LANG = 'tr';
 export const FREQUENCY_LABELS = ['Relaxed', 'Normal', 'Continuous'] as const;
 /** Pause between lines, seconds [min, max], per frequency setting. */
-const GAPS: [number, number][] = [[3, 5], [0.8, 2], [0.2, 0.6]];
+// Natural conversational pauses: long enough to breathe, never a gap you wait on.
+const GAPS: [number, number][] = [[3.5, 6], [1.6, 3.2], [0.9, 1.8]];
+/** Unhurried delivery: slightly slower than generated, pitch kept natural. */
+const SPEECH_RATE = 0.94;
 
 /** Number of bundled clips for a language (0 until the voice pack is generated). */
 export const voiceClipCount = (lang = VOICE_LANG) => Object.keys(VOICE_CLIPS[lang] ?? {}).length;
@@ -57,6 +60,7 @@ class VoiceCompanion {
     try {
       this.player = createAudioPlayer(null);
       this.player.volume = opts.volume;
+      this.player.shouldCorrectPitch = true;
       this.sub = this.player.addListener('playbackStatusUpdate', (s) => {
         if (s.didJustFinish && this.speaking) {
           this.speaking = false;
@@ -110,7 +114,7 @@ class VoiceCompanion {
     const { rhythm } = this.getContext();
     const [lo, hi] = GAPS[this.frequency];
     // Faster rhythm → slightly shorter breaths between lines.
-    return rand(lo, hi) * 1000 * (rhythm >= 7 ? 0.7 : 1);
+    return rand(lo, hi) * 1000 * (rhythm >= 7 ? 0.8 : 1);
   }
 
   private pickGroup(): VoiceGroup {
@@ -145,6 +149,7 @@ class VoiceCompanion {
     if (src == null) return this.schedule(this.gap());
     try {
       this.player.replace(src);
+      try { this.player.setPlaybackRate(SPEECH_RATE); } catch { /* unsupported on this platform */ }
       this.player.play();
       this.speaking = true;
       this.played++;
@@ -152,7 +157,7 @@ class VoiceCompanion {
       clearTimeout(this.timer);
       this.timer = setTimeout(() => {
         if (this.speaking) { this.speaking = false; this.schedule(this.gap()); }
-      }, 20000);
+      }, 30000);
     } catch {
       this.schedule(this.gap());
     }
