@@ -28,6 +28,7 @@ export default function AdultGate() {
     const st = useStore.getState();
     st.set({ adultAsked: true, adultConfirmed: true });
     st.setToggle('voice', true);
+    st.setToggle('ambience', true);
     leave();
     st.showToast('Voice companion on');
   };

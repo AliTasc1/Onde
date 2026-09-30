@@ -6,7 +6,7 @@ import { Animated, AppState, Easing, Pressable, StyleSheet, View } from 'react-n
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Circle } from 'react-native-svg';
 
-import { ambience, ambienceCounts } from '../audio/ambience';
+import { ambience, ambienceTotal } from '../audio/ambience';
 import { voice, voiceClipCount } from '../audio/voice';
 import { Icon } from '../components/Icon';
 import { Txt } from '../components/ui';
@@ -32,7 +32,7 @@ export default function Session() {
   const adultConfirmed = useStore((s) => s.adultConfirmed);
   const voiceOn = useStore((s) => s.tg.voice) && adultConfirmed && voiceClipCount() > 0;
   const voiceVolume = useStore((s) => s.voiceVolume);
-  const ambienceOn = useStore((s) => s.tg.ambience) && adultConfirmed && ambienceCounts().bed + ambienceCounts().accents > 0;
+  const ambienceOn = useStore((s) => s.tg.ambience) && adultConfirmed && ambienceTotal() > 0;
   const ambienceVolume = useStore((s) => s.ambienceVolume);
   const pat = findPattern(play.pid);
 

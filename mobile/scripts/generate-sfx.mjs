@@ -44,7 +44,7 @@ async function main() {
   let failed = 0;
   for (const s of sounds) {
     if (only && s.id !== only) continue;
-    const dir = path.join(root, 'assets', 'ambience', s.group === 'bed' ? 'bed' : 'accents');
+    const dir = path.join(root, 'assets', 'ambience', ['bed', 'rhythm'].includes(s.group) ? s.group : 'accents');
     fs.mkdirSync(dir, { recursive: true });
     const file = path.join(dir, `${s.id}.mp3`);
     if (fs.existsSync(file) && !force) continue;
@@ -68,7 +68,7 @@ async function main() {
     }
   }
   const c = writeAmbienceManifest();
-  console.log(`\nDone: ${made} generated, ${failed} failed. Manifest: ${c.bed} bed, ${c.accents} accents.`);
+  console.log(`\nDone: ${made} generated, ${failed} failed. Manifest: ${c.bed} bed, ${c.rhythm} rhythm, ${c.accents} accents.`);
   if (failed) process.exitCode = 1;
 }
 

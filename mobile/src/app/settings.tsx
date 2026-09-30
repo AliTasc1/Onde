@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { ListPage } from '../components/ListPage';
 import { Slider } from '../components/Slider';
 import { Group, NavRow, ToggleRow, Txt } from '../components/ui';
-import { ambienceCounts } from '../audio/ambience';
+import { ambienceCounts, ambienceTotal } from '../audio/ambience';
 import { FREQUENCY_LABELS, voiceClipCount } from '../audio/voice';
 import { go } from '../lib/nav';
 import { LOCK_MODES, useStore } from '../store';
@@ -56,8 +56,8 @@ export default function Settings() {
         <ToggleRow label="Background sounds" sub="Breaths and sounds under the voice" icon="waves" on={tg.ambience && adultConfirmed}
           onPress={() => (adultConfirmed ? flip('ambience') : go('/adult'))} />
         {tg.ambience && adultConfirmed ? (
-          <NavRow label="Sound pack" value={amb.bed + amb.accents ? `${amb.bed} loop · ${amb.accents} sounds` : 'Not installed'} icon="headphones"
-            onPress={() => showToast(amb.bed + amb.accents ? 'Add more sounds to assets/ambience' : 'No background sounds in this build yet')} />
+          <NavRow label="Sound pack" value={ambienceTotal() ? `${amb.bed + amb.rhythm + amb.accents} sounds` : 'Not installed'} icon="headphones"
+            onPress={() => showToast(ambienceTotal() ? `${amb.bed} loop · ${amb.rhythm} rhythm · ${amb.accents} accents` : 'No background sounds in this build yet')} />
         ) : null}
       </Group>
       {tg.voice && adultConfirmed ? (

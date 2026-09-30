@@ -127,7 +127,7 @@ const initialPersisted = (): Persisted => ({
   adultConfirmed: false,
   voiceVolume: 0.8,
   voiceFreq: 1,
-  ambienceVolume: 0.6,
+  ambienceVolume: 0.7,
   createdAt: Date.now(),
   name: '',
   premium: false,
