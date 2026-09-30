@@ -23,10 +23,18 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 function loadEnvFile() {
-  const f = path.join(root, '.env.local');
-  if (!fs.existsSync(f)) return;
+  let f = path.join(root, '.env.local');
+  // Windows Notepad often saves it as ".env.local.txt".
+  if (!fs.existsSync(f) && fs.existsSync(f + '.txt')) {
+    console.warn('Note: using .env.local.txt (rename it to .env.local when you can).');
+    f += '.txt';
+  }
+  if (!fs.existsSync(f)) {
+    console.warn(`No settings file found at ${path.join(root, '.env.local')}`);
+    return;
+  }
   for (const line of fs.readFileSync(f, 'utf8').split(/\r?\n/)) {
-    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
+    const m = line.replace(/^\uFEFF/, '').match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);
     if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
   }
 }
@@ -71,7 +79,15 @@ async function synth(text) {
     headers: { 'xi-api-key': apiKey, 'Content-Type': 'application/json', Accept: 'audio/mpeg' },
     body: JSON.stringify(body),
   });
-  if (!res.ok) throw new Error(`HTTP ${res.status}: ${(await res.text()).slice(0, 300)}`);
+  if (!res.ok) {
+    const detail = (await res.text()).slice(0, 300);
+    const hint = res.status === 401 ? ' → API key is wrong or missing a permission (enable Text to Speech on the key).'
+      : res.status === 404 ? ' → Voice ID not found. Add the voice to "My Voices" and copy its ID.'
+        : res.status === 402 || /quota|credits/i.test(detail) ? ' → Not enough ElevenLabs credits / plan limit.'
+          : res.status === 400 && /model/i.test(detail) ? ' → Model not available on your plan; try ELEVENLABS_MODEL=eleven_multilingual_v2.'
+            : '';
+    throw new Error(`HTTP ${res.status}: ${detail}${hint}`);
+  }
   return Buffer.from(await res.arrayBuffer());
 }
 
