@@ -17,7 +17,9 @@ export default function Splash() {
   const next = () => {
     if (done.current) return;
     done.current = true;
-    router.replace(useStore.getState().onboarded ? '/(tabs)/home' : '/onboarding');
+    const st = useStore.getState();
+    if (!st.onboarded) router.replace('/onboarding');
+    else router.replace(st.adultAsked ? '/(tabs)/home' : '/adult?from=onboarding');
   };
 
   useEffect(() => {

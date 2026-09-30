@@ -8,6 +8,8 @@ export type Toggles = {
   analytics: boolean; personalization: boolean; notif: boolean; local: boolean; cloud: boolean;
   sound: boolean; dark: boolean; autostop: boolean; battery: boolean; rm: boolean; visual: boolean;
   n_routine: boolean; n_checkin: boolean; n_tips: boolean;
+  /** Voice companion (18+). Only switchable after the age confirmation. */
+  voice: boolean;
 };
 
 export type SavedPattern = {
@@ -53,6 +55,7 @@ export const LOCK_MODES = ['Stop session', 'Pause session', 'Keep running'] as c
 const DEFAULT_TOGGLES: Toggles = {
   analytics: false, personalization: true, notif: true, local: true, cloud: false, sound: false, dark: true,
   autostop: true, battery: true, rm: false, visual: true, n_routine: true, n_checkin: true, n_tips: false,
+  voice: false,
 };
 
 const newDraft = (dur = 5): Draft => ({
@@ -63,6 +66,11 @@ const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(
 
 type Persisted = {
   onboarded: boolean;
+  /** The 18+ voice screen has been shown once (confirmed or declined). */
+  adultAsked: boolean;
+  adultConfirmed: boolean;
+  voiceVolume: number;
+  voiceFreq: 0 | 1 | 2;
   createdAt: number;
   name: string;
   premium: boolean;
@@ -111,6 +119,10 @@ let toastTimer: ReturnType<typeof setTimeout> | undefined;
 
 const initialPersisted = (): Persisted => ({
   onboarded: false,
+  adultAsked: false,
+  adultConfirmed: false,
+  voiceVolume: 0.8,
+  voiceFreq: 1,
   createdAt: Date.now(),
   name: '',
   premium: false,
@@ -190,9 +202,14 @@ export const useStore = create<Store>()(
       name: 'onde-store-v1',
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (s): Persisted => ({
-        onboarded: s.onboarded, createdAt: s.createdAt, name: s.name, premium: s.premium, plan: s.plan, tg: s.tg, limit: s.limit,
+        onboarded: s.onboarded, adultAsked: s.adultAsked, adultConfirmed: s.adultConfirmed, voiceVolume: s.voiceVolume, voiceFreq: s.voiceFreq, createdAt: s.createdAt, name: s.name, premium: s.premium, plan: s.plan, tg: s.tg, limit: s.limit,
         defDur: s.defDur, lockMode: s.lockMode, fav: s.fav, saved: s.saved, history: s.history, last: s.last, draft: s.draft,
       }),
+      // Shallow merge would drop newly added toggles from older saves.
+      merge: (persisted, current) => {
+        const p = (persisted ?? {}) as Partial<Persisted>;
+        return { ...current, ...p, tg: { ...current.tg, ...p.tg } };
+      },
       onRehydrateStorage: () => () => useStore.setState({ hydrated: true }),
     },
   ),

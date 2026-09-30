@@ -1,0 +1,57 @@
+{
+  "lang": "tr",
+  "note": "Sesli eşlik (18+) ifadeleri. Her satır ayrı bir ses dosyası olur: assets/voice/tr/<id>.mp3. Metni değiştirirseniz o id'nin mp3'ünü silip scripti yeniden çalıştırın.",
+  "groups": {
+    "open": [
+      { "id": "tr_open_01", "text": "Merhaba... ben buradayım. Sadece nefes al ve rahatla." },
+      { "id": "tr_open_02", "text": "Acele yok... bu an tamamen senin." },
+      { "id": "tr_open_03", "text": "Gözlerini kapat... sesime odaklan." },
+      { "id": "tr_open_04", "text": "Omuzlarını bırak... yavaşça... çok güzel." },
+      { "id": "tr_open_05", "text": "Yavaştan başlıyoruz... sen nasıl istersen." },
+      { "id": "tr_open_06", "text": "Bugün kendine zaman ayırdın... bunu hak ediyorsun." },
+      { "id": "tr_open_07", "text": "Derin bir nefes al... ve yavaşça ver." }
+    ],
+    "flow": [
+      { "id": "tr_flow_01", "text": "Nasıl... böyle güzel mi?" },
+      { "id": "tr_flow_02", "text": "Bu şekilde hoşuna gidiyor mu?" },
+      { "id": "tr_flow_03", "text": "Şimdi kendini daha rahat hissediyor musun?" },
+      { "id": "tr_flow_04", "text": "Biraz daha kendini geriye çeker misin... bırak kendini." },
+      { "id": "tr_flow_05", "text": "Seni çok beğeniyorum... çok güzel görünüyorsun." },
+      { "id": "tr_flow_06", "text": "Her zaman harikasın." },
+      { "id": "tr_flow_07", "text": "Mükemmelsin... tam olduğun gibi." },
+      { "id": "tr_flow_08", "text": "Nefesini hissediyorum... yavaş... sakin." },
+      { "id": "tr_flow_09", "text": "Kendini bırak... ben buradayım." },
+      { "id": "tr_flow_10", "text": "Hiçbir şey düşünme... sadece bu ânı hisset." },
+      { "id": "tr_flow_11", "text": "Bu ritim sana iyi geliyor, değil mi?" },
+      { "id": "tr_flow_12", "text": "Çok güzel gidiyorsun... devam et." },
+      { "id": "tr_flow_13", "text": "Tenin... nefesin... her şey çok güzel." },
+      { "id": "tr_flow_14", "text": "Seninle olmak... çok özel." }
+    ],
+    "ask": [
+      { "id": "tr_ask_01", "text": "Daha hızlı yapmamı ister misin, tatlım?" },
+      { "id": "tr_ask_02", "text": "Biraz daha yavaş mı olsun... söyle bana." },
+      { "id": "tr_ask_03", "text": "Böyle mi seviyorsun... tam böyle mi?" },
+      { "id": "tr_ask_04", "text": "İstediğin an durabiliriz... kontrol sende." },
+      { "id": "tr_ask_05", "text": "Biraz daha mı... ister misin?" },
+      { "id": "tr_ask_06", "text": "Nasıl hissettiğini merak ediyorum... anlat bana." }
+    ],
+    "rising": [
+      { "id": "tr_rise_01", "text": "Evet... tam böyle... çok güzel." },
+      { "id": "tr_rise_02", "text": "Hissediyor musun... gittikçe artıyor." },
+      { "id": "tr_rise_03", "text": "Bırak kendini... tutma." },
+      { "id": "tr_rise_04", "text": "Nefesin hızlanıyor... bunu seviyorum." },
+      { "id": "tr_rise_05", "text": "Biraz daha... az kaldı." },
+      { "id": "tr_rise_06", "text": "Harikasın... devam et... durma." },
+      { "id": "tr_rise_07", "text": "Tam şimdi... sadece hisset." },
+      { "id": "tr_rise_08", "text": "Çok güzelsin böyle... gerçekten." }
+    ],
+    "close": [
+      { "id": "tr_close_01", "text": "Şimdi yavaşla... nefesini dinle." },
+      { "id": "tr_close_02", "text": "Çok güzeldin... gerçekten." },
+      { "id": "tr_close_03", "text": "Biraz böyle kal... acele etme." },
+      { "id": "tr_close_04", "text": "Kendine iyi bak... sen bunu hak ediyorsun." },
+      { "id": "tr_close_05", "text": "Yanındaydım... ve yine burada olacağım." },
+      { "id": "tr_close_06", "text": "Gülümse... bugün kendin için güzel bir şey yaptın." }
+    ]
+  }
+}

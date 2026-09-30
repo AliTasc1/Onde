@@ -21,8 +21,9 @@ export default function Onboarding() {
   const last = step === ONBOARDING.length - 1;
 
   const finish = () => {
-    useStore.getState().set({ onboarded: true });
-    router.replace('/(tabs)/home');
+    const st = useStore.getState();
+    st.set({ onboarded: true });
+    router.replace(st.adultAsked ? '/(tabs)/home' : '/adult?from=onboarding');
   };
   const next = () => (last ? finish() : setStep(step + 1));
 

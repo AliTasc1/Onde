@@ -54,6 +54,7 @@ export default function RootLayout() {
           <Stack.Screen name="subscription" options={{ presentation: 'fullScreenModal', animation: 'slide_from_bottom' }} />
           <Stack.Screen name="payment" options={{ animation: 'fade', gestureEnabled: false }} />
           <Stack.Screen name="permission" options={{ animation: 'fade' }} />
+          <Stack.Screen name="adult" options={{ animation: 'fade', gestureEnabled: false }} />
         </Stack>
         <Toast />
       </View>

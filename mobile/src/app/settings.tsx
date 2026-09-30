@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { ListPage } from '../components/ListPage';
 import { Slider } from '../components/Slider';
 import { Group, NavRow, ToggleRow, Txt } from '../components/ui';
+import { FREQUENCY_LABELS, voiceClipCount } from '../audio/voice';
 import { go } from '../lib/nav';
 import { LOCK_MODES, useStore } from '../store';
 import { C } from '../theme';
@@ -18,6 +19,10 @@ export default function Settings() {
   const lockMode = useStore((s) => s.lockMode);
   const set = useStore((s) => s.set);
   const showToast = useStore((s) => s.showToast);
+  const adultConfirmed = useStore((s) => s.adultConfirmed);
+  const voiceVolume = useStore((s) => s.voiceVolume);
+  const voiceFreq = useStore((s) => s.voiceFreq);
+  const clips = voiceClipCount();
 
   return (
     <ListPage title="Settings" sub="Tune how Onde works for you.">
@@ -35,6 +40,26 @@ export default function Settings() {
         <ToggleRow label="Auto stop" sub="End sessions when the timer finishes" icon="clock" on={tg.autostop} onPress={() => flip('autostop')} />
         <NavRow label="Screen lock behavior" value={LOCK_MODES[lockMode]} icon="lock" onPress={() => set({ lockMode: (lockMode + 1) % LOCK_MODES.length })} />
       </Group>
+      <Group title="Voice companion · 18+">
+        <ToggleRow label="Voice companion" sub="Whispered voice during sessions" icon="sound" on={tg.voice && adultConfirmed}
+          onPress={() => (adultConfirmed ? flip('voice') : go('/adult'))} />
+        {tg.voice && adultConfirmed ? (
+          <>
+            <NavRow label="How often" value={FREQUENCY_LABELS[voiceFreq]} icon="waves" onPress={() => set({ voiceFreq: ((voiceFreq + 1) % 3) as 0 | 1 | 2 })} />
+            <NavRow label="Voice pack" value={clips ? `Turkish · ${clips} clips` : 'Not installed'} icon="headphones"
+              onPress={() => showToast(clips ? 'More voices and languages are coming' : 'The voice pack has not been added to this build yet')} />
+          </>
+        ) : null}
+      </Group>
+      {tg.voice && adultConfirmed ? (
+        <View style={{ marginTop: 12, marginHorizontal: 24, padding: 16, borderRadius: 20, backgroundColor: C.surface, gap: 2 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Txt style={{ fontSize: 16 }}>Voice volume</Txt>
+            <Txt style={{ fontSize: 16, color: C.muted }}>{Math.round(voiceVolume * 100)}%</Txt>
+          </View>
+          <Slider label="Voice volume" value={Math.round(voiceVolume * 10)} min={1} max={10} onChange={(v) => set({ voiceVolume: v / 10 })} valueText={`${Math.round(voiceVolume * 100)} percent`} />
+        </View>
+      ) : null}
       <Group title="App">
         <ToggleRow label="Sound effects" icon="sound" on={tg.sound} onPress={() => flip('sound')} />
         <ToggleRow label="Dark mode" icon="moon" on={tg.dark} onPress={() => (tg.dark ? showToast('Light mode is coming soon') : flip('dark'))} />

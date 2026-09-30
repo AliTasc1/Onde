@@ -6,6 +6,7 @@ import { Animated, AppState, Easing, Pressable, StyleSheet, View } from 'react-n
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Circle } from 'react-native-svg';
 
+import { voice, voiceClipCount } from '../audio/voice';
 import { Icon } from '../components/Icon';
 import { Txt } from '../components/ui';
 import { Orb, RadialGlow } from '../components/visuals';
@@ -27,6 +28,9 @@ export default function Session() {
   const limit = useStore((s) => s.limit);
   const autostop = useStore((s) => s.tg.autostop);
   const visual = useStore((s) => s.tg.visual);
+  const adultConfirmed = useStore((s) => s.adultConfirmed);
+  const voiceOn = useStore((s) => s.tg.voice) && adultConfirmed && voiceClipCount() > 0;
+  const voiceVolume = useStore((s) => s.voiceVolume);
   const pat = findPattern(play.pid);
 
   const total = play.duration * 60;
@@ -41,6 +45,7 @@ export default function Session() {
     if (finished.current) return;
     finished.current = true;
     haptics.stop();
+    voice.stop();
     const st = useStore.getState();
     st.recordSession({ ended, elapsed: elapsed.current, pid: st.play.pid, intensity: Math.min(st.play.intensity, st.limit) });
     router.replace('/complete');
@@ -52,10 +57,30 @@ export default function Session() {
     haptics.play(sessionSteps(pat.shape, level, play.rhythm), { loop: true });
   }, [paused, level, play.rhythm, pat.shape]);
 
+  // Voice companion follows the session: its lines read progress, intensity and rhythm live.
+  const voiceCtx = useRef({ progress: 0, intensity: level, rhythm: play.rhythm });
+  useEffect(() => {
+    voiceCtx.current = { progress: 1 - remaining / Math.max(1, total), intensity: level, rhythm: play.rhythm };
+  }, [remaining, total, level, play.rhythm]);
+
+  useEffect(() => {
+    if (!voiceOn) { voice.stop(); return; }
+    voice.start({ volume: useStore.getState().voiceVolume, frequency: useStore.getState().voiceFreq, getContext: () => voiceCtx.current });
+    return () => voice.stop();
+  }, [voiceOn]);
+
+  useEffect(() => { voice.setVolume(voiceVolume); }, [voiceVolume]);
+
+  useEffect(() => {
+    if (paused) voice.pause();
+    else voice.resume();
+  }, [paused]);
+
   useEffect(() => {
     activateKeepAwakeAsync(KEEP_AWAKE_TAG).catch(() => {});
     return () => {
       haptics.stop();
+      voice.stop();
       deactivateKeepAwake(KEEP_AWAKE_TAG).catch(() => {});
     };
   }, []);
@@ -108,7 +133,20 @@ export default function Session() {
       <View style={{ alignItems: 'center', gap: 4 }}>
         <Txt style={{ fontSize: 12, fontWeight: '600', letterSpacing: em(0.12, 12), textTransform: 'uppercase', color: C.muted }}>Current Pattern</Txt>
         <Txt style={{ fontSize: 20, fontWeight: '600' }}>{pat.name}</Txt>
+        {voiceOn ? (
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 }}>
+            <Icon name="headphones" size={13} color={C.faint} />
+            <Txt style={{ fontSize: 12, color: C.faint }}>Voice on · headphones recommended</Txt>
+          </View>
+        ) : null}
       </View>
+      {adultConfirmed ? (
+        <Pressable onPress={() => (voiceClipCount() ? useStore.getState().flip('voice') : useStore.getState().showToast('Voice pack not installed yet'))} accessibilityRole="switch" accessibilityLabel="Voice companion"
+          accessibilityState={{ checked: voiceOn }} hitSlop={6}
+          style={{ position: 'absolute', top: insets.top + 16, right: 24, width: 44, height: 44, borderRadius: 22, backgroundColor: C.surface, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center' }}>
+          <Icon name={voiceOn ? 'sound' : 'soundOff'} size={20} color={voiceOn ? C.lavender : C.faint} />
+        </Pressable>
+      ) : null}
 
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <View style={{ width: 300, height: 300, opacity: paused ? 0.45 : 1 }}>

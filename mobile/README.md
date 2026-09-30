@@ -57,6 +57,22 @@ src/lib/            waveform maths, insights, navigation helpers
 - **iOS** plays each "on" window as a train of Taptic Engine impacts (Soft, Medium or Heavy, depending on level). A custom Core Haptics module would add continuous, amplitude-shaped events. That upgrade stays inside `src/haptics/engine.ts`.
 - The intensity limit in Settings caps every session and preview. Stop is always the largest control. Double-tapping anywhere also stops. The "Screen lock behavior" setting decides whether leaving the app stops the session, pauses it, or keeps it running.
 
+## Voice companion (18+)
+
+The voice is an optional whispered voice that plays alongside a session. It is off by default. The 18+ screen (`/adult`) opens once, after onboarding or on the next launch for existing users. The voice only turns on if the user confirms they are an adult; declining leaves it off. After confirming, users can switch it in Settings and on the session screen.
+
+- **Lines:** `voice/lines.tr.json` holds the lines, in groups for the opening, steady flow, check-in questions, rising intensity and winding down. The player picks a group based on session progress, intensity and rhythm. It never repeats a line until every line in that group has played, and a faster rhythm means shorter pauses between lines.
+- **Generating the audio.** Clips are generated once with ElevenLabs and bundled with the app. They are never generated live.
+  1. Create `mobile/.env.local` (it is git-ignored):
+     ```
+     ELEVENLABS_API_KEY=your-key
+     ELEVENLABS_VOICE_ID=voice-id-from-the-library
+     ELEVENLABS_MODEL=eleven_multilingual_v2   # or eleven_v3 (adds a [whispers] tag)
+     ```
+  2. Run `npm run voice`. Existing files are skipped; add `--force` to regenerate everything, `--only tr_flow_01` to regenerate one line, or `--lang xx` for another language.
+  3. Commit `assets/voice/` together with `src/data/voiceManifest.ts`. The script writes the manifest, which bundles the clips into the app.
+- **Audio setup:** playback uses `expo-audio`. It ducks other audio and keeps playing in silent mode. The config plugin is set up so the app never requests microphone access.
+
 ## Where the app differs from the prototype
 
 - **Insights and Continue use real data.** Insights is computed from the device's session history instead of sample numbers. The Continue card resumes the last session.

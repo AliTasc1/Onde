@@ -14,7 +14,9 @@
     },
     "android": {
       "package": "app.onde.wellness",
-      "permissions": ["android.permission.VIBRATE"],
+      "permissions": [
+        "android.permission.VIBRATE"
+      ],
       "adaptiveIcon": {
         "backgroundColor": "#15151F",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -42,6 +44,14 @@
         "expo-notifications",
         {
           "color": "#8B5CF6"
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "enableBackgroundPlayback": false
         }
       ]
     ],
